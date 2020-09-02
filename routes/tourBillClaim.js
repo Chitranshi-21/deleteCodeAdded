@@ -46,6 +46,8 @@ router.get('/gettourbillclaim',verify,(request,response)=>{
         tourBillClaimResult.rows.forEach((eachRecord) => {
           let obj = {};
           let createdDate = new Date(eachRecord.createddate);
+          createdDate.setHours(createdDate.getHours() + 5);
+          createdDate.setMinutes(createdDate.getMinutes() + 30);
           let strDate = createdDate.toLocaleString();
           obj.sequence = i;
           obj.name = '<a href="'+eachRecord.sfid+'"  data-toggle="modal" data-target="#popup" class="tourBillId"  id="" >'+eachRecord.name+'</a>';
@@ -1030,6 +1032,8 @@ router.get('/boardingLodgingListView',verify,(request,response)=>{
             BoardingQueryResult.rows.forEach((eachRecord) => {
           let obj = {};
           let createdDate = new Date(eachRecord.createddate);
+          createdDate.setHours(createdDate.getHours() + 5);
+          createdDate.setMinutes(createdDate.getMinutes() + 30);
           let strDate = createdDate.toLocaleString();
   
           let strFrom = new Date(eachRecord.from__c);
@@ -1542,7 +1546,7 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
             amount:joi.number().required().label('Please enter Amount'),
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
         })
-        let result = schema.validate({projectTask:request.body.projectTask,dated:request.body.date,date:request.body.date,amount:request.body.amount,particulars_mode:request.body.particulars_mode})
+        let result = schema.validate({projectTask:request.body.projectTask,dated:request.body.date,date:request.body.date,amount:request.body.amount,particulars_mode:request.body.particulars_mode ,imgpath:request.body.imgpath})
         console.log('validation '+JSON.stringify(result));
         if(result.error)
         {
@@ -1576,7 +1580,7 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
                 amount:joi.number().required().label('Please enter Amount'),
                 imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
              })
-            let result = schema.validate({projectTask:request.body.projectTask[i],date:request.body.date[i],amount:request.body.amount[i],particulars_mode:request.body.particulars_mode[i]})
+            let result = schema.validate({projectTask:request.body.projectTask[i],date:request.body.date[i],amount:request.body.amount[i],particulars_mode:request.body.particulars_mode[i],imgpath:request.body.imgpath[i]})
             console.log('validation '+JSON.stringify(result));
             if(result.error)
             {

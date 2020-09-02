@@ -187,8 +187,8 @@ router.get('/expenseAllRecords',verify, async (request, response) => {
               {
                 let obj = {};
                 let crDate = new Date(expenseQueryResult.rows[i].createddate);
-               // crDate = crDate.setHours(crDate.getHours() + 5);
-               // crDate = crDate.setMinutes(crDate.getMinutes() + 30);
+                crDate.setHours(crDate.getHours() + 5);
+                crDate.setMinutes(crDate.getMinutes() + 30);
                 let strDate = crDate.toLocaleString();
                 obj.sequence = i+1;
                 obj.name = '<a href="'+expenseQueryResult.rows[i].sfid+'" data-toggle="modal" data-target="#popup" class="expId" id="name'+expenseQueryResult.rows[i].sfid+'"  >'+expenseQueryResult.rows[i].name+'</a>';
@@ -1171,6 +1171,8 @@ router.get('/getpettycashlist',verify,(request, response) => {
               pettyCashQueryResult.rows.forEach((eachRecord) => {
                 let obj = {};
                 let createdDate = new Date(eachRecord.createddate);
+                createdDate.setHours(createdDate.getHours() + 5);
+                createdDate.setMinutes(createdDate.getMinutes() + 30);
                 let strDate = createdDate.toLocaleString();
                 let strBillDate = new Date(eachRecord.bill_date__c).toLocaleString();
                 obj.sequence = i;
@@ -1260,6 +1262,8 @@ router.get('/getconveyancelist' ,verify,(request,response) => {
       conveyanceQueryResult.rows.forEach((eachRecord) => {
         let obj = {};
         let createdDate = new Date(eachRecord.createddate);
+        createdDate.setHours(createdDate.getHours() + 5);
+        createdDate.setMinutes(createdDate.getMinutes() + 30);
         let strDate = createdDate.toLocaleString();
         obj.sequence = i;
         obj.name = '<a href="#" class="conveyanceTag" id="'+eachRecord.sfid+'" >'+eachRecord.name+'</a>';
