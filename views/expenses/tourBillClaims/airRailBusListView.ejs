@@ -189,7 +189,8 @@
       //  alert(tourbillId);
         let columns ={
             sequence : 'Sequence',
-            editAction:'Action',
+            deleteAction: 'Action',
+            //editAction:'Action',
             name: 'Air/Bus/Train Tour Name ',
             arrival : 'Arrival Station',
             departure:'Departure Station',
@@ -219,7 +220,8 @@
         },
         tableDidUpdate: () => {
         console.log('table did update');
-       addtionalFunctionalities();
+      // addtionalFunctionalities();
+      additionaldeleteFunctionality();
         
         },
         tableWillUnmount: () => console.log('table will unmount'),
@@ -252,8 +254,8 @@
             console.log('response : '+JSON.stringify(response));
             table.setData(response, columns);
             anchorClickFunctionalities();
-            addtionalFunctionalities();
-
+           // addtionalFunctionalities();
+           additionaldeleteFunctionality();
         })
         .fail((jqXHR,status,error)=>{
             console.log('jqXHR: '+jqXHR);
@@ -467,6 +469,34 @@
 
         })
     }
-    
+    function additionaldeleteFunctionality(){
+
+      $('.deleteButton').on('click',function(event){
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+          //  $('#parentId').hide();
+          // let parentId = document.getElementById('parentId').innerHTML;
+            let parentId = this.id;
+          console.log('airrailbus Id  '+parentId);
+            alert('Are you sure to Delete !');
+        
+      $.ajax({
+      url : '/expense/tourBillClaim/deleteAirRailBus/'+parentId,
+      type:'get',
+
+      dataType: 'json',
+
+          })
+          .done((response) => {
+                console.log('resonse   :'+response);
+                alert("Air Rail Bus Deleted Succesfullly !");
+          })
+          .fail((jqXHR, status, error) => {
+                console.log('jqXHR  '+JSON.stringify(jqXHR));
+          }) 
+          })
+      }
 </script>
 

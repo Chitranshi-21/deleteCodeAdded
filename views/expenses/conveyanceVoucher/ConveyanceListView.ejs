@@ -79,6 +79,7 @@
        
         let columns ={
             sequence : 'Sequence',
+            deleteAction: 'Action',
             name: 'Conveyance Voucher ',
             TravellingPurpose : 'Purpose of Travelling',
             modeOfTravel : 'Nature Of Travel',
@@ -110,6 +111,7 @@
         tableDidUpdate: () => {
         console.log('table did update');
          anchorClickFunctionalities();
+         additionaldeleteFunctionality();
         
         },
         tableWillUnmount: () => console.log('table will unmount'),
@@ -239,4 +241,35 @@
                 })
         }
     })
+
+    function additionaldeleteFunctionality(){
+
+$('.deleteButton').on('click',function(event){
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    //  $('#parentId').hide();
+    // let parentId = document.getElementById('parentId').innerHTML;
+      let parentId = this.id;
+    console.log('pettyCashId  '+parentId);
+      alert('Are you sure to Delete !');
+  
+$.ajax({
+url : '/expense/deleteConveyance/'+parentId,
+type:'get',
+
+dataType: 'json',
+
+    })
+    .done((response) => {
+          console.log('resonse   :'+response);
+          alert("Conveyance Voucher Deleted Succesfullly !");
+    })
+    .fail((jqXHR, status, error) => {
+          console.log('jqXHR  '+JSON.stringify(jqXHR));
+    }) 
+    })
+}
+
 </script>

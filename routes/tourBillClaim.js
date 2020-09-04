@@ -266,8 +266,9 @@ router.get('/getAirBusListView',verify,(request,response)=>{
           obj.amount = eachRecord.amount__c;
           obj.createDdate = strDate;
           obj.arrival=eachRecord.arrival_station__c;
-          obj.editAction = '<button href="#" class="btn btn-primary editAirRailBus" id="'+eachRecord.sfid+'" >Edit</button>'
-  
+        //  obj.editAction = '<button href="#" class="btn btn-primary editAirRailBus" id="'+eachRecord.sfid+'" >Edit</button>'
+         obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
+
           i= i+1;
           modifiedAirBuslList.push(obj);
         })
@@ -482,6 +483,26 @@ router.post('/airRailBusCharges',verify, (request, response) => {
   
 });
 
+      router.get('/deleteAirRailBus/:parentId',(request,response)=>{
+
+        var airId= request.params.parentId;
+      console.log('airId Id1111 ='+airId);
+
+          let deleteQuerry = 'DELETE FROM salesforce.Air_Rail_Bus_Fare__c '+
+          'WHERE sfid = $1';
+        console.log('deleteQuerry  '+deleteQuerry);
+        pool
+        .query(deleteQuerry,[airId])
+        .then((deleteQuerry) => {     
+        console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+        response.send('Success');
+        })
+        .catch((deleteError) => {
+        console.log('deleteError'+deleteError.stack);
+        response.send('Error');
+        })
+      })
+
 /*************************************End Air Rail Bus ******************************************************************* */
 
 /*************************************Start  tourBillConveyanceCharges ******************************************************************* */
@@ -660,8 +681,9 @@ if(result.error)
           obj.amount = eachRecord.amount__c;
           obj.createDdate = strDate;
           obj.dated=strDate3;
-          obj.editAction = '<button href="#" class="btn btn-primary editConveyance" id="'+eachRecord.sfid+'" >Edit</button>'
-        
+       //   obj.editAction = '<button href="#" class="btn btn-primary editConveyance" id="'+eachRecord.sfid+'" >Edit</button>'
+         obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
+
              i= i+1;
           modifiedAirBuslList.push(obj);
         })
@@ -739,6 +761,26 @@ if(result.error)
     })
   });
   
+
+  router.get('/deleteConveyanceCharges/:parentId',(request,response)=>{
+
+    var conveyanceId= request.params.parentId;
+  console.log('conveyanceId Id1111 ='+conveyanceId);
+
+      let deleteQuerry = 'DELETE FROM salesforce.Conveyance_Charges__c '+
+      'WHERE sfid = $1';
+    console.log('deleteQuerry  '+deleteQuerry);
+    pool
+    .query(deleteQuerry,[conveyanceId])
+    .then((deleteQuerry) => {     
+    console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+    response.send('Success');
+    })
+    .catch((deleteError) => {
+    console.log('deleteError'+deleteError.stack);
+    response.send('Error');
+    })
+  })
 
 /************************************* end tourBillConveyanceCharges ******************************************************************* */
 
@@ -875,7 +917,7 @@ router.post('/boardingLodgingCharges',verify, (request, response) => {
 
               lstcharges.push(amtForBL[i]);
               lstcharges.push(actualAMTForBL[i]);
-              lstcharges.push(policyamtForBL[i]);
+           // lstcharges.push(policyamtForBL[i]);
               
               lstcharges.push(ownStayAmount[i]);
 
@@ -974,22 +1016,19 @@ router.post('/boardingLodgingCharges',verify, (request, response) => {
                    var amtForBL1= 0;
                     lstcharges.push(amtForBL1);
                   }
-                
-
-                  lstcharges.push(policyamtForBL);
+                 // lstcharges.push(policyamtForBL);
 
                   lstcharges.push(ownStayAmount);
-
                   lstcharges.push(imgpath);
                   lstcharges.push(parentTourBillId);
-          console.log(JSON.stringify(lstcharges));
-          parentTourBillTemp = parentTourBillId;
-          lstBoarding.push(lstcharges);
+                  console.log(JSON.stringify(lstcharges));
+                  parentTourBillTemp = parentTourBillId;
+                  lstBoarding.push(lstcharges);
         }
 }
      console.log('lstBoarding' +lstBoarding);
 
-      let lodgingboarding = format('INSERT INTO salesforce.Boarding_Lodging__c (Stay_Option__c, Place_Journey__c,Correspondence_City__c,Activity_Code_Project__c, From__c, To__c,Total_Allowance__c,Daily_Allowance__c,Amount_for_boarding_and_lodging__c, Actual_Amount_for_boarding_and_lodging__c	,Amount_of_B_L_as_per_policy__c	,Own_Stay_Amount__c,Heroku_Image_URL__c,Tour_Bill_Claim__c) VALUES %L returning id',lstBoarding);
+      let lodgingboarding = format('INSERT INTO salesforce.Boarding_Lodging__c (Stay_Option__c, Place_Journey__c,Correspondence_City__c,Activity_Code_Project__c, From__c, To__c,Total_Allowance__c,Daily_Allowance__c,Amount_for_boarding_and_lodging__c, Actual_Amount_for_boarding_and_lodging__c	,Own_Stay_Amount__c,Heroku_Image_URL__c,Tour_Bill_Claim__c) VALUES %L returning id',lstBoarding);
       console.log('qyyy '+lodgingboarding);
       pool
       .query(lodgingboarding)
@@ -1047,7 +1086,8 @@ router.get('/boardingLodgingListView',verify,(request,response)=>{
           obj.from=strDateFrom;
           obj.to=strDateTo;
           obj.createDdate = strDate;
-          obj.editAction = '<button href="#" class="btn btn-primary editBoarding" id="'+eachRecord.sfid+'" >Edit</button>'
+          obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
+      //    obj.editAction = '<button href="#" class="btn btn-primary editBoarding" id="'+eachRecord.sfid+'" >Edit</button>'
           i= i+1;
           modifiedAirBuslList.push(obj);
         })
@@ -1127,6 +1167,25 @@ router.get('/boardingLodgingListView',verify,(request,response)=>{
   });
   
 
+      router.get('/deleteboardingloadging/:parentId',(request,response)=>{
+
+        var conveyanceId= request.params.parentId;
+      console.log('conveyanceId Id1111 ='+conveyanceId);
+
+          let deleteQuerry = 'DELETE FROM salesforce.Boarding_Lodging__c '+
+          'WHERE sfid = $1';
+        console.log('deleteQuerry  '+deleteQuerry);
+        pool
+        .query(deleteQuerry,[conveyanceId])
+        .then((deleteQuerry) => {     
+        console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+        response.send('Success');
+        })
+        .catch((deleteError) => {
+        console.log('deleteError'+deleteError.stack);
+        response.send('Error');
+        })
+      })
 
 
 
@@ -1290,7 +1349,8 @@ router.get('/telephoneFoodCharge',verify,(request,response)=>{
           obj.fooding=eachRecord.fooding_expense__c;
           obj.laundry=eachRecord.laundry_expense__c;
           obj.createDdate = strDate;
-          obj.editAction = '<button href="#" class="btn btn-primary editFooding" id="'+eachRecord.sfid+'" >Edit</button>'
+          obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
+         // obj.editAction = '<button href="#" class="btn btn-primary editFooding" id="'+eachRecord.sfid+'" >Edit</button>'
              i= i+1;
              modifiedFoodChargeList.push(obj);
         })
@@ -1365,6 +1425,25 @@ router.get('/telephoneFoodCharge',verify,(request,response)=>{
     })
   });
   
+  router.get('/deleteTelephoneFood/:parentId',(request,response)=>{
+
+    var conveyanceId= request.params.parentId;
+  console.log('conveyanceId Id1111 ='+conveyanceId);
+
+      let deleteQuerry = 'DELETE FROM salesforce.Telephone_Fooding_Laundry_Expenses__c '+
+      'WHERE sfid = $1';
+    console.log('deleteQuerry  '+deleteQuerry);
+    pool
+    .query(deleteQuerry,[conveyanceId])
+    .then((deleteQuerry) => {     
+    console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+    response.send('Success');
+    })
+    .catch((deleteError) => {
+    console.log('deleteError'+deleteError.stack);
+    response.send('Error');
+    })
+  })
 
 /************************************* End telephoneFoodCharges ******************************************************************* */
 
@@ -1440,7 +1519,8 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
           obj.remarks=eachRecord.remarks__c;
           obj.createDdate = strDate;
           obj.date=dated.slice(0, 10);
-          obj.editAction = '<button href="#" class="btn btn-primary editMiscellanous" id="'+eachRecord.sfid+'" >Edit</button>'
+          obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
+        //  obj.editAction = '<button href="#" class="btn btn-primary editMiscellanous" id="'+eachRecord.sfid+'" >Edit</button>'
       
               i= i+1;
              modifiedList.push(obj);
@@ -1618,7 +1698,25 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
     
 });
  
+      router.get('/deletemiscellaneous/:parentId',(request,response)=>{
 
+        var conveyanceId= request.params.parentId;
+      console.log('conveyanceId Id1111 ='+conveyanceId);
+
+          let deleteQuerry = 'DELETE FROM salesforce.Miscellaneous_Expenses__c '+
+          'WHERE sfid = $1';
+        console.log('deleteQuerry  '+deleteQuerry);
+        pool
+        .query(deleteQuerry,[conveyanceId])
+        .then((deleteQuerry) => {     
+        console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+        response.send('Success');
+        })
+        .catch((deleteError) => {
+        console.log('deleteError'+deleteError.stack);
+        response.send('Error');
+        })
+      })
 
 /************************************* End Miscellaneous Charges ******************************************************************* */
 

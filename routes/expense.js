@@ -199,15 +199,18 @@ router.get('/expenseAllRecords',verify, async (request, response) => {
                 obj.conveyanceVoucherAmount = expenseQueryResult.rows[i].conveyance_amount__c;
                 obj.createdDate = strDate;
                 obj.print='<button    data-toggle="modal" data-target="#popupPrint" class="btn btn-primary printexp"   id="print'+expenseQueryResult.rows[i].sfid+'" >Print</button>';
-                if(expenseQueryResult.rows[i].isherokueditbuttondisabled__c)
-                  obj.editButton = '<button    data-toggle="modal" data-target="#popupEdit" class="btn btn-primary expIdEditMode"   id="edit'+expenseQueryResult.rows[i].sfid+'" >Edit</button>';
-                else
                   obj.editButton = '<button    data-toggle="modal" data-target="#popupEdit" class="btn btn-primary expIdEditMode"   id="edit'+expenseQueryResult.rows[i].sfid+'" >Edit</button>';
                
                   if(expenseQueryResult.rows[i].approval_status__c == 'Pending' || expenseQueryResult.rows[i].approval_status__c == 'Rejected')
-                  obj.approvalButton = '<button   class="btn btn-primary expIdApproval" disabled = "true" style="color:white;" id="'+expenseQueryResult.rows[i].sfid+'" >Approval</button>';
+                  {
+                    obj.editButton = '<button    data-toggle="modal" data-target="#popupEdit" class="btn btn-primary expIdEditMode" disabled = "true"  id="edit'+expenseQueryResult.rows[i].sfid+'" >Edit</button>';
+                    obj.approvalButton = '<button   class="btn btn-primary expIdApproval" disabled = "true" style="color:white;" id="'+expenseQueryResult.rows[i].sfid+'" >Approval</button>';
+                  }
                  else
-                 obj.approvalButton = '<button   class="btn btn-primary expIdApproval" style="color:white;" id="'+expenseQueryResult.rows[i].sfid+'" >Approval</button>';
+                 {
+                  obj.editButton = '<button    data-toggle="modal" data-target="#popupEdit" class="btn btn-primary expIdEditMode" id="edit'+expenseQueryResult.rows[i].sfid+'" >Edit</button>';
+                  obj.approvalButton = '<button   class="btn btn-primary expIdApproval" style="color:white;" id="'+expenseQueryResult.rows[i].sfid+'" >Approval</button>';
+                 }
                   expenseList.push(obj);
                 /* disabled="'+expenseQueryResult.rows[i].isherokueditbuttondisabled__c+'" */
               }
@@ -1181,6 +1184,7 @@ router.get('/getpettycashlist',verify,(request, response) => {
                 obj.natureOfExpense = eachRecord.nature_of_exp__c;
                 obj.billDate = strBillDate.split(',')[0];
                 obj.createDdate = strDate;
+                obj.deleteAction = '<button href="#" class="btn btn-primary deletePetty" id="'+eachRecord.sfid+'" >Delete</button>'
 
                 i= i+1;
                 modifiedPettyCashList.push(obj);
@@ -1270,7 +1274,7 @@ router.get('/getconveyancelist' ,verify,(request,response) => {
         obj.TravellingPurpose = eachRecord.purpose_of_travel__c;
         obj.createDdate = strDate;
         obj.modeOfTravel = eachRecord.mode_of_conveyance__c;
-        
+        obj.deleteAction = '<button href="#" class="btn btn-primary deleteButton" id="'+eachRecord.sfid+'" >Delete</button>'
 
         i= i+1;
         modifiedConveyanceList.push(obj);
@@ -1401,8 +1405,45 @@ router.get('/tourBillClaimActivityCode', verify ,(request, response) => {
         response.render('./expenses/expensePageRealted',{objUser,parentExpenseId:parentExpenseId}); 
 })
 
+    router.get('/deletepetty/:parentId',(request,response)=>{
 
+      var pettyCashId  = request.params.parentId;
+    console.log('pettyCashId Id1111 ='+pettyCashId);
 
+        let deleteQuerry = 'DELETE FROM salesforce.Petty_Cash_Expense__c '+
+        'WHERE sfid = $1';
+      console.log('deleteQuerry  '+deleteQuerry);
+      pool
+      .query(deleteQuerry,[pettyCashId])
+      .then((deleteQuerry) => {     
+      console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+      response.send('Success');
+      })
+      .catch((deleteError) => {
+      console.log('deleteError'+deleteError.stack);
+      response.send('Error');
+      })
+    })
+
+    router.get('/deleteConveyance/:parentId',(request,response)=>{
+
+      var conveyanceId  = request.params.parentId;
+    console.log('conveyanceId Id1111 ='+conveyanceId);
+
+        let deleteQuerry = 'DELETE FROM salesforce.Conveyance_Voucher__c '+
+        'WHERE sfid = $1';
+      console.log('deleteQuerry  '+deleteQuerry);
+      pool
+      .query(deleteQuerry,[conveyanceId])
+      .then((deleteQuerry) => {     
+      console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+      response.send('Success');
+      })
+      .catch((deleteError) => {
+      console.log('deleteError'+deleteError.stack);
+      response.send('Error');
+      })
+    })
 
 
 module.exports = router;

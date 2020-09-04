@@ -379,7 +379,7 @@ function chkFile(file1,id) {
     $.ajax({
     type: "POST",
     url: "/expense/uploadImage",    
-    cache: false,
+    cache: true,
     dataType:'json',
     processData: false,
     contentType: false,
@@ -393,6 +393,7 @@ function chkFile(file1,id) {
      }
   });
 }
+
 function cityAllowance(name,cnt)
 {
   $.get('/expense/tourBillClaim/fetchAllowence',{name : name}, function(response){
