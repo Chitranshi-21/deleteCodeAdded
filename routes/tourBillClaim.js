@@ -894,16 +894,17 @@ console.log(' activity_code '+activity_code );
            placeJourney: joi.string().required().label('Please select Place of Journey.'),
            fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
            fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
-           fromTimes:joi.time().required().label('Please select FROM(Departure Time from Residence) Time'),
+           fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
+        //   fromTimes:joi.time().required().label('Please select FROM(Departure Time from Residence) Time'),
            toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
            toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-           toTimes:joi.time().required().label('Please select TO (Arrival Time to Residence)Time'),
+           toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            actualAMTForBL:joi.number().required().label('Please enter Actual Boarding lodging Amount'),
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           })
 
-          result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],toTimes:toTime[i],actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
+          result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],toTimes:toTime,actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
         }
         else if(stayOption[i] == 'Own Stay')
         {
@@ -945,12 +946,19 @@ console.log(' activity_code '+activity_code );
             let toDateTime = toDate[i]+'T'+toTime[i]+':00';
             lstcharges.push(toDateTime[i]);
 
-            lstcharges.push(totalAllowances[i]);      
+         
+            if(totalAllowances != 0)
+            {
+              lstcharges.push(totalAllowances[i]);   
+            }
+            else{
+             var totalamt= 0;
+              lstcharges.push(totalamt);
+            }   
             lstcharges.push(dailyAllowances[i]);
 
             lstcharges.push(amtForBL[i]);
             lstcharges.push(actualAMTForBL[i]);
-         // lstcharges.push(policyamtForBL[i]);
             
             lstcharges.push(ownStayAmount[i]);
 
@@ -989,11 +997,11 @@ console.log(' activity_code '+activity_code );
           placeJourney: joi.string().required().label('Please select Place of Journey.'),
           fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
            fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
-           fromTimes:joi.time().required().label('Please select FROM(Departure Time from Residence) Time'),
+           fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
            toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
            toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-           toTimes:joi.time().required().label('Please select TO (Arrival Time to Residence)Time'),
+           toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            actualAMTForBL:joi.number().required().label('Please enter Actual Boarding lodging Amount'),
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           
@@ -1053,8 +1061,7 @@ console.log(' activity_code '+activity_code );
                  var amtForBL1= 0;
                   lstcharges.push(amtForBL1);
                 }
-               // lstcharges.push(policyamtForBL);
-
+              
                 lstcharges.push(ownStayAmount);
                 lstcharges.push(imgpath);
                 lstcharges.push(parentTourBillId);

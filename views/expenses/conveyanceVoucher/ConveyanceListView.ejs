@@ -179,7 +179,11 @@
                             {
                               let conveyanceRecord = response[0];
                               let htmlTable = '';
-                              let strCreatedDate = new Date(conveyanceRecord.createddate).toLocaleString();
+                            //  let strCreatedDate = new Date(conveyanceRecord.createddate).toLocaleString();
+                              let strCreatedDate = new Date(conveyanceRecord.createddate);
+                              strCreatedDate.setHours(strCreatedDate.getHours() + 5);
+                              strCreatedDate.setMinutes(strCreatedDate.getMinutes() + 30);
+                              let strDate = strCreatedDate.toLocaleString();
                               htmlTable += '<tr>';
                                   htmlTable += '<td><strong>Name</strong></td>';
                                   htmlTable += '<td>'+conveyanceRecord.conveyancename+'</td>';
@@ -212,7 +216,7 @@
                                 htmlTable += '<td><strong>Purpose of Travel</strong></td>';
                                 htmlTable += '<td>'+conveyanceRecord.purpose_of_travel__c+'</td>';
                                 htmlTable += '<td><strong>Create Date</strong></td>';
-                                htmlTable += '<td>'+strCreatedDate+'</td>';
+                                htmlTable += '<td>'+strDate+'</td>';
                               htmlTable += '</tr>';
                                htmlTable += '<tr>';
                               htmlTable += '<td><strong>View Image</strong></td>';

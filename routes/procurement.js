@@ -39,14 +39,6 @@ router.get('/assetDetails',verify,(request, response)=> {
                 let obj = {};
               obj.sequence = i+1;
              // obj.editbutton = '<button    data-toggle="modal" data-target="#assetRequisitionEditModal" class="btn btn-primary assetRequisitionEditModalButton"   id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
-             if(assetQueryResult.rows[i].isHerokuApprovalButtonDisabled__c)
-             {
-                obj.editbutton = '<button href="#" disabled="true" class="btn btn-primary assetRequisitionEditModal" id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
-             }
-             else
-             {
-                obj.editbutton = '<button href="#" class="btn btn-primary assetRequisitionEditModal" id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
-             }
               
               obj.name = '<a href="'+assetQueryResult.rows[i].sfid+'" data-toggle="modal" data-target="#popup" class="assetTag" id="name'+assetQueryResult.rows[i].sfid+'"  >'+assetQueryResult.rows[i].name+'</a>';
               obj.projectname = assetQueryResult.rows[i].projname;
@@ -55,7 +47,16 @@ router.get('/assetDetails',verify,(request, response)=> {
               obj.itamount = assetQueryResult.rows[i].procurement_it_total_amount__c;
               obj.nonitamount = assetQueryResult.rows[i].procurement_non_it_total_amount__c;
               obj.totalamount = assetQueryResult.rows[i].total_amount__c;
-              obj.approvalbutton = '<button href="#" class="btn btn-primary approvalpopup" id="'+assetQueryResult.rows[i].sfid+'" >Approval</button>'
+              if(assetQueryResult.rows[i].approval_status__c == 'Pending' || assetQueryResult.rows[i].approval_status__c == 'Rejected')
+              {
+                obj.approvalbutton = '<button href="#" class="btn btn-primary approvalpopup" disabled = "true" id="'+assetQueryResult.rows[i].sfid+'" >1st Stage Approval</button>'
+                obj.editbutton = '<button href="#" disabled="true" class="btn btn-primary assetRequisitionEditModal" id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
+            }
+             else
+             {
+                obj.approvalbutton = '<button href="#" class="btn btn-primary approvalpopup" id="'+assetQueryResult.rows[i].sfid+'" >1st Stage Approval</button>'
+                obj.editbutton = '<button href="#" class="btn btn-primary assetRequisitionEditModal" id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
+            }
               obj.accountsapprovalbutton = '<button href="#" class="btn btn-primary accountsapprovalpopup" id="'+assetQueryResult.rows[i].sfid+'" >Accounts Approval</button>'
               modifiedList.push(obj);
               }
@@ -530,6 +531,17 @@ router.post('/updateasset',(request,response)=>{
 
     var payPass='';
     var attchPass='';
+    var quant='';
+
+    if(receivedQuantity >0 || receivedQuantity == null || receivedQuantity == '')
+    {
+        quant = true;
+    }
+    else
+    {
+        quant = false;
+    }
+   
     if(paymentStatus=='Released'){
         if(status=='Closed' || status=='Open'){
             payPass='true';
@@ -570,11 +582,17 @@ router.post('/updateasset',(request,response)=>{
         if(attchPass=='true'){
             if(payPass=='true' || payPass=='false'){
                 console.log('@@@@@1111');
-                pool.query(updateQuerry,[assetsfid])
-                .then((queryResultUpdate)=>{
-                console.log('queryResultUpdate '+JSON.stringify(queryResultUpdate));
-                response.send('succesfully Update!');
-                }).catch((eroor)=>{console.log(JSON.stringify(eroor.stack))})   
+                if(quant == 'true'){
+                    pool.query(updateQuerry,[assetsfid])
+                    .then((queryResultUpdate)=>{
+                    console.log('queryResultUpdate '+JSON.stringify(queryResultUpdate));
+                    response.send('Successfully Updated!');
+                    }).catch((eroor)=>{console.log(JSON.stringify(eroor.stack))})   
+                }
+                else{
+                    response.send('Received Quantity(Goods) should not be negative.')
+                }
+               
             }
             else{
                 response.send('Choose Status Closed only When payment is Released !!!')
@@ -676,13 +694,15 @@ router.post('/nonItProducts', (request,response) => {
             state:joi.string().required().label('Please select State.'),
              district:joi.string().required().label('Please select District.'),
              itemsCategory:joi.string().required().label('Please select Item Category.'),
-             items:joi.string().required().label('Please fill Item'),
+             items:joi.string().invalid('None').required().label('Please fill Items'),
              vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
             itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
             quantity:joi.number().required().label('Please enter Quantity.'),
+            quanty:joi.number().min(0).label('The quantity cannot be negative.'),
             budget:joi.number().required().label('Please enter Budget.'),
+            budg:joi.number().min(0).label('The budget cannot be negative.'),
         })
-        let result=schema.validate({state,items,itemsCategory,district,vendor,itemSpecification,quantity,budget});
+        let result=schema.validate({state:state,items:items,itemsCategory:itemsCategory,district:district,vendor:vendor,itemSpecification:itemSpecification,quantity:quantity,quanty:quantity,budget:budget,budg:budget});
         console.log('validation hsh '+JSON.stringify(result.error));
         if(result.error){
             console.log('fd'+result.error);
@@ -728,14 +748,16 @@ router.post('/nonItProducts', (request,response) => {
                 state:joi.string().required().label('Please select State.'),
                 district:joi.string().required().label('Please select District.'),
                 itemsCategory:joi.string().required().label('Please select Item Category.'),
-                items:joi.string().required().label('Please fill Item'),
+                items:joi.string().invalid('None').required().label('Please fill Items'),
                 vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
                 itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
                 quantity:joi.number().required().label('Please enter Quantity.'),
+                quanty:joi.number().min(0).label('The quantity cannot be negative.'),
                 budget:joi.number().required().label('Please enter Budget.'),
+                budg:joi.number().min(0).label('The budget cannot be negative.'),
     
             })
-            let result=schema.validate({state:state[i],items:items[i],itemsCategory:itemsCategory[i],district:district[i],vendor:vendor[i],itemSpecification:itemSpecification[i],quantity:quantity[i],budget:budget[i]});
+            let result=schema.validate({state:state[i],items:items[i],itemsCategory:itemsCategory[i],district:district[i],vendor:vendor[i],itemSpecification:itemSpecification[i],quantity:quantity[i],quanty:quantity[i],budget:budget[i],budg:budget[i]});
             console.log('validation REsult mul'+JSON.stringify(result.error));
             if(result.error){
                 console.log('Validation error'+result.error);
@@ -838,13 +860,15 @@ router.post('/itProducts', (request,response) => {
              state:joi.string().required().label('Please select State.'),
              district:joi.string().required().label('Please select District.'),
              itemCategory:joi.string().required().label('Please select Item Category.'),
-             items:joi.string().required().label('Please fill Item'),
+             items:joi.string().invalid('None').required().label('Please fill Items'),
              vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
              itemSpecification:joi.string().required().label('Please fill Item Specification.'),
              quantity:joi.number().required().label('Please enter Quantity.'),
+             quanty:joi.number().min(0).label('The quantity cannot be negative.'),
              budget:joi.number().required().label('Please enter Budget.'),
-        })
-        let result=schema.validate({state,district,itemCategory,items,vendor,itemSpecification,quantity,budget});
+             budg:joi.number().min(0).label('The budget cannot be negative.'),
+            })
+        let result=schema.validate({state:state,district:district,itemCategory:itemCategory,items:items,vendor:vendor,itemSpecification:itemSpecification,quantity:quantity,quanty:quantity,budget:budget,budg:budget});
         console.log('validation REsult '+JSON.stringify(result.error));
         if(result.error){
             console.log('fd'+result.error);
@@ -886,13 +910,15 @@ router.post('/itProducts', (request,response) => {
             const schema = joi.object({
                 state:joi.string().required().label('Please select State.'),
                 district:joi.string().required().label('Please select District.'),
-                items:joi.string().required().label('Please fill Item'),
+                items:joi.string().invalid('None').required().label('Please fill Items'),
                 vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
                 itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
                 quantity:joi.number().required().label('Please enter Quantity.'),
+                quanty:joi.number().min(0).label('The quantity cannot be negative.'),
                 budget:joi.number().required().label('Please enter Budget.'),
+                budg:joi.number().min(0).label('The budget cannot be negative.'),
             })
-            let result=schema.validate({state:state[i],items:items[i],district:district[i],vendor:vendor[i],itemSpecification:itemSpecification[i],quantity:quantity[i],budget:budget[i]});
+            let result=schema.validate({state:state[i],items:items[i],district:district[i],vendor:vendor[i],itemSpecification:itemSpecification[i],quantity:quantity[i],quanty:quantity[i],budget:budget[i],budg:budget[i]});
             console.log('validation REsult '+JSON.stringify(result.error));
             if(result.error){
                 console.log('fd'+result.error);

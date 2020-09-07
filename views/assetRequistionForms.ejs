@@ -217,7 +217,7 @@
   <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
   <div class="modal-header">
-  <h5 class="modal-title">Asset Requisition Form Edit</h5>
+  <h5 class="modal-title">Edit: Asset Requisition Form </h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
   <span aria-hidden="true">&times;</span>
   </button>
@@ -309,7 +309,7 @@
      
      <div class="col-md-6">
          <label for="deliveryCost">Delivery Cost(transport cost,etc)</label>
-         <input type="text" class="form-control" id="deliveryCost" value="" name="deliveryCost" >
+         <input type="number" class="form-control" id="deliveryCost" value="" name="deliveryCost" >
        </div>
  
      <div class="col-md-6">
@@ -432,7 +432,7 @@
   
   <div class="col-md-6">
   <label for="receivedQuantity">Received Quantity(Goods)</label>
-  <input type="text" class="form-control" id="receivedQuantity" value="" name="receivedQuantity" >
+  <input type="number" class="form-control" id="receivedQuantity" value="" name="receivedQuantity" >
   </div>
   </div> 
   </div>
@@ -976,7 +976,7 @@
       assetDetailsTableRows += '<td>'+assetDetailsRecord.delivery_terms_delivery_time__c.split('T')[0]+'</td>';
             }
          else{
-      assetDetailsTableRows +='<td></td>';
+      assetDetailsTableRows +='<td>'+assetDetailsRecord.delivery_terms_delivery_time__c+'</td>';
             }
       assetDetailsTableRows += '<td><strong>Delivery cost(transport cost,etc)<strong></td>';
       assetDetailsTableRows += '<td>'+assetDetailsRecord.delivery_cost_incl__c+'</td>';
@@ -1364,8 +1364,8 @@ $('#editassetForm').on('click',function(event){
  })
  .fail((jqXHR, status, error) => {
  console.log('jqXHR '+JSON.stringify(jqXHR));
- if(jqXHR.responseText=='succesfully Update!'){
- alert('succesfully Update!');
+ if(jqXHR.responseText=='Successfully Updated!'){
+ alert('Successfully Updated!');
  $('#assetRequisitionEditModal').modal('hide');
  }
  else{
@@ -1507,7 +1507,7 @@ function accountsApprovalFunctionality(){
       .fail((jqXHR, status, error) => {
       console.log('jqXHR '+JSON.stringify(jqXHR));
       let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-      '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
       '<span aria-hidden="true">&times;</span>'+
       '</button>'+
       '</div>';
