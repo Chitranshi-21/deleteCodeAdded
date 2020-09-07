@@ -350,8 +350,9 @@ router.post('/createExpense',(request, response) => {
    const schema=joi.object({
     taskname:joi.string().required().label('Please Fill Expense Name'),
     proj:joi.string().required().label('Please choose Project'),
+    department:joi.string().required().label('Please choose Department'),
       })
-let result=schema.validate({taskname,proj});
+let result=schema.validate({taskname,proj,department});
 if(result.error){
     console.log('fd'+result.error);
     response.send(result.error.details[0].context.label);    
@@ -766,7 +767,7 @@ router.post('/savePettyCashForm', (request, response) => {
   console.log('Body Result '+JSON.stringify(request.body));  
   console.log('Now For Each   lllllllllLoop !');
   console.log('Hello Work done !');
-  const{bill_no,bill_date,projectTask,nature_exp,amount,imgpath}=request.body;
+  const{bill_no,bill_date,projectTask,desc,nature_exp,amount,imgpath}=request.body;
 
     let numberOfRows,lstPettyCash = [];
     if(typeof(request.body.bill_no) == 'object')
@@ -775,15 +776,17 @@ router.post('/savePettyCashForm', (request, response) => {
           for(let i=0; i< numberOfRows ; i++)
           {
             const schema = joi.object({
-              bill_no:joi.string().required().label('Please enter Bill NO'),
+              billnum:joi.string().required().label('Please enter Bill NO'),
             //  bill_dt:joi.date().required().label('Please Fill Bill Date.'),
               bill_date:joi.date().required().label('Please enter Bill Date'),
+              bill_dated:joi.date().max('now').label('Bill Date must be less than today'),
               projectTask:joi.string().required().label('Please select Activity Code'),
+              desc: joi.string().required().label('Please enter Description '),
               nature_exp : joi.string().required().label('Please enter Nature of Expense '),
               amount:joi.number().required().label('Please enter Amount'),
               imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachments'),
              })
-             let result = schema.validate({bill_no:request.body.bill_no[i],amount:request.body.amount[i],bill_date:request.body.bill_date[i],projectTask : request.body.projectTask[i],nature_exp: request.body.nature_exp[i] , imgpath:request.body.imgpath[i]})
+             let result = schema.validate({billnum:request.body.bill_no[i],amount:request.body.amount[i],bill_date:request.body.bill_date[i],bill_dated:request.body.bill_date[i],projectTask : request.body.projectTask[i],desc:request.body.desc[i], nature_exp: request.body.nature_exp[i] , imgpath:request.body.imgpath[i]})
              if(result.error)
              {
                console.log('ejssssss VAlidation'+JSON.stringify(result.error));
@@ -815,16 +818,16 @@ router.post('/savePettyCashForm', (request, response) => {
     else
     { 
       const schema = joi.object({
-     //   bill_no:joi.string().required().label('Please provode Bill NO'),
-        bill_no:joi.string().required().label('Please enter Bill NO'),
+        billnum:joi.string().required().label('Please enter Bill NO'),
         bill_date:joi.date().required().label('Please enter Bill Date'),
-        bill_date:joi.date().max('now').label('Bill Date must be less than today'),
+        bill_dated:joi.date().max('now').label('Bill Date must be less than today'),
         projectTask:joi.string().required().label('Please select Activity Code'),
+        desc: joi.string().required().label('Please enter Description '),
         nature_exp : joi.string().required().label('Please enter Nature of Expense '),
         amount:joi.number().required().label('Please enter Amount'),
         imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachments'),
        })
-       let result = schema.validate({bill_no:request.body.bill_no,bill_date:request.body.bill_date, projectTask:request.body.projectTask,nature_exp: request.body.nature_exp,amount:request.body.amount,imgpath:request.body.imgpath})
+       let result = schema.validate({billnum:request.body.bill_no,bill_date:request.body.bill_date, bill_dated:request.body.bill_date,projectTask:request.body.projectTask,desc:request.body.desc,nature_exp: request.body.nature_exp,amount:request.body.amount,imgpath:request.body.imgpath})
        if(result.error)
        {
          console.log('ejssssss VAlidation'+JSON.stringify(result.error));
@@ -938,17 +941,18 @@ router.post('/conveyanceform',(request,response) => {
           const schema=joi.object({
             
             fromBlank:joi.date().required().label('Please enter From date'),
+            fromdate:joi.date().max('now').label('From date must be less than or equals to today'),
             toBlank:joi.date().required().label('Please enter To date'),
-            to:joi.date().max('now').label('To date must be less than today'),
+            to:joi.date().max('now').label('To date must be less than or equals to today'),
             from:joi.date().less(joi.ref('to')).label('From date must be less than To date'),
             projectTask: joi.string().required().label('Please select Activity Code'),
             purposeoftravel:joi.string().required().label('Please enter Purpose of Travel'),
             modeofconveyance: joi.string().required().label('Please enter mode of conveyance'),
-            kmtravelled:joi.number().required().label('Please enter Km'),
+            kmtravelled:joi.number().required().label('Please enter Km.Travelled'),
             amount:joi.number().required().label('Please enter Amount'), 
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment '),
            })
-           let result=schema.validate({toBlank:body.to[i] ,to:body.to[i],fromBlank:body.from[i], from:body.from[i], projectTask: body.projectTask[i], purposeoftravel:body.purposeoftravel[i],modeofconveyance: body.modeofconveyance[i], amount:body.amount[i],kmtravelled:body.kmtravelled[i],imgpath:body.imgpath[i]});
+           let result=schema.validate({toBlank:body.to[i] ,fromdate:body.from[i] ,to:body.to[i],fromBlank:body.from[i], from:body.from[i], projectTask: body.projectTask[i], purposeoftravel:body.purposeoftravel[i],modeofconveyance: body.modeofconveyance[i], amount:body.amount[i],kmtravelled:body.kmtravelled[i],imgpath:body.imgpath[i]});
            console.log('sdjabsdjb'+JSON.stringify(result));
            if(result.error)
            {
@@ -980,18 +984,19 @@ router.post('/conveyanceform',(request,response) => {
           const schema=joi.object({
             
             fromBlank:joi.date().required().label('Please enter From date'),
+            fromdate:joi.date().max('now').label('From date must be less than or equals to today'),
             toBlank:joi.date().required().label('Please enter To date'),
-            to:joi.date().max('now').label('To date must be less than today'),
+            to:joi.date().max('now').label('To date must be less than or equals to today'),
             from:joi.date().less(joi.ref('to')).label('From date must be less than To date'),
             projectTask: joi.string().required().label('Please select Activity Code'),
             purposeoftravel:joi.string().required().label('Please enter Purpose of Travel'),
             modeofconveyance: joi.string().required().label('Please enter mode of conveyance'),
-            kmtravelled:joi.number().required().label('Please enter Km'),
+            kmtravelled:joi.number().required().label('Please enter Km.Travelled'),
             amount:joi.number().required().label('Please enter Amount'), 
             
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment '),
            })
-           let result=schema.validate({toBlank:body.to,to:body.to,fromBlank:body.from, from:body.from,projectTask:body.projectTask, purposeoftravel:body.purposeoftravel,modeofconveyance:body.modeofconveyance,amount:body.amount,kmtravelled:body.kmtravelled,imgpath:body.imgpath});
+           let result=schema.validate({toBlank:body.to,to:body.to,fromBlank:body.from,fromdate:body.from, from:body.from,projectTask:body.projectTask, purposeoftravel:body.purposeoftravel,modeofconveyance:body.modeofconveyance,amount:body.amount,kmtravelled:body.kmtravelled,imgpath:body.imgpath});
            console.log('sdjabsdjb'+JSON.stringify(result));
            if(result.error)
            {
@@ -1417,7 +1422,7 @@ router.get('/tourBillClaimActivityCode', verify ,(request, response) => {
       .query(deleteQuerry,[pettyCashId])
       .then((deleteQuerry) => {     
       console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-      response.send('Success');
+      response.send('Petty Cash Deleted Succesfullly !');
       })
       .catch((deleteError) => {
       console.log('deleteError'+deleteError.stack);

@@ -7,7 +7,7 @@
 
 <p1 id="tourbillId"><%= tourbillId %></p1>
 
-<h3 style="text-align: center; margin-top: 20px;">Air/Bus Detail</h3>
+<h3 style="text-align: center; margin-top: 20px;">Air/Rail/Bus Detail</h3>
 
 <div class="container">
     <div class="row mt-5 mb-3 align-items-center">
@@ -191,7 +191,7 @@
             sequence : 'Sequence',
             deleteAction: 'Action',
             //editAction:'Action',
-            name: 'Air/Bus/Train Tour Name ',
+            name: 'Air/Rail/Bus Tour Name ',
             arrival : 'Arrival Station',
             departure:'Departure Station',
             amount : 'Amount',
@@ -480,7 +480,7 @@
           // let parentId = document.getElementById('parentId').innerHTML;
             let parentId = this.id;
           console.log('airrailbus Id  '+parentId);
-            alert('Are you sure to Delete !');
+            alert('Are you sure to  Delete this record !');
         
       $.ajax({
       url : '/expense/tourBillClaim/deleteAirRailBus/'+parentId,

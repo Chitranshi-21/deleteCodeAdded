@@ -13,10 +13,12 @@
         <div class="col-md-10 m-auto">
               <div class="col-md-5">
                   <a class="btn btn-primary btn-md bg-gray" href="/expense/tourBillClaim/getAirBusListView?tourBillClaimId=<%= parentTourBillId %>" >Go To Air/Rail/Bus</a>
-              </div>
+                  <a class="btn btn-primary btn-md bg-gray" href="/expense/tourBillClaim/tourBillViewRelated/<%= parentTourBillId %>"  >Go To TourBill</a>
+                  <a class="btn btn-primary btn-md bg-gray" href="/expense/tourBillClaim/expenseLanding/<%= parentTourBillId %>"  >Go To Expense</a>
+                </div>
             </br>
    <p id="tourbillId"><%= parentTourBillId %></p>
-   <h4 align="center">Tour Bill Air/Rail/Bus Fare</h4>
+   <h4 align="center">Air/Rail/Bus Fare</h4>
    <br />
 
    <div class="">
@@ -28,7 +30,7 @@
      <table class="table table-bordered"  id="item_table">    
       <tr>
        <th>SR. NO</th>
-       <th>ARRIAVL dATE</th>
+       <th>ARRIVAL DATE</th>
        <th>DEPARTURE DATE</th>
        <th>ACTIVITY CODE</th>
        <th>ARRIVAL STATION</th>

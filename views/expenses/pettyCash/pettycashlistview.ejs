@@ -32,11 +32,14 @@
                         </div>
                     </div>
              </div>
-
+            </br>
+            <div class="">
+              <% include ../../partials/messages %>
+              <div id="errorMessages"></div>
              <div id="pettyCashExpenseTable" style="overflow-x:auto;">
 
              </div>
-
+            </div>
 </div>
 
 
@@ -180,7 +183,11 @@
                               createdDate.setHours(createdDate.getHours() + 5);
                               createdDate.setMinutes( createdDate.getMinutes() + 30 ); */
                               let strBillDate = new Date(pettyCashRecord.bill_date__c).toLocaleString();
-                              let strCreatedDate = new Date(pettyCashRecord.createddate).toLocaleString();
+                            //  let strCreatedDate = new Date(pettyCashRecord.createddate).toLocaleString();
+                              let strCreatedDate = new Date(pettyCashRecord.createddate);
+                              strCreatedDate.setHours(strCreatedDate.getHours() + 5);
+                              strCreatedDate.setMinutes(strCreatedDate.getMinutes() + 30);
+                              let strDate = strCreatedDate.toLocaleString();
                               htmlTable += '<tr>';
                                   htmlTable += '<td><strong>Name</strong></td>';
                                   htmlTable += '<td>'+pettyCashRecord.pettycashname+'</td>';
@@ -212,7 +219,7 @@
 
                               htmlTable += '<tr>';
                                   htmlTable += '<td><strong>Created Date</strong></td>';
-                                  htmlTable += '<td>'+strCreatedDate+'</td>';
+                                  htmlTable += '<td>'+strDate+'</td>';
                              
                                 htmlTable += '<td><strong>View Image</strong></td>';
                                 if(pettyCashRecord.heroku_image_url__c != null && pettyCashRecord.heroku_image_url__c != '')
@@ -250,21 +257,60 @@
           // let parentId = document.getElementById('parentId').innerHTML;
             let parentId = this.id;
           console.log('pettyCashId  '+parentId);
-            alert('Are you sure to Delete !');
+            alert('Are you sure to Delete this record !');
         
       $.ajax({
       url : '/expense/deletepetty/'+parentId,
       type:'get',
-
       dataType: 'json',
 
           })
           .done((response) => {
                 console.log('resonse   :'+response);
                 alert("Petty Cash Deleted Succesfullly !");
+                if(response == 'Petty Cash Deleted Succesfullly !')
+       {
+       
+        let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ data+
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#errorMessages').empty();
+          $('#errorMessages').append(errorHtml);
+       
+       }
+       else
+       {
+        let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ data+
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#errorMessages').empty();
+          $('#errorMessages').append(errorHtml);
+        }
           })
           .fail((jqXHR, status, error) => {
                 console.log('jqXHR  '+JSON.stringify(jqXHR));
+                $.ajax({
+            url : '/expense/getpettycashlist',
+            type:'get',
+            data : {
+                expenseId : expenseId
+            },
+            dataType: 'json'
+       })
+       .done((resp) => {
+           console.log('response  : '+JSON.stringify(resp));
+           table.setData(resp, columns);
+           anchorClickFunctionalities();
+          
+        })
+      .fail((jqXHR, status, error) =>{
+          console.log('jqXHR  : '+JSON.stringify(jqXHR));
+          console.log('error  : '+error);
+        })
           }) 
           })
       }

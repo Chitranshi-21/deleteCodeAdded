@@ -121,9 +121,10 @@
             <div class="row mt-6 mb-3 align-items-center">
                       <div class="col-md-2">
                           <button class="btn btn-primary btn-md bg-gray"  id="createNewExpenseButton">Create New</button>   
+                          <i class="fa fa-refresh" aria-hidden="true" id="refresh"  style="font-size:34px; margin-left: 7px; margin-top: 40px; color: #555;"></i> 
                     </div>
-                    <div class="col-md-4">
-                      <i class="fa fa-refresh" aria-hidden="true" id="refresh"  style="font-size:34px; margin-left: 10px; margin-top: 30px; color: #555;"></i> 
+                    <div class="col-md-2">
+                    
                   </div>
                       <div class="col-md-2">
                         <input type="text" class="form-control" placeholder="Search" id="searchField" style="margin-top: 5px;">
@@ -311,7 +312,7 @@
                   <div class="col-md-6">
                     <label for="proj">Project Name</label>
                     <select class="custom-select custom-select-sm form-control" id="proj" required="true" name="proj">
-                        <option selected value="" ></option>
+                        <option value="">None</option>
                     </select>
                   </div>
                 </div>
@@ -321,7 +322,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <label for="validationTooltip03">Department</label>
-                    <input type="text" class="form-control" id="validationTooltip03" placeholder="Deaprtment"  name="department" >
+                    <input type="text" class="form-control" id="validationTooltip03" placeholder="Department"  name="department" >
                   </div>
                   <div class="col-md-6">
                     <label for="validationTooltip06">Employee Category / Band</label>
@@ -735,7 +736,7 @@
       console.log('text  '+text + '  err '+err);
       console.log('jqXHR '+JSON.stringify(jqXHR));
       let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-      '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+      '<button type="button" class="close" data-dismiss="alert-danger" aria-label="Close">'+
       '<span aria-hidden="true">&times;</span>'+
       '</button>'+
       '</div>';
@@ -1069,7 +1070,7 @@
                       '</div>'+
                     '</div>'+
                     
-                    '<div class="form-group">'+
+                 /*   '<div class="form-group">'+
                       '<div class="row">'+
                         '<div class="col-md-6">'+
                           '<label for="validationTooltip07">Approval Status</label>'+
@@ -1082,7 +1083,7 @@
                           
                         '</div>'+
                       '</div>'+  
-                  '</div>'+
+                  '</div>'+*/
                   '<input type="hidden"  value="'+expenseDetails.sfid+'"  name="expenseId">' +
                   '<div class="modal-footer">'+
                       '<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>'+
@@ -1616,17 +1617,26 @@ $('.printexp').on('click', function(event){
               .done((response) => {
                   console.log('Expense Creation Response : '+JSON.stringify(response));
                   
-                  
               })
               .fail((jqXHR, status, error)=> {
                 console.log('jqXHR '+JSON.stringify(jqXHR));
-      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-      '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Chitranshi'+ jqXHR.responseText+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
       '<span aria-hidden="true">&times;</span>'+
       '</button>'+
       '</div>';
       $('#errorMessages').empty();
       $('#errorMessages').append(errorHtml); 
+      if(jqXHR.responseText=='Successfully Inserted'){
+               $('#taskForm')[0].reset()
+               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ response+
+            '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#errorMessages').empty();
+          $('#errorMessages').append(errorHtml);
+             }
               })
           })
 

@@ -7,7 +7,7 @@
 <script src="/scripts/table-sortable.js" ></script>
 
 
-<center><h3 style="text-align: center; margin-top: 20px;">Conveyance Vocher</h3></center>     
+<center><h3 style="text-align: center; margin-top: 20px;"> Conveyance Voucher</h3></center>     
 
 <p id="expenseId"><%= expenseId %></p>
 <div class="responsive">
@@ -253,7 +253,7 @@ $('.deleteButton').on('click',function(event){
     // let parentId = document.getElementById('parentId').innerHTML;
       let parentId = this.id;
     console.log('pettyCashId  '+parentId);
-      alert('Are you sure to Delete !');
+      alert('Are you sure to  Delete this record !');
   
 $.ajax({
 url : '/expense/deleteConveyance/'+parentId,

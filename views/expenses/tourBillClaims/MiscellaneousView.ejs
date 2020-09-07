@@ -422,7 +422,7 @@ $('.deleteButton').on('click',function(event){
     // let parentId = document.getElementById('parentId').innerHTML;
       let parentId = this.id;
     console.log('airrailbus Id  '+parentId);
-      alert('Are you sure to Delete !');
+      alert('Are you sure to Delete this record !');
   
       $.ajax({
       url : '/expense/tourBillClaim/deletemiscellaneous/'+parentId,

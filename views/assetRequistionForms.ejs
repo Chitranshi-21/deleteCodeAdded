@@ -1514,7 +1514,8 @@ function accountsApprovalFunctionality(){
       $('#errorMessages').empty();
       $('#errorMessages').append(errorHtml); 
       if(jqXHR.responseText=='Successfully Inserted'){
-                document.getElementById("assetRequisitionForm").reset();
+               $('#assetRequisitionForm')[0].reset()
+               // document.getElementById("assetRequisitionForm").reset();
               }
       }) 
       })
