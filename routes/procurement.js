@@ -1677,6 +1677,8 @@ router.get('/getItemList',(request,response)=>{
 router.post('/sendProcurementApproval',(request, response) => {
     let body = request.body;
     console.log('body  : '+JSON.stringify(body));
+    let comment = body.comment;
+    console.log('comment'+comment);
 
   /*  let updateProcurementQuery = 'UPDATE salesforce.Asset_Requisition_Form__c SET '+  
     'isSentForApprovalFromHeroku__c = true , '+
@@ -1691,8 +1693,16 @@ router.post('/sendProcurementApproval',(request, response) => {
     .catch((requisitionQueryError) =>{
         response.send('Error occured while sending approval !');
     })  */
+    const schema=joi.object({
+        comment:joi.string().required().label('Please Fill Comment'),
+    })
 
-
+   let result=schema.validate({comment});
+   if(result.error){
+    console.log('fd'+result.error);
+    response.send(result.error.details[0].context.label);    
+     }
+     else{
     pool
     .query('UPDATE salesforce.Asset_Requisition_Form__c SET isSentForApprovalFromHeroku__c = $1 ,Heroku_Approval_Comment__c =$2, isHerokuApprovalButtonDisabled__c = $3 WHERE sfid= $4;',[true, body.comment,true, body.assetRequisitionFormId])
     .then((requisitionQueryResult) =>{
@@ -1703,11 +1713,14 @@ router.post('/sendProcurementApproval',(request, response) => {
         console.log('requisitionQueryError   '+requisitionQueryError);
         response.send('Error occured while sending approval !');
     })  
+       }
 });
 
 router.post('/sendProcurementAccountsApproval',(request, response) => {
     let body = request.body;
     console.log('body  : '+JSON.stringify(body));
+    let comment = body.comment;
+    console.log('comment'+comment);
     let selectqry ='SELECT asset.id, asset.sfid as sfid,asset.name as name ,asset.Activity_Code__c, asset.GST__c,asset.Requested_Closure_Plan_Date__c,asset.Requested_Closure_Actual_Date__c,asset.Project_Department__c, '+
     'asset.Manager_Approval__c,asset.Management_Approval__c,asset.Procurement_Committee_Approval__c,asset.Chairperson_Approval__c,asset.Committee_Approved_Counts__c,'+
     'asset.Comittee_Rejected_Count__c,asset.Procurement_Committee_Status__c,asset.Accounts_Approval__c,asset.Procurement_Head_Approval__c,asset.Approval_Status__c,'+
@@ -1727,7 +1740,7 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
           if((eachRequisitionForm.manager_approval__c == null) &&
               (eachRequisitionForm.procurement_head_approval__c == null) &&
               (eachRequisitionForm.procurement_committee_approval__c == null) &&
-              (eachRequisitionForm.asset.procurement_comt_approval_for_fortnight__c == null)  &&
+              (eachRequisitionForm.procurement_comt_approval_for_fortnight__c == null)  &&
               (eachRequisitionForm.management_approval__c == null)  &&
               (eachRequisitionForm.chairperson_approval__c == null) &&
               (eachRequisitionForm.management_approval_less_than_3_quotes__c == null ) &&
@@ -1740,7 +1753,7 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
           else if((eachRequisitionForm.manager_approval__c == 'Pending') ||
           ( eachRequisitionForm.procurement_head_approval__c == 'Pending') ||
           ( eachRequisitionForm.procurement_committee_approval__c == 'Pending') ||
-          ( eachRequisitionForm.asset.procurement_comt_approval_for_fortnight__c == 'Pending') ||
+          ( eachRequisitionForm.procurement_comt_approval_for_fortnight__c == 'Pending') ||
           ( eachRequisitionForm.management_approval__c == 'Pending') ||
           ( eachRequisitionForm.chairperson_approval__c == 'Pending') ||
           ( eachRequisitionForm.management_approval_less_than_3_quotes__c == 'Pending') ||
@@ -1753,6 +1766,17 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
           }
           else{
               console.log('READY FOR SEND Accout APPROVAL');
+              const schema=joi.object({
+                comment:joi.string().required().label('Please Fill Comment'),
+            })
+        
+           let result=schema.validate({comment});
+           if(result.error){
+            console.log('fd'+result.error);
+            response.send(result.error.details[0].context.label);    
+             }
+             else{
+
               pool
               .query('UPDATE salesforce.Asset_Requisition_Form__c SET isSentForApprovalFromHeroku__c = $1 ,Heroku_Accounts_Approval_Comment__c =$2 WHERE sfid= $3;',[true, body.comment, body.assetRequisitionFormId])
               .then((requisitionQueryResult) =>{
@@ -1764,6 +1788,7 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
                   response.send(error);
             })
           }
+        }
       })
 
   /*  pool

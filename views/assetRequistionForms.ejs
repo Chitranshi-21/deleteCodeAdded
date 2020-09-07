@@ -484,6 +484,8 @@
   </button>
   </div>
   <div class="modal-body">
+    <div class="">
+      <div id="errorMessages"></div>
   <form name="approval" id="approvalpopup">
   <div class="form-group">
   <label for="commentTextarea">Comment</label>
@@ -501,6 +503,7 @@
   <div class="modal-footer">
   <button type="button" class="btn btn-primary" id="submitForApproval" >Submit</button>
   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+  </div>
   </div>
   </div>
   </div>
@@ -805,15 +808,29 @@
       let assetRequisitionFormId = this.id;
       $('#approvalCommentModal').modal('show');
       $('#submitForApproval').on('click', function(e){
+
       e.stopImmediatePropagation();
       e.stopPropagation();
       let comment = document.getElementById('commentTextarea').value;
      // alert('comment : '+comment);
       $.post('/procurement/sendProcurementApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
     //  alert(response);
-      $('#approvalCommentModal').modal('hide');
+    console.log('resonse :'+JSON.stringify(response));
+    //  $('#approvalCommentModal').modal('hide');
       }).fail(function(jqXHR, status, error){
-      
+      console.log('jqXHR '+JSON.stringify(jqXHR));
+      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+      '<span aria-hidden="true">&times;</span>'+
+      '</button>'+
+      '</div>';
+      $('#errorMessages').empty();
+      $('#errorMessages').append(errorHtml); 
+      if(jqXHR.responseText=='Approval Sent Successfully !'){
+               $('#approvalCommentModal')[0].reset()
+               // document.getElementById("assetRequisitionForm").reset();
+              }
+
       //$('#approvalCommentModal').modal('hide');
       })
       });
@@ -830,10 +847,24 @@
       //alert('comment : '+comment);
       $.post('/procurement/sendProcurementAccountsApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
     //  alert(response);
-      $('#approvalCommentModal').modal('hide');
+      //to hide pop up below code line
+     // $('#approvalCommentModal').modal('hide');
       })
       .fail(function(jqXHR, status, error){
       //$('#approvalCommentModal').modal('hide');
+      console.log('jqXHR '+JSON.stringify(jqXHR));
+      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+      '<span aria-hidden="true">&times;</span>'+
+      '</button>'+
+      '</div>';
+      $('#errorMessages').empty();
+      $('#errorMessages').append(errorHtml); 
+      if(jqXHR.responseText=='Approval Sent Successfully !'){
+               $('#approvalCommentModal')[0].reset()
+               // document.getElementById("assetRequisitionForm").reset();
+              }
+
       })
       })
       })
