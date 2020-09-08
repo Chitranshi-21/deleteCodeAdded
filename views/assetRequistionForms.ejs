@@ -485,7 +485,7 @@
   </div>
   <div class="modal-body">
     <div class="">
-      <div id="errorMessages"></div>
+      <div id="approvalerrorMessages"></div>
   <form name="approval" id="approvalpopup">
   <div class="form-group">
   <label for="commentTextarea">Comment</label>
@@ -497,19 +497,20 @@
   <input type="hidden" class="form-control" value="" id="expenseId" name="expenseId" required>
   </div>
   </div>
+  </div>
   
-  </div>
-  </div>
   <div class="modal-footer">
   <button type="button" class="btn btn-primary" id="submitForApproval" >Submit</button>
   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
   </div>
-  </div>
-  </div>
-  </div>
+ 
+  
 </form>
+</div>
+</div>
+</div>
   </div> 
-
+</div>
 
 <!--Approval Pop up end-->
 
@@ -525,6 +526,8 @@
   </button>
   </div>
   <div class="modal-body">
+    <div class="">
+      <div id="accApprovalerrorMessages"></div>
   <form name="accountsapproval" id="accountsapprovalpopup">
   <div class="form-group">
   <label for="commentTextarea">Comment</label>
@@ -535,7 +538,6 @@
   <div class="col-md-6">
   <input type="hidden" class="form-control" value="" id="expenseId" name="expenseId" required>
   </div>
-  </div>
   
   </div>
   </div>
@@ -543,10 +545,13 @@
   <button type="button" class="btn btn-primary" id="submitForAccApproval" >Submit</button>
   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
   </div>
-  </div>
-  </div>
+ 
 </form>
+</div>
+</div>
+</div>
   </div> 
+</div>
 
 
 <!--Accounts Approval Pop up end-->
@@ -819,17 +824,6 @@
     //  $('#approvalCommentModal').modal('hide');
       }).fail(function(jqXHR, status, error){
       console.log('jqXHR '+JSON.stringify(jqXHR));
-      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-      '<span aria-hidden="true">&times;</span>'+
-      '</button>'+
-      '</div>';
-      $('#errorMessages').empty();
-      $('#errorMessages').append(errorHtml); 
-      if(jqXHR.responseText=='Approval Sent Successfully !'){
-               $('#approvalCommentModal')[0].reset()
-               // document.getElementById("assetRequisitionForm").reset();
-              }
 
       //$('#approvalCommentModal').modal('hide');
       })
@@ -851,19 +845,8 @@
      // $('#approvalCommentModal').modal('hide');
       })
       .fail(function(jqXHR, status, error){
-      //$('#approvalCommentModal').modal('hide');
+     
       console.log('jqXHR '+JSON.stringify(jqXHR));
-      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-      '<span aria-hidden="true">&times;</span>'+
-      '</button>'+
-      '</div>';
-      $('#errorMessages').empty();
-      $('#errorMessages').append(errorHtml); 
-      if(jqXHR.responseText=='Approval Sent Successfully !'){
-               $('#approvalCommentModal')[0].reset()
-               // document.getElementById("assetRequisitionForm").reset();
-              }
 
       })
       })
@@ -1411,20 +1394,43 @@ $('#editassetForm').on('click',function(event){
 //approval
 function approvalFunctionality(){
 $('.approvalpopup').on('click',function(event){
- //alert('Hello'+this.id);
- event.stopImmediatePropagation();
- event.stopPropagation();
+ 
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
  let assetRequisitionFormId = this.id;
  $('#approvalCommentModal').modal('show');
  $('#submitForApproval').on('click', function(e){
- e.stopImmediatePropagation();
+
+  e.stopImmediatePropagation();
  e.stopPropagation();
  let comment = document.getElementById('commentTextarea').value;
-// alert('comment : '+comment);
+ 
  $.post('/procurement/sendProcurementApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
-// alert(response);
- $('#approvalCommentModal').modal('hide');
+
+  console.log('jqxhrjjkj'+JSON.stringify(response))
+ let resp = JSON.stringify(response);
+ console.log('response....'+resp);
+ let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+resp+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+      '<span aria-hidden="true">&times;</span>'+
+      '</button>'+
+      '</div>';
+      $('#approvalerrorMessages').empty();
+      $('#approvalerrorMessages').append(errorHtml); 
+      if(resp=='Approval Sent Successfully !'){
+           //    $('#taskForm')[0].reset()
+               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+            '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#approvalerrorMessages').empty();
+          $('#approvalerrorMessages').append(errorHtml);
+             }
  }).fail(function(jqXHR, status, error){
+  console.log('jqXHR '+JSON.stringify(jqXHR));
+    
  })
  });
  });
@@ -1432,8 +1438,10 @@ $('.approvalpopup').on('click',function(event){
 //Accounts Approval
 function accountsApprovalFunctionality(){
  $('.accountsapprovalpopup').on('click',function(event){
- event.stopImmediatePropagation();
- event.stopPropagation();
+
+     event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
  let assetRequisitionFormId = this.id;
  console.log('inside Asset Requisition'+assetRequisitionFormId);
  $('#accountsApprovalCommentModal').modal('show');
@@ -1444,14 +1452,34 @@ function accountsApprovalFunctionality(){
  //alert('comment : '+comment);
  $.post('/procurement/sendProcurementAccountsApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
  //alert(response);
- $('#accountsApprovalCommentModal').modal('hide');
+ //$('#accountsApprovalCommentModal').modal('hide');
+ console.log('jqxhrjjkj'+JSON.stringify(response))
+ let resp = JSON.stringify(response);
+ console.log('response....'+resp);
+ let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+      '<span aria-hidden="true">&times;</span>'+
+      '</button>'+
+      '</div>';
+      $('#accApprovalerrorMessages').empty();
+      $('#accApprovalerrorMessages').append(errorHtml); 
+      if(resp=='Approval Sent Successfully !'){
+           //    $('#taskForm')[0].reset()
+               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+            '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#accApprovalerrorMessages').empty();
+          $('#accApprovalerrorMessages').append(errorHtml);
+             }
  })
  .fail(function(jqXHR, status, error){
  //$('#accountsApprovalCommentModal').modal('hide');
  })
  });
  });
-      }      //c
+      }      //c     //c
 
               $('#createAssetRequisitionFormButton').click(function() {
         let projId = this.id;

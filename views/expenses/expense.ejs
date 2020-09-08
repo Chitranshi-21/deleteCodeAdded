@@ -1620,7 +1620,7 @@ $('.printexp').on('click', function(event){
               })
               .fail((jqXHR, status, error)=> {
                 console.log('jqXHR '+JSON.stringify(jqXHR));
-      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Chitranshi'+ jqXHR.responseText+
+      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
       '<span aria-hidden="true">&times;</span>'+
       '</button>'+
