@@ -776,7 +776,7 @@ router.post('/savePettyCashForm', (request, response) => {
           for(let i=0; i< numberOfRows ; i++)
           {
             const schema = joi.object({
-              billnum:joi.string().required().label('Please enter Bill NO'),
+              bill_no:joi.string().required().label('Please enter Bill NO'),
             //  bill_dt:joi.date().required().label('Please Fill Bill Date.'),
               bill_date:joi.date().required().label('Please enter Bill Date'),
               bill_dated:joi.date().max('now').label('Bill Date must be less than today'),
@@ -786,7 +786,7 @@ router.post('/savePettyCashForm', (request, response) => {
               amount:joi.number().required().label('Please enter Amount'),
               imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachments'),
              })
-             let result = schema.validate({billnum:request.body.bill_no[i],amount:request.body.amount[i],bill_date:request.body.bill_date[i],bill_dated:request.body.bill_date[i],projectTask : request.body.projectTask[i],desc:request.body.desc[i], nature_exp: request.body.nature_exp[i] , imgpath:request.body.imgpath[i]})
+             let result = schema.validate({bill_no:request.body.bill_no[i],amount:request.body.amount[i],bill_date:request.body.bill_date[i],bill_dated:request.body.bill_date[i],projectTask : request.body.projectTask[i],desc:request.body.desc[i], nature_exp: request.body.nature_exp[i] , imgpath:request.body.imgpath[i]})
              if(result.error)
              {
                console.log('ejssssss VAlidation'+JSON.stringify(result.error));
@@ -818,7 +818,7 @@ router.post('/savePettyCashForm', (request, response) => {
     else
     { 
       const schema = joi.object({
-        billnum:joi.string().required().label('Please enter Bill NO'),
+        bill_no:joi.string().required().label('Please enter Bill NO'),
         bill_date:joi.date().required().label('Please enter Bill Date'),
         bill_dated:joi.date().max('now').label('Bill Date must be less than today'),
         projectTask:joi.string().required().label('Please select Activity Code'),
@@ -827,7 +827,7 @@ router.post('/savePettyCashForm', (request, response) => {
         amount:joi.number().required().label('Please enter Amount'),
         imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachments'),
        })
-       let result = schema.validate({billnum:request.body.bill_no,bill_date:request.body.bill_date, bill_dated:request.body.bill_date,projectTask:request.body.projectTask,desc:request.body.desc,nature_exp: request.body.nature_exp,amount:request.body.amount,imgpath:request.body.imgpath})
+       let result = schema.validate({bill_no:request.body.bill_no,bill_date:request.body.bill_date, bill_dated:request.body.bill_date,projectTask:request.body.projectTask,desc:request.body.desc,nature_exp: request.body.nature_exp,amount:request.body.amount,imgpath:request.body.imgpath})
        if(result.error)
        {
          console.log('ejssssss VAlidation'+JSON.stringify(result.error));

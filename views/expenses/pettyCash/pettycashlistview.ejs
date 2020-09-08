@@ -34,8 +34,7 @@
              </div>
             </br>
             <div class="">
-              <% include ../../partials/messages %>
-              <div id="errorMessages"></div>
+              <div id="errorMessages">hello</div>
              <div id="pettyCashExpenseTable" style="overflow-x:auto;">
 
              </div>
@@ -176,12 +175,6 @@
                             {
                               let pettyCashRecord = response[0];
                               let htmlTable = '';
-                          /*    let billDate = new Date(pettyCashRecord.bill_date__c);
-                              billDate.setHours(billDate.getHours() + 5);
-                              billDate.setMinutes( billDate.getMinutes() + 30 );
-                              let createdDate = new Date(pettyCashRecord.createddate);
-                              createdDate.setHours(createdDate.getHours() + 5);
-                              createdDate.setMinutes( createdDate.getMinutes() + 30 ); */
                               let strBillDate = new Date(pettyCashRecord.bill_date__c).toLocaleString();
                             //  let strCreatedDate = new Date(pettyCashRecord.createddate).toLocaleString();
                               let strCreatedDate = new Date(pettyCashRecord.createddate);

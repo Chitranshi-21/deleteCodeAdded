@@ -277,37 +277,43 @@ router.get('/fetchActivityCode', verify ,(request, response) => {
                                       
                                     })
                                     
-                                    router.get('/detailsApproval',verify,(request, response)=> {
-                                        console.log('inside asset approval details');
-                                        console.log('Asset request.user '+JSON.stringify(request.user));
-                                        var userId = request.user.sfid;
-                                        var objUser = request.user;
-                                        let assetId = request.assetRequisitionFormId
-                                        console.log('Asset userId : '+userId);
-                                        console.log('assetRequisitionFormId : '+assetRequisitionFormId);
-                                        let qry ='SELECT sfid, if_3_quotations_specify_Reason__c,reason_for_non_registered_GST_Vendor__c,Pricing_Terms_Cost_comparison__c,Delivery_Terms_Delivery_Place__c, Delivery_Terms_Delivery_Time__c, Delivery_cost_Incl__c FROM  salesforce.Asset_Requisition_Form__c '+
-                                                 ' WHERE sfid = $1 ';
+                                    router.get('/detailsApproval',verify,(request, response) => {
+
+                                        let assetRequisitionFormId = request.query.assetRequisitionFormId;
+                                        console.log('assetRequisitionFormId  : '+assetRequisitionFormId);
+                                        let queryText = 'SELECT sfid, if_3_quotations_specify_Reason__c,reason_for_non_registered_GST_Vendor__c,Pricing_Terms_Cost_comparison__c,Delivery_Terms_Delivery_Place__c, Delivery_Terms_Delivery_Time__c, Delivery_cost_Incl__c FROM  salesforce.Asset_Requisition_Form__c '+
+                                                         ' WHERE sfid = $1 ';
+                                      
                                         pool
-                                        .query(qry,[assetId])
+                                        .query(queryText,[assetRequisitionFormId])
                                         .then((assetQueryResult) => {
-                                                console.log('assetQueryResult   '+assetQueryResult.rows);
-                                                if(assetQueryResult.rowCount > 0)
-                                                {
-                                                console.log('assetQueryResult   : '+JSON.stringify(assetQueryResult.rows));
-                                                if(assetQueryResult.if_3_quotations_specify_Reason__c == null || assetQueryResult.reason_for_non_registered_GST_Vendor__c == null || assetQueryResult.Pricing_Terms_Cost_comparison__c == null || assetQueryResult.Delivery_Terms_Delivery_Place__c == null || assetQueryResult.Delivery_Terms_Delivery_Time__c == null || assetQueryResult.Delivery_cost_Incl__c == null)
-                                                  response.send(modifiedList);
-                                                
+                                              console.log('assetQueryResult for approval '+JSON.stringify(assetQueryResult.rows));
+                                              if(assetQueryResult.rowCount > 0)
+                                              for(let i=0 ; i < assetQueryResult.rows.length; i++)
+                                               {
+                                                 {
+                                                  console.log('assetQueryResult.rows[i].if_3_quotations_specify_reason__c '+assetQueryResult.rows[i].if_3_quotations_specify_Reason__c );
+                                                if(assetQueryResult.rows[i].if_3_quotations_specify_reason__c == false && assetQueryResult.rows[i].reason_for_non_registered_gst_vendor__c == false && assetQueryResult.rows[i].pricing_terms_cost_comparison__c == false && assetQueryResult.rows[i].delivery_terms_delivery_place__c == null && assetQueryResult.rows[i].delivery_terms_delivery_time__c == null && assetQueryResult.rows[i].delivery_cost_incl__c == null)
+                                                   {
+                                                    response.send('Unless and until , the purchase order checklist is not filled completely, the form can not be sent for approval.');
+                                                   }
+                                                 else{
+                                                     response.send('Success')
+                                                     }
                                               }
+                                            }
                                               else
                                               {
-                                                  response.send([]);
+                                                response.send({});
                                               }
+                                               
                                         })
                                         .catch((assetQueryError) => {
-                                          console.log('assetQueryError   '+assetQueryError.stack);
-                                          response.send({objUser: objUser, assetList : []});
+                                              console.log('assetQueryError  '+assetQueryError.stack);
+                                              response.send({});
                                         })
-                                    });
+                                      
+                                      })
                                                
 
 router.get('/details',verify, async(request, response) => {
@@ -600,7 +606,7 @@ router.post('/updateasset',(request,response)=>{
         pool.query(updateQuerry,[assetsfid])
         .then((queryResultUpdate)=>{
          console.log('queryResultUpdate '+JSON.stringify(queryResultUpdate));
-         response.send('succesfully Update!');
+         response.send('Successfully Updated!');
         }).catch((eroor)=>{console.log(JSON.stringify(eroor.stack))})
      }
      else{

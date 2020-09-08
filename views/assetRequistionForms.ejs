@@ -1383,7 +1383,7 @@ $('#editassetForm').on('click',function(event){
  $('#assetRequisitionEditModal').modal('hide');
  }
  else{
- alert('Error in Updates :'+jqXHR.responseText);
+ alert('Updates :'+jqXHR.responseText);
  }
  
  }) 
@@ -1402,34 +1402,59 @@ $('.approvalpopup').on('click',function(event){
  $('#approvalCommentModal').modal('show');
  $('#submitForApproval').on('click', function(e){
 
-  e.stopImmediatePropagation();
+ e.stopImmediatePropagation();
  e.stopPropagation();
- let comment = document.getElementById('commentTextarea').value;
- 
- $.post('/procurement/sendProcurementApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
 
-  console.log('jqxhrjjkj'+JSON.stringify(response))
- let resp = JSON.stringify(response);
- console.log('response....'+resp);
- let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+resp+
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-      '<span aria-hidden="true">&times;</span>'+
-      '</button>'+
-      '</div>';
-      $('#approvalerrorMessages').empty();
-      $('#approvalerrorMessages').append(errorHtml); 
-      if(resp=='Approval Sent Successfully !'){
-           //    $('#taskForm')[0].reset()
-               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
-            '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
-              '<span aria-hidden="true">&times;</span>'+
-            '</button>'+
+ $.get('/procurement/detailsApproval',{assetRequisitionFormId:assetRequisitionFormId }, function(response){
+
+      console.log('approval check for po '+ response)
+    let msg = response;
+    console.log('messageeee'+msg);
+    if (msg == 'Unless and until , the purchase order checklist is not filled completely, the form can not be sent for approval.'){
+      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+msg+
+          '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+          '<span aria-hidden="true">&times;</span>'+
+          '</button>'+
           '</div>';
           $('#approvalerrorMessages').empty();
-          $('#approvalerrorMessages').append(errorHtml);
-             }
- }).fail(function(jqXHR, status, error){
-  console.log('jqXHR '+JSON.stringify(jqXHR));
+          $('#approvalerrorMessages').append(errorHtml); 
+       }
+       else{
+        let comment = document.getElementById('commentTextarea').value;
+
+          $.post('/procurement/sendProcurementApproval',{assetRequisitionFormId:assetRequisitionFormId, comment: comment }, function(response){
+
+          console.log('jqxhrjjkj'+JSON.stringify(response))
+          let resp = JSON.stringify(response);
+          console.log('response....'+resp);
+          let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+resp+
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+              '</button>'+
+              '</div>';
+              $('#approvalerrorMessages').empty();
+              $('#approvalerrorMessages').append(errorHtml); 
+              if(resp=='Approval Sent Successfully !'){
+                    //    $('#taskForm')[0].reset()
+                        let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+                    '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+                      '<span aria-hidden="true">&times;</span>'+
+                    '</button>'+
+                  '</div>';
+                  $('#approvalerrorMessages').empty();
+                  $('#approvalerrorMessages').append(errorHtml);
+                      }
+          })
+       }
+ 
+ })
+ .fail((jqXHR, status, error) => {
+ console.log('This fail is for check po validation '+JSON.stringify(jqXHR));
+ 
+ }) 
+
+.fail(function(jqXHR, status, error){
+  console.log('this is for approval pop up ajax '+JSON.stringify(jqXHR));
     
  })
  });

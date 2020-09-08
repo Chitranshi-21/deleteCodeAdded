@@ -152,9 +152,9 @@
             //editAction : 'Edit',
             name: 'Boarding/Loading Name ',
             place : 'Place Of Journey',
-            from:'From Date',
+            from:'From(Dep. Time from Residence)',
             amount : 'Amount',
-            to:'To Date',
+            to:'To(Arrival Time to Residence)',
             createDdate : 'Created Date'
         }
 
@@ -293,13 +293,13 @@
                           htmlTable += '<tr>';
                           htmlTable += '<td><strong>Own Stay Amount</strong></td>';
                           htmlTable += '<td>'+boardingRecord.own_stay_amount__c+'</td>';
-                          htmlTable += '<td><strong>From</strong></td>';
+                          htmlTable += '<td><strong>From(Dep. Time from Residence)</strong></td>';
                           htmlTable += '<td>'+strfromDate+'</td>';
                           htmlTable += '</tr>';
 
                           htmlTable += '<tr>';
                         
-                          htmlTable += '<td><strong>To</strong></td>';
+                          htmlTable += '<td><strong>To(Arrival Time to Residence)</strong></td>';
                           htmlTable += '<td>'+strtoDate+'</td>';
                           htmlTable += '<td><strong>Numbey Of Day Stay</strong></td>';
                               htmlTable += '<td>'+boardingRecord.number_of_days__c+'</td>';
@@ -307,7 +307,7 @@
 
                           htmlTable += '<tr>';
                             
-                              htmlTable += '<td><strong>Daily Allowance</strong></td>';
+                              htmlTable += '<td><strong>Daily Allowance Per Day</strong></td>';
                             htmlTable += '<td>'+boardingRecord.daily_allowance__c+'</td>';
                             htmlTable += '<td><strong>Amount of B&L as per policy</strong></td>';
                               htmlTable += '<td>'+boardingRecord.amount_of_b_l_as_per_policy__c+'</td>';
@@ -316,9 +316,9 @@
 
                             htmlTable += '<tr>';
                              
-                              htmlTable += '<td><strong>Amount for boarding and lodging</strong></td>';
+                              htmlTable += '<td><strong>Amount for boarding and lodging(per day)</strong></td>';
                             htmlTable += '<td>'+boardingRecord.amount_for_boarding_and_lodging__c+'</td>';
-                              htmlTable += '<td><strong>Actual Amount of boarding and lodging</strong></td>';
+                              htmlTable += '<td><strong>Actual Amount for B&L (as per incurred)</strong></td>';
                               htmlTable += '<td>'+boardingRecord.actual_amount_for_boarding_and_lodging__c+'</td>';
                           htmlTable += '</tr>';
                           htmlTable += '<tr>';
