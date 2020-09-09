@@ -406,10 +406,14 @@
           })
           .done((response) => {
                 console.log('resonse   :'+response);
+                if(response == 200)
                 alert("Telephone and Food Charges Deleted Succesfullly !");
+                window.location.reload()
+              
           })
           .fail((jqXHR, status, error) => {
                 console.log('jqXHR  '+JSON.stringify(jqXHR));
+                window.location.reload()
           }) 
           })
       }

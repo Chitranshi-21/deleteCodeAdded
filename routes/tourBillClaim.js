@@ -364,21 +364,6 @@ router.post('/airRailBusCharges',verify, (request, response) => {
   var bdy = request.body;
   var bodyResult = request.body;  
   console.log('airRailBusCharges Body'+JSON.stringify(bodyResult));
- /*  const schema = joi.object({
-      departure_Date:joi.date().max('now').label('departure_Date must be less than Today').required(),
-      arrival_Date:joi.date().less(joi.ref('departure_Date')).label('Arrival Date must be less than departure_Date').required(),
-      amount:joi.number().required().label('Amount cannot be null'),
-      arrival_Station:joi.string().required().label('Please fill Arrivial Statton'),
-      departure_Station:joi.string().required().label('Please fill Departure Station'),
-      imgpath:joi.string().invalid('deme').required().label('Upload your File/Attachment'),
-  })
-  let Result=schema.validate({departure_Date:bdy.departure_Date,arrival_Date:bdy.arrival_Date,amount:bdy.amount,arrival_Station:bdy.arrival_Station,departure_Station:bdy.departure_Station,imgpath:bdy.imgpath});
-  console.log('validaton result '+JSON.stringify(Result.error));
-  if(Result.error)
-  {
-      console.log('fd'+Result.error)
-      response.send(Result.error.details[0].context.label);
-  } */
 
       let parentTourBillClaimId='';
       let numberOfRows; let lstAirRailBus= [];
@@ -426,9 +411,7 @@ router.post('/airRailBusCharges',verify, (request, response) => {
      }
       else
       {
-          numberOfRows = 1;
-          for(let i=0; i<numberOfRows ;i++)
-          { 
+         
             const schema = joi.object({
               arrival_Dted:joi.date().required().label('Please enter Arrival Date'),
               arrival_Dt:joi.date().max('now').label('Arrival Date must be less than or equals to Today '),
@@ -449,7 +432,10 @@ router.post('/airRailBusCharges',verify, (request, response) => {
               response.send(Result.error.details[0].context.label);
           } 
           else
-          {     
+          {    
+            numberOfRows = 1;
+            for(let i=0; i<numberOfRows ;i++)
+            {  
             let airRailBusSingleRecordValues = [];
             parentTourBillClaimId = bodyResult.parentTourBillId;
             airRailBusSingleRecordValues.push(bodyResult.arrival_Date);
@@ -495,7 +481,7 @@ router.post('/airRailBusCharges',verify, (request, response) => {
         .query(deleteQuerry,[airId])
         .then((deleteQuerry) => {     
         console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-        response.send('Success');
+        response.send(200);
         })
         .catch((deleteError) => {
         console.log('deleteError'+deleteError.stack);
@@ -532,22 +518,6 @@ router.post('/conveyanceCharges',verify, (request, response) => {
   let bodyResult =  request.body;
   console.log('conveyanceCharges bodyResult  : '+JSON.stringify(bodyResult));
   console.log('typeof(request.body.date)   : '+typeof(request.body.date));
-  
-/* const schema = joi.object({
-  date:joi.date().max('now').required().label('Date should be less than Today'),
-  place:joi.string().required().label('Enter your Place'), 
-    amount:joi.number().required().label('Amount cannot be Null'),
-    imgpath:joi.string().invalid('demo').label('Upload your File/Attachments').required(),
-//  activity_code:joi.required,
-})
-  
-  let result= schema.validate({date:bodyResult.date,place:bodyResult.place,imgpath:bodyResult.imgpath,amount:bodyResult.amount});
-if(result.error)
-{
-  console.log('fd'+result.error)
-      response.send(result.error.details[0].context.label);
-}
-*/
 
   let numberOfRows ;  let lstConveyanceCharges = [];
   if(typeof(request.body.date) == 'object')
@@ -571,7 +541,8 @@ if(result.error)
             {
                 console.log('fd'+result.error)
                     response.send(result.error.details[0].context.label);
-            }
+                    return;
+                  }
             else{
 
               let singleConveyanceRecord = [];
@@ -597,9 +568,7 @@ if(result.error)
   }  
   else
   {
-      numberOfRows = 1;
-      for(let i=0; i < numberOfRows ;i++)
-      {
+     
         const schema = joi.object({
           dated:joi.date().required().label('Please select Date'),
           date:joi.date().max('now').required().label('Date must be less than or equal to Today'),
@@ -617,6 +586,9 @@ if(result.error)
               response.send(result.error.details[0].context.label);
       }
       else{
+        numberOfRows = 1;
+        for(let i=0; i < numberOfRows ;i++)
+        {
         let singleConveyanceRecord = [];
               singleConveyanceRecord.push(bodyResult.date);
               singleConveyanceRecord.push(bodyResult.place);
@@ -774,7 +746,7 @@ if(result.error)
     .query(deleteQuerry,[conveyanceId])
     .then((deleteQuerry) => {     
     console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-    response.send('Success');
+    response.send(200);
     })
     .catch((deleteError) => {
     console.log('deleteError'+deleteError.stack);
@@ -889,7 +861,7 @@ console.log(' activity_code '+activity_code );
         else if(stayOption[i] == 'Stay')
           {
            schema =joi.object({
-            stayOption:joi.string().required().label('Please select Stay Option'),
+         //   stayOption:joi.string().required().label('Please select Stay Option'),
            projectTask:joi.string().required().label('Please select Activity Code.'),
            placeJourney: joi.string().required().label('Please select Place of Journey.'),
            fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
@@ -899,29 +871,31 @@ console.log(' activity_code '+activity_code );
            toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
            toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-           toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
+         //  toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            actualAMTForBL:joi.number().required().label('Please enter Actual Boarding lodging Amount'),
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           })
 
-          result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],toTimes:toTime,actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
+          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
         }
         else if(stayOption[i] == 'Own Stay')
         {
 
            schema =joi.object({
-            stayOption:joi.string().required().label('Please Choose Stay Option'),
+         //   stayOption:joi.string().required().label('Please Choose Stay Option'),
            projectTask:joi.string().required().label('Please select Activity Code.'),
            placeJourney: joi.string().required().label('Please select Place of Journey.'),
            fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
            fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
+           fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
            toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
            toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-           imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
+          // toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
+           // imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           })
 
-          result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],imgpath:imgpath[i]});
+          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i]});
         }
        
       //  result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],placeJourney:placeJourney[i], toDate:toDate[i],fromDate:fromDate[i],actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
@@ -941,20 +915,21 @@ console.log(' activity_code '+activity_code );
             lstcharges.push(projectTask[i]);
             console.log('.....2 =>'+ lstcharges);
           
-            let fromDateTime = fromDate[i]+'T'+fromTime[i]+':00';
+         /*   let fromDateTime = fromDate[i]+'T'+fromTime[i]+':00';
             lstcharges.push(fromDateTime[i]);      
             let toDateTime = toDate[i]+'T'+toTime[i]+':00';
             lstcharges.push(toDateTime[i]);
+*/
+            let fromDateTime = fromDate[i]+'T'+fromTime[i]+':00';
+            console.log('fromDateTime  : '+fromDateTime);
+            lstcharges.push(fromDateTime);      
+            let toDateTime = toDate[i]+'T'+toTime[i]+':00';
+            console.log('toDateTime  : '+toDateTime);
+            lstcharges.push(toDateTime);
 
          
-            if(totalAllowances != 0)
-            {
-              lstcharges.push(totalAllowances[i]);   
-            }
-            else{
-             var totalamt= 0;
-              lstcharges.push(totalamt);
-            }   
+              lstcharges.push(totalAllowances[i]);  
+           
             lstcharges.push(dailyAllowances[i]);
 
             lstcharges.push(amtForBL[i]);
@@ -992,7 +967,7 @@ console.log(' activity_code '+activity_code );
       else if(stayOption == 'Stay')
       {
           schema=joi.object({
-          stayOption:joi.string().required().label('Please Choose Stay Option'),
+         // stayOption:joi.string().required().label('Please Choose Stay Option'),
           projectTask:joi.string().required().label('Please select Activity Code.'),
           placeJourney: joi.string().required().label('Please select Place of Journey.'),
           fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
@@ -1006,24 +981,25 @@ console.log(' activity_code '+activity_code );
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           
         })
-         result=schema.validate({stayOption:stayOption,projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,toDated:toDate,fromDate:fromDate,fromTimes:fromTime,toDate:toDate,toTimes:toTime,actualAMTForBL:actualAMTForBL,imgpath:imgpath});
+         result=schema.validate({projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,toDated:toDate,fromDate:fromDate,fromTimes:fromTime,toDate:toDate,toTimes:toTime,actualAMTForBL:actualAMTForBL,imgpath:imgpath});
 
       }
       else if(stayOption == 'Own Stay')
       {
          schema=joi.object({
-          stayOption:joi.string().required().label('Please Choose Stay Option'),
+        //  stayOption:joi.string().required().label('Please Choose Stay Option'),
           projectTask:joi.string().required().label('Please select Activity Code.'),
           placeJourney: joi.string().required().label('Please select Place of journey.'),
           fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
           fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
+          fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
           toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
           toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
           fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-        
+          toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
           
         })
-         result=schema.validate({stayOption:stayOption,projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,toDated:toDate,fromDate:fromDate,toDate:toDate});
+         result=schema.validate({projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,fromTimes:fromTime,toDated:toDate,fromDate:fromDate,toDate:toDate,toTimes:toTime});
 
       }
       
@@ -1222,7 +1198,7 @@ router.get('/boardingLodgingListView',verify,(request,response)=>{
         .query(deleteQuerry,[conveyanceId])
         .then((deleteQuerry) => {     
         console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-        response.send('Success');
+        response.send(200);
         })
         .catch((deleteError) => {
         console.log('deleteError'+deleteError.stack);
@@ -1480,7 +1456,7 @@ router.get('/telephoneFoodCharge',verify,(request,response)=>{
     .query(deleteQuerry,[conveyanceId])
     .then((deleteQuerry) => {     
     console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-    response.send('Success');
+    response.send(200);
     })
     .catch((deleteError) => {
     console.log('deleteError'+deleteError.stack);
@@ -1753,7 +1729,7 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
         .query(deleteQuerry,[conveyanceId])
         .then((deleteQuerry) => {     
         console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-        response.send('Success');
+        response.send(200);
         })
         .catch((deleteError) => {
         console.log('deleteError'+deleteError.stack);

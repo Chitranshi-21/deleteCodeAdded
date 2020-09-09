@@ -776,8 +776,8 @@ router.post('/savePettyCashForm', (request, response) => {
           for(let i=0; i< numberOfRows ; i++)
           {
             const schema = joi.object({
+
               bill_no:joi.string().required().label('Please enter Bill NO'),
-            //  bill_dt:joi.date().required().label('Please Fill Bill Date.'),
               bill_date:joi.date().required().label('Please enter Bill Date'),
               bill_dated:joi.date().max('now').label('Bill Date must be less than today'),
               projectTask:joi.string().required().label('Please select Activity Code'),
@@ -794,14 +794,8 @@ router.post('/savePettyCashForm', (request, response) => {
                return;
              }
              else{
-
-              
-               
+   
               let pettyCashValues = [];
-             /*  if(typeof(request.body.bill_no) == 'undefined' || request.body.bill_no == '')
-              pettyCashValues.push('');
-            else
-              pettyCashValues.push(request.body.bill_no[i]); */
               pettyCashValues.push(request.body.bill_no[i]);
               pettyCashValues.push(request.body.bill_date[i]);
               pettyCashValues.push(request.body.projectTask[i]);
@@ -857,6 +851,7 @@ router.post('/savePettyCashForm', (request, response) => {
         }
 
        }    
+      
         console.log('lstPettyCash  '+JSON.stringify(lstPettyCash));
     }
     
@@ -915,30 +910,14 @@ router.get('/conveyanceVoucher/:parentExpenseId',verify,(request, response) => {
 router.post('/conveyanceform',(request,response) => {  
   let body = request.body;
     console.log('conveyanceform Body Result  : '+JSON.stringify(request.body));
-  /*  const schema=joi.object({
-    activity_code:joi.required(),
-    to:joi.date().max('now').required().label('To date can not exceed Today'),
-    from:joi.date().less(joi.ref('to')).required().label('From date must be less tha To date'),
-    purposeoftravel:joi.required().label('Please mention Purpose of Travell'),
-    amount:joi.number().required().label('Amount cannot be null'), 
-    kmtravelled:joi.number().required().label('Enter how Much You Travell'),
-    imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment '),
-   })
-   let result=schema.validate(request.body);
-   console.log('sdjabsdjb'+JSON.stringify(result));
-   if(result.error)
-   {
-    console.log(' VAlidation'+JSON.stringify(result.error));
-    response.send(result.error.details[0].context.label);
-   } */
-
     let numberOfRows ,lstConveyance = [];
     if(typeof(request.body.from) == 'object')
     {
         numberOfRows = request.body.from.length;
+        console.log('number of rows'+numberOfRows)
         for(let i=0; i<numberOfRows ; i++)
         {
-          const schema=joi.object({
+          const schema = joi.object({
             
             fromBlank:joi.date().required().label('Please enter From date'),
             fromdate:joi.date().max('now').label('From date must be less than or equals to today'),
@@ -952,14 +931,16 @@ router.post('/conveyanceform',(request,response) => {
             amount:joi.number().required().label('Please enter Amount'), 
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment '),
            })
-           let result=schema.validate({toBlank:body.to[i] ,fromdate:body.from[i] ,to:body.to[i],fromBlank:body.from[i], from:body.from[i], projectTask: body.projectTask[i], purposeoftravel:body.purposeoftravel[i],modeofconveyance: body.modeofconveyance[i], amount:body.amount[i],kmtravelled:body.kmtravelled[i],imgpath:body.imgpath[i]});
+           let result = schema.validate({toBlank:body.to[i] ,fromdate:body.from[i] ,to:body.to[i],fromBlank:body.from[i], from:body.from[i], projectTask: body.projectTask[i], purposeoftravel:body.purposeoftravel[i],modeofconveyance: body.modeofconveyance[i], amount:body.amount[i],kmtravelled:body.kmtravelled[i],imgpath:body.imgpath[i]});
            console.log('sdjabsdjb'+JSON.stringify(result));
            if(result.error)
            {
             console.log(' VAlidation'+JSON.stringify(result.error));
             response.send(result.error.details[0].context.label);
+            return;
            } 
            else{
+
             let conveyanceValues = [];
             conveyanceValues.push(request.body.from[i]);
             conveyanceValues.push(request.body.to[i]);
@@ -977,10 +958,6 @@ router.post('/conveyanceform',(request,response) => {
     }
     else
     {
-        numberOfRows = 1;
-        for(let i=0; i<numberOfRows ; i++)
-        {
-          
           const schema=joi.object({
             
             fromBlank:joi.date().required().label('Please enter From date'),
@@ -993,17 +970,20 @@ router.post('/conveyanceform',(request,response) => {
             modeofconveyance: joi.string().required().label('Please enter mode of conveyance'),
             kmtravelled:joi.number().required().label('Please enter Km.Travelled'),
             amount:joi.number().required().label('Please enter Amount'), 
-            
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment '),
            })
-           let result=schema.validate({toBlank:body.to,to:body.to,fromBlank:body.from,fromdate:body.from, from:body.from,projectTask:body.projectTask, purposeoftravel:body.purposeoftravel,modeofconveyance:body.modeofconveyance,amount:body.amount,kmtravelled:body.kmtravelled,imgpath:body.imgpath});
+           let result = schema.validate({toBlank:body.to,to:body.to,fromBlank:body.from,fromdate:body.from, from:body.from,projectTask:body.projectTask, purposeoftravel:body.purposeoftravel,modeofconveyance:body.modeofconveyance,amount:body.amount,kmtravelled:body.kmtravelled,imgpath:body.imgpath});
            console.log('sdjabsdjb'+JSON.stringify(result));
            if(result.error)
            {
             console.log(' VAlidation'+JSON.stringify(result.error));
             response.send(result.error.details[0].context.label);
+            return;
            } 
            else{
+            numberOfRows = 1;
+            for(let i=0; i<numberOfRows ; i++)
+            {    
             let conveyanceValues = [];
             conveyanceValues.push(request.body.from);
             conveyanceValues.push(request.body.to);
@@ -1015,6 +995,7 @@ router.post('/conveyanceform',(request,response) => {
             conveyanceValues.push(request.body.imgpath);
             conveyanceValues.push(request.body.parentExpenseId);
             lstConveyance.push(conveyanceValues);
+            
            }
         }   
         console.log('lstConveyance   : '+lstConveyance);
@@ -1422,7 +1403,7 @@ router.get('/tourBillClaimActivityCode', verify ,(request, response) => {
       .query(deleteQuerry,[pettyCashId])
       .then((deleteQuerry) => {     
       console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-      response.send('Petty Cash Deleted Succesfullly !');
+      response.send(200);
       })
       .catch((deleteError) => {
       console.log('deleteError'+deleteError.stack);
@@ -1442,7 +1423,7 @@ router.get('/tourBillClaimActivityCode', verify ,(request, response) => {
       .query(deleteQuerry,[conveyanceId])
       .then((deleteQuerry) => {     
       console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
-      response.send('Success');
+      response.send(200);
       })
       .catch((deleteError) => {
       console.log('deleteError'+deleteError.stack);
