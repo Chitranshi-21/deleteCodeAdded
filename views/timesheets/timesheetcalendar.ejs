@@ -312,40 +312,207 @@
             e.preventDefault();
             var values = $(this).serialize();
             console.log('values   '+values);
+          // if()
+          var deadlin = $('#deadline option:selected').val();
+          console.log('deadline ++++  '+deadlin); 
+          if(deadlin == 'blocktime')
+          {
+            var startDate = $('#plannedstarttimeTask').val();
+            console.log('plandatejhjbkjbjk '+startDate);
+            if(startDate == '')
+            {
+              alert('Error: Please Fill Planned Start Time');
+            }
+            var endDate = $('#plannedendtimeTask').val();
+            console.log('plandatejhjbkjbjk '+endDate);
+            if(endDate == '')
+            {
+              alert('Error: Please Fill Planned End  Time');
+            }
+            if(endDate != '' && startDate != '')
+            {
+              var starthours = Number(startDate.match(/^(\d+)/)[1]);
+            var startminutes = Number(startDate.match(/:(\d+)/)[1]);
+            var endhours = Number(endDate.match(/^(\d+)/)[1]);
+            var endminutes = Number(endDate.match(/:(\d+)/)[1]);
+          //  var AMPM = startDate.match(/\s(.*)$/)[1];
+            console.log('starthours '+starthours);
+            console.log('startminutes '+startminutes);
+            console.log('endhours '+endhours);
+            console.log('endminutes '+endminutes);
+           
+            if(starthours > endhours)
+            {
+              alert('Error: Planned Start time should be less than Planned End time. !')
+            }
+          
+            else if((starthours == endhours) && (startminutes > endminutes))
+            {
+              alert('Error: Planned Start time should be less than Planned End time. !')
+            }
+            else if((starthours == endhours) && (startminutes = endminutes))
+            {
+              alert('Error: Planned Start time should be less than Planned End time. !')
+            }
+            else
+            {
+              $("#submitbutton").attr("disabled", true);
             $.ajax({
                     url: "/timesheets/createtask",
                     type: "post",
                     data: values ,
-                    success: function (res) {
-                            alert('Task Saved Successfully');
-                            //document.getElementById("taskForm").reset();
-                            $("#createTaskModal").modal("hide");
-                            console.log(res)
-                    },
-                    error: function(xhr, status, error) {
-                            console.log(xhr.responseText);
+                  })
+                .done((data)=>{
+                    console.log('data '+JSON.stringify(data))
+                    let resp = JSON.stringify(data);
+                    console.log('dataaaaa' +resp);
+                    if(data == 'Task saved Successfully')
+                    {
+                      document.getElementById("taskForm").reset()
+                      let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
+                        $("#submitbutton").attr("disabled", false);
+
                     }
+                    else
+                    {
+                      //document.getElementById("taskForm").reset()
+                      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
+                        $("#submitbutton").attr("disabled", false);
+                    }
+                })
+                .fail((jqXHR, status, error) =>{
+                    console.log('jqXHR  : '+JSON.stringify(jqXHR));
+                    console.log('error  : '+error);
+                    let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
                 });
+            }
+            }
+
+          }
+           
+            else
+            {
+              $("#submitbutton").attr("disabled", true);
+            $.ajax({
+                    url: "/timesheets/createtask",
+                    type: "post",
+                    data: values ,
+                  })
+                .done((data)=>{
+                    console.log('data '+JSON.stringify(data))
+                    let resp = JSON.stringify(data);
+                    console.log('dataaaaa' +resp);
+                    if(data == 'Task saved Successfully')
+                    {
+                      document.getElementById("taskForm").reset()
+                      let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
+                        $("#submitbutton").attr("disabled", false);
+
+                    }
+                    else
+                    {
+                      //document.getElementById("taskForm").reset()
+                      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
+                        $("#submitbutton").attr("disabled", false);
+                    }
+                })
+                .fail((jqXHR, status, error) =>{
+                    console.log('jqXHR  : '+JSON.stringify(jqXHR));
+                    console.log('error  : '+error);
+                    let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessages').empty();
+                        $('#errorMessages').append(errorHtml); 
+                });
+            }
+           
          })
         /*Timesheet Form post method */
         $('#fillActualsForm').submit(function(e){
         e.preventDefault();
         var values = $(this).serialize();
         console.log('values   '+values);
+       $("#submitbuttonnn").attr("disabled", true);
         $.ajax({
                 url: "/timesheets/fillactuals",
                 type: "post",
                 data: values ,
-                success: function (res) {
-                        alert('Timesheet saved successfully !');
-                        document.getElementById("fillActualsForm").reset();
-                        $("#fillActualsModal").modal("hide");
-                        console.log(res)
-                },
-                error: function(xhr, status, error) {
-                        console.log(xhr.responseText);
-                }
-            });
+          })
+                .done((data)=>{
+                    console.log('data '+JSON.stringify(data))
+                    let resp = JSON.stringify(data);
+                    console.log('dataaaaa' +resp);
+                    if(data == 'Successfully Inserted')
+                    {
+                      document.getElementById("fillActualsForm").reset()
+                      let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessagesss').empty();
+                        $('#errorMessagesss').append(errorHtml); 
+                        $("#submitbuttonnn").attr("disabled", false);
+
+                    }
+                    else
+                    {
+                      //document.getElementById("taskForm").reset()
+                      let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessagesss').empty();
+                        $('#errorMessagesss').append(errorHtml); 
+                        $("#submitbuttonnn").attr("disabled", false);
+                    }
+                })
+                .fail((jqXHR, status, error) =>{
+                     let resp = JSON.stringify(jqXHR);
+                    console.log('jqXHR  : '+JSON.stringify(jqXHR));
+                    console.log('error  : '+error);
+                    let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ resp+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                        '</div>';
+                        $('#errorMessagesss').empty();
+                        $('#errorMessagesss').append(errorHtml); 
+                });
         })
         $('#bootstrapModalFullCalendar').fullCalendar({
             header: {
@@ -375,10 +542,12 @@
                 console.log('seletedDate   '+seletedDate);
                 let currentDate = new Date();
                 console.log('currentDate  :  '+currentDate );
-                let todaydate = new Date().getTime() +1296000000;
+            //    let todaydate = new Date().getTime() +1296000000;
+                let todaydate = new Date().getTime() +604800000;
                 let tomoorow=new Date(todaydate);
                 console.log('today plus 15 day= '+tomoorow);
-                let before=new Date().getTime()-1296000000;
+              //  let before=new Date().getTime()-1296000000;
+              let before=new Date().getTime()-604800000;
                 let beforedate=new Date(before);
                 console.log('15 day before today '+ beforedate);
             
@@ -440,7 +609,7 @@
 
                     }
                     else{
-                      alert('Date should be 15 daye before or after today ');
+                      alert('The timesheet tasks are locked. You cannot create task before and after 7 days from today date. !');
                     }
                     
                 }
@@ -527,17 +696,18 @@
                          console.log( "Sample of data:", JSON.stringify(taskData));
                          console.log('sleePROJ :'+selecPro +'& selected view ='+selecView);
                          var tasktableData = ''; 
-                         tasktableData  += '<thead><tr><th>Task Name</th><th>Planned Hours</th><th>Actual Hours</th><th>Date</th><th>Project Name</th><th>Assigned Resource</th></tr></thead>';    
+                         tasktableData  += '<thead><tr><th>Project Name</th><th>Task Name</th><th>Task Date</th><th>Status</th><th>Planned Hours</th><th>Actual Hours</th><th>Assigned to Heroku User</th></tr></thead>';    
                          taskData.forEach((eachTaskCol) => {  
                                  console.log('dt '+eachTaskCol.date);
                                  console.log('date str '+eachTaskCol.date.toString().split('T')[0]);
                                  var strDate = eachTaskCol.date.toString().split('T')[0];
                                  tasktableData += '<tr>';
+                                  tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.name+'</td>';
+                                 tasktableData  += '<td>'+strDate+'</td>';
+                                 tasktableData  += '<td>'+eachTaskCol.status+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.plannedHours+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.actualHours+'</td>';
-                                 tasktableData  += '<td>'+strDate+'</td>';
-                                 tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.userName+'</td>';
                                  tasktableData += '</tr>';   
                          });
@@ -570,17 +740,20 @@
                          console.log( "Sample of data:", JSON.stringify(taskData));
                          console.log('sleePROJ :'+selecPro +'& selected view ='+selecView);
                          var tasktableData = ''; 
-                         tasktableData  += '<thead><tr><th>Task Name</th><th>Planned Hours</th><th>Actual Hours</th><th>Date</th><th>Project Name</th><th>Assigned Resource</th></tr></thead>';    
+                         tasktableData  += '<thead><tr><th>Project Name</th><th>Task Name</th><th>Task Date</th><th>Status</th><th>Planned Hours</th><th>Actual Hours</th><th>Assigned to Heroku User</th></tr></thead>';    
                          taskData.forEach((eachTaskCol) => {  
                                  console.log('dt '+eachTaskCol.date);
                                  console.log('date str '+eachTaskCol.date.toString().split('T')[0]);
                                  var strDate = eachTaskCol.date.toString().split('T')[0];
                                  tasktableData += '<tr>';
+                                  tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.name+'</td>';
+                                 tasktableData  += '<td>'+strDate+'</td>';
+                                 tasktableData  += '<td>'+eachTaskCol.status+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.plannedHours+'</td>';
                                  tasktableData  += '<td>'+eachTaskCol.actualHours+'</td>';
-                                 tasktableData  += '<td>'+strDate+'</td>';
-                                 tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
+                                
+                               
                                  tasktableData  += '<td>'+eachTaskCol.userName+'</td>';
                                  tasktableData += '</tr>';   
                          });
@@ -621,12 +794,12 @@
                   var tasktableData = '';
                       tasktableData  += '<thead>';
                       tasktableData  += '<tr>';
+                      tasktableData  += ' <th>Project Name</th>';
                       tasktableData  += ' <th>Task Name</th>';
+                      tasktableData  += ' <th>Task Date</th>';
                       tasktableData  += '<th>Planned Hours</th>';
                       tasktableData  += '<th>Actual Hours</th>';
-                      tasktableData  += '<th>Date</th>';
-                      tasktableData  += ' <th>Project Name</th>';
-                      tasktableData  += ' <th>Assigned Resource</th>';
+                      tasktableData  += ' <th>Assigned to Heroku User</th>';
                       tasktableData  += '</tr>';
                       tasktableData  += '</thead>'; 
                       tskdata.forEach((eachTaskCol) => {
@@ -635,11 +808,11 @@
                         console.log('date str '+eachTaskCol.date.toString().split('T')[0]);
                         var strDate = eachTaskCol.date.toString().split('T')[0];
                         tasktableData += '<tr>';
+                        tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
                         tasktableData  += '<td>'+eachTaskCol.name+'</td>';
+                        tasktableData  += '<td>'+strDate+'</td>';
                         tasktableData  += '<td>'+eachTaskCol.plannedHours+'</td>';
                         tasktableData  += '<td>'+eachTaskCol.actualHours+'</td>';
-                        tasktableData  += '<td>'+strDate+'</td>';
-                        tasktableData  += '<td>'+eachTaskCol.projectName+'</td>';
                         tasktableData  += '<td>'+eachTaskCol.userName+'</td>';
                         tasktableData += '</tr>';  
                   })
@@ -680,6 +853,8 @@
       </button>
     </div>
     <div class="modal-body">
+      <div class="">
+        <div id="errorMessages"></div>
       <form  id="taskForm" class="needs-validation" novalidate >
 
         <div class="form-group">  
@@ -776,12 +951,17 @@
             <div class="col-md-6">
               <label for="validationTooltip02">Assign to Heroku user</label>
               <select class="custom-select custom-select-sm form-control" name="assignedresource">
-                <option value="" >None</option>
-                  <% if(contactList.length != 0) { %>
-                   <% contactList.forEach((eachContact) => { %>
-                   <option value="<%= eachContact.sfid %>" ><%= eachContact.name %></option>
-                   <% }) %>
+                  <% if(objUser.isManager == false) { %>
+                   <option value="<%= objUser.sfid %>" readonly="true"><%= objUser.name %></option> 
                   <% } %>
+                  <% if(objUser.isManager != false) { %>
+                    <option value="" >None</option>
+                  <% if(contactList.length != 0) { %>
+                    <% contactList.forEach((eachContact) => { %>
+                    <option value="<%= eachContact.sfid %>" ><%= eachContact.name %></option>
+                    <% }) %>
+                   <% } %>
+                   <% } %>
                </select>
             </div>
 
@@ -801,12 +981,12 @@
           <div class="row">
             <div class="col-md-6">
               <label for="validationTooltip02">Planned Start Time</label>
-              <input type="time" class="form-control" id="plannedstarttimeTask" name="plannedstarttime"  required>
+              <input type="time" class="form-control" id="plannedstarttimeTask" name="plannedstarttime" required>
             </div>
             
             <div class="col-md-6">
               <label for="validationTooltip02">Planned End Time</label>
-              <input type="time" class="form-control" id="plannedendtimeTask" name="plannedendtime"  required>
+              <input type="time" class="form-control" id="plannedendtimeTask" name="plannedendtime" required>
             </div>
           </div>  
         </div>
@@ -815,7 +995,7 @@
           <div class="row">
             <div class="col-md-6">
               <label for="validationTooltipUsername">Deadline Type</label>
-              <select class="custom-select custom-select-sm form-control" id="deadline" name="Deadline" >
+              <select class="custom-select custom-select-sm form-control" id="deadline" name="deadline" >
                 <option selected>Select</option>
                 <option value="Deadlines">Deadlines</option>
                 <option value="blocktime">Block Time</option>
@@ -832,7 +1012,7 @@
 
       </form>
     </div>
-    
+    </div>
   </div>
 </div>
 </div>
@@ -850,7 +1030,9 @@
       </button>
     </div>
     <div class="modal-body">
-      <form id="fillActualsForm" >
+      <div class="">
+        <div id="errorMessagesss"></div>
+      <form id="fillActualsForm" class="needs-validation" novalidate>
         <div class="form-group">  
           <div class="row">
             <div class="col-md-6">
@@ -935,10 +1117,11 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" id="submitbuttonnn">Save</button>
         </div>
 
       </form>
+      </div>
     </div>
     
   </div>
@@ -952,7 +1135,7 @@
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="detailsModal">Details</h5>
+   <center><h5 class="modal-title" id="detailsModal">Project Tasks Detail</h5></center> 
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

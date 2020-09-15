@@ -42,7 +42,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Task View Detail</h5>
+          <h5 class="modal-title" style="align-items: center;">Timesheet Task Details</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -256,10 +256,22 @@
             let taskRecord = res[0];
             let htmlTable = '';
                               htmlTable += '<tr>';
-                                  htmlTable += '<td><strong>Name</strong></td>';
-                                  htmlTable += '<td>'+taskRecord.name+'</td>';
-                                  htmlTable += '<td><strong>Assigned Resource</strong></td>';
-                                  htmlTable += '<td>'+taskRecord.sfid+'</td>';
+                                  htmlTable += '<td><strong>Project Task Name</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.tskname+'</td>';
+                                  htmlTable += '<td><strong>Project</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.projname+'</td>';
+                              htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong> Task Type</strong></td>';
+                                htmlTable += '<td>'+taskRecord.task_type__c+'</td>';
+                                  htmlTable += '<td><strong>Project Task Category</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.contname+'</td>';
+                              htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Assigned Resource</strong></td>';
+                                htmlTable += '<td>'+taskRecord.categoname+'</td>';
+                                  htmlTable += '<td><strong>DeadLine Type</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.deadline_type__c+'</td>';
                               htmlTable += '</tr>';
                               htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Plans Hour</strong></td>';
@@ -267,11 +279,23 @@
                                 htmlTable += '<td><strong> Task Type</strong></td>';
                                 htmlTable += '<td>'+taskRecord.task_type__c+'</td>';
                             htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Status</strong></td>';
+                                htmlTable += '<td>'+taskRecord.task_stage__c+'</td>';
+                                htmlTable += '<td><strong>Planned start date</strong></td>';
+                                htmlTable += '<td>'+taskRecord.start_date__c.split('T')[0]+'</td>';
+                            htmlTable += '</tr>';
                             htmlTable += '<tr>';
+                              htmlTable += '<td><strong>Planned Hours</strong></td>';
+                              htmlTable += '<td>'+taskRecord.planned_hours__c+'</td>';
                               htmlTable += '<td><strong>Start Time</strong></td>';
                               htmlTable += '<td>'+taskRecord.start_time__c+'</td>';
+                          htmlTable += '</tr>';
+                            htmlTable += '<tr>';
                               htmlTable += '<td><strong> End Time</strong></td>';
                               htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
+                              htmlTable += '<td></td>';
+                              htmlTable += '<td></td>';
                           htmlTable += '</tr>';
                               $('#taskViewTable').empty();
                               $('#taskViewTable').html(htmlTable);

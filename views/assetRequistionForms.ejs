@@ -167,7 +167,7 @@
  <div class="row">
 
  <div class="col-md-6">
- <label for="planDate">Target Date of receiving</label>
+ <label for="planDate">Target Date of Receiving</label>
  <input type="date" class="form-control" id="planDate" value="" name="planDate" >
  </div>
   
@@ -237,7 +237,7 @@
   <input type="text" class="form-control" id="projectName" value="" name="projectName" readonly="true">
   </div>
   <div class="col-md-6">
-    <label for="closurePlanDate">Target Date of receiving</label>
+    <label for="closurePlanDate">Target Date of Receiving</label>
     <input type="date" class="form-control" id="closurePlanDate" value="" name="closurePlanDate" >
     </div>
     <div class="col-md-6">
@@ -592,97 +592,92 @@
                              
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     <div class="accordion" id="accordionExample">
-                                   
-    <div class="card">
-    <div class="card-header" id="headingOne">
-    <h5 class="mb-0">
-    <button class="btn btn-link text-left" type="pettyCashButton"
-    data-toggle="collapse" data-target="#collapseOne"
-    aria-expanded="true" aria-controls="collapseOne">
-    <i class="fa fa-angle-double-right mr-3"></i>Procurement-Non IT
-    </button>
-    <!-- <button class="btn btn-primary float-right" id="pettyCashButton" >New</button> -->
-    <a href="#" class="btn btn-primary float-right procurementNonIT" id="pettyCashButton" style="color:white;" >New</a>
-    </h5>
-    </div>
-   
-    <div id="collapseOne" class="collapse show fade" aria-labelledby="headingOne" data-parent="#accordionExample">
-    <div class="card-body">
+      <div class="card">
+          <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                  <button class="btn btn-link text-left" type="pettyCashButton"
+                      data-toggle="collapse" data-target="#collapseOne"
+                      aria-expanded="true" aria-controls="collapseOne">
+                      <i class="fa fa-angle-double-right mr-3"></i>Procurement-Non IT
+                    </button>
+                    <!-- <button class="btn btn-primary float-right" id="pettyCashButton" >New</button> -->
+                  <a href="#" class="btn btn-primary float-right procurementNonIT" id="pettyCashButton" style="color:white;" >New</a>
+                </h5>
+              </div>
+
+              <div id="collapseOne" class="collapse show fade"
+                  aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
     <table id="procuremnetNonItTable" class="table table-hover striped">
+         
     </table>
+  </div>
+</div>
+</div>
+<div class="card">
+<div class="card-header" id="headingTwo">
+  <h5 class="mb-0">
+      <button class="btn btn-link collapsed text-left" type="button"
+          data-toggle="collapse" data-target="#collapseTwo"
+          aria-expanded="false" aria-controls="collapseTwo">
+          <i class="fa fa-angle-double-right mr-3"></i>Procurement-IT
+        </button>
+        <!-- <button class="btn btn-primary float-right">New</button> -->
+        <a href="#" class="btn btn-primary float-right procurementIT" style="color:white;">New</a>
+      </h5>
     </div>
-    </div>
-    </div>
-                                       
-    <div class="card">
-    <div class="card-header" id="headingTwo">
-    <h5 class="mb-0">
-    <button class="btn btn-link collapsed text-left" type="button"
-    data-toggle="collapse" data-target="#collapseTwo"
-    aria-expanded="false" aria-controls="collapseTwo">
-    <i class="fa fa-angle-double-right mr-3"></i>Procurement-IT
-    </button>
-    <!-- <button class="btn btn-primary float-right">New</button> -->
-    <a href="#" class="btn btn-primary float-right procurementIT" style="color:white;">New</a>
-    </h5>
-    </div>
-    <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <div class="card-body">
-    <table id="procuremnetItTable" class="table table-hover striped">
-    <thead>
-    <th>Procuremnet_-IT ID</th>
-    <th>Items</th>
-    <th>Quantity</th>
-    <th>Budget</th>
-    </thead>
-    </table>
-    </div>
-    </div>
-    </div>
-   
-    
-    <div class="card">
-    <div class="card-header" id="headingThree">
-    <h5 class="mb-0">
-    <button class="btn btn-link collapsed text-left" type="button"
-    data-toggle="collapse" data-target="#headingThree"
-    aria-expanded="false" aria-controls="headingThree">
-    <i class="fa fa-angle-double-right mr-3"></i>Approval
-    </button>
-    <!-- <button class="btn btn-primary float-right">New</button> -->
-    <!-- <a href="#" class="btn btn-primary float-right approval" style="color:white;">New</a>-->
-    </h5> 
-    </div>
-    <div id="headingThree" class="collapse fade" aria-labelledby="headingThree" data-parent="#accordionExample">
-    
-    <div style="overflow-x:auto;">
-    <table id="approvalTable" class="table table-hover striped">
-    <thead>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Date</th>
-    
-    </thead>
-    </table>
-    </div>
-    </div>
-    </div>
-   
-    <div class="card">
-    <div class="card-header" id="headingOne">
-    <h5 class="mb-0">
-    <button class="btn btn-link text-left" type="pettyCashButton"
-    data-toggle="collapse" data-target="#collapseOne"
-    aria-expanded="true" aria-controls="collapseOne">
-    <i class="fa fa-angle-double-right mr-3"></i>Notes/Attachments 
-    </button>
+    <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo"
+        data-parent="#accordionExample">
+        <div class="card-body">
+              <table id="procuremnetItTable" class="table table-hover striped">
+              <thead>
+              <th>Procuremnet_-IT ID</th>
+              <th>Items</th>
+              <th>Quantity</th>
+              <th>Budget</th>
+              </thead>
+            </table>
+          </div>
+      </div>
+  </div>
+  <div class="card">
+      <div class="card-header" id="headingThree">
+          <h5 class="mb-0">
+              <button class="btn btn-link collapsed text-left" type="button"
+                  data-toggle="collapse" data-target="#collapseThree"
+                  aria-expanded="false" aria-controls="collapseThree">
+                  <i class="fa fa-angle-double-right mr-3"></i>Approval
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseThree" class="collapse fade" 
+                aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                      <table id="approvalTable" class="table table-hover striped">
+                      <thead>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Date</th>
+                      
+                      </thead>
+                    </table>
+                  </div>
+              </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                <button class="btn btn-link collapsed text-left" type="button"
+                    data-toggle="collapse" data-target="#collapseFour"
+                    aria-expanded="false" aria-controls="collapseFour">
+                    <i class="fa fa-angle-double-right mr-3"></i>Notes/Attachments 
+                         </button>
     <!-- <button class="btn btn-primary float-right" id="pettyCashButton" >New</button> -->
-    <a href="#" class="btn btn-primary float-right notes" id="notes" style="color:white;" >New</a>
-    </h5>
-    </div>
-   
-    <div id="collapseOne" class="collapse show fade" aria-labelledby="headingOne" data-parent="#accordionExample">
-    <div class="card-body">
+                    <a href="#" class="btn btn-primary float-right notes" id="notes" style="color:white;" >New</a>
+                </h5>
+              </div>
+              <div id="collapseFour" class="collapse fade" aria-labelledby="headingFour" data-parent="#accordionExample">
+                <div class="card-body">
     <table id="notesbuttontable" class="table table-hover striped">
     </table>
     </div>
@@ -713,11 +708,11 @@
           name: 'Asset Requisition Name',
           projectname: 'Project Name',
           noit: 'Number of IT Product',
-          nononit: 'Number of Non IT Product',
+          nononit: 'Number of Non-IT Product',
           itamount: 'IT Amount',
-          nonitamount: 'Non IT Amount' ,
+          nonitamount: 'Non-IT Amount' ,
           totalamount: 'Total Amount', 
-          approvalbutton : 'Approval', 
+          approvalbutton : '1st Stage Approval', 
           accountsapprovalbutton : 'Accounts Approval'
 
         }
@@ -884,6 +879,7 @@
     if(assetDetails.assetFormDetails.length > 0)
     {
     console.log('Inside Asset Details'); 
+    let asset = null ;
     let assetDetailsTableRows = ''; 
     assetDetails.assetFormDetails.forEach((assetDetailsRecord) => {
     let plane = new Date(assetDetailsRecord.requested_closure_plan_date__c);
@@ -906,7 +902,7 @@
     assetDetailsTableRows += '<td>'+assetDetailsRecord.projname +'</td>';
     assetDetailsTableRows += '</tr>'; 
     assetDetailsTableRows += '<tr>';
-    assetDetailsTableRows += '<td><strong>Target Date of receiving<strong></td>';
+    assetDetailsTableRows += '<td><strong>Target Date of Receiving<strong></td>';
     assetDetailsTableRows += '<td>'+ planDt+'</td>';
     assetDetailsTableRows += '<td ><strong>Activity Code<strong></td>';
     
@@ -955,7 +951,7 @@
       assetDetailsTableRows += '<td colspan="4" style="background-color:#d3d3d3;"><h5>Purchase Order Checklist</h5></td>'; 
       assetDetailsTableRows += '</tr>';
       assetDetailsTableRows += '<tr>';
-      assetDetailsTableRows += '<td><strong>if < 3 quotations, specify Reason<strong></td>';
+      assetDetailsTableRows += '<td><strong>If < 3 quotations, specify Reason<strong></td>';
         if(assetDetailsRecord.if_3_quotations_specify_reason__c==true){
           assetDetailsTableRows += '<td>Yes</td>';
         }
@@ -963,7 +959,7 @@
           assetDetailsTableRows += '<td>No</td>';
         }
       
-      assetDetailsTableRows += '<td><strong>reason for non-registered GST Vendor<strong></td>';
+      assetDetailsTableRows += '<td><strong>Reason for non-registered GST Vendor<strong></td>';
         if(assetDetailsRecord.reason_for_non_registered_gst_vendor__c==true){
           assetDetailsTableRows += '<td>Yes</td>';
         }
@@ -1001,30 +997,30 @@
     assetDetailsTableRows += '</tr>';
     
     assetDetailsTableRows += '<tr>';
-    assetDetailsTableRows += '<td><strong>PM Approval(amount<=10k, 10k-30k)<strong></td>';
+    assetDetailsTableRows += '<td><strong>PM Approval(Amount<=10k, 10k-30k)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.manager_approval__c+'</td>';
-    assetDetailsTableRows += '<td><strong>Proc. Head Approval(amount= 10k-30k)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Proc. Head Approval(Amount= 10k-30k)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord. procurement_head_approval__c+'</td>';
     assetDetailsTableRows += '</tr>';
     assetDetailsTableRows += '<tr>';
     assetDetailsTableRows += '<tr>';
-    assetDetailsTableRows += '<td><strong>Proc. Comm. Approval(amount= 30k-5L)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Proc. Comm. Approval(Amount= 30k-5L)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.procurement_comt_approval_for_fortnight__c+'</td>';
-    assetDetailsTableRows += '<td><strong>Proc. Comm. Approval(>30k/14days/vendor)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Proc. Comm. Approval(>30k/14days/Vendor)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.management_approval_for_fortnight_limit__c+'</td>';
     assetDetailsTableRows += '</tr>';
     
         assetDetailsTableRows += '<tr>';
         assetDetailsTableRows += '<td><strong>Management Approval(Amount > 5L)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.management_approval__c+'</td>';
-    assetDetailsTableRows += '<td><strong>Chairperson Approval(amount > 5L)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Chairperson Approval(Amount > 5L)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.chairperson_approval__c+'</td>';
     assetDetailsTableRows += '</tr>';
     
     assetDetailsTableRows += '<tr>';
-    assetDetailsTableRows += '<td><strong>Management Approval(less than 3 quotes)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Management Approval(Less than 3 Quotes)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.management_approval_less_than_3_quotes__c+'</td>';
-    assetDetailsTableRows += '<td><strong>Mgmt. Approval(>30k/14day/vendor/No GST)<strong></td>';
+    assetDetailsTableRows += '<td><strong>Mgmt. Approval(>30k/14day/Vendor/No GST)<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.procurement_committee_approval__c+'</td>';
     assetDetailsTableRows += '</tr>';
     assetDetailsTableRows += '<tr>';
@@ -1054,7 +1050,7 @@
     assetDetailsTableRows += '</tr>';
     assetDetailsTableRows += '<tr>';
         assetDetailsTableRows += '<tr>';
-    assetDetailsTableRows += '<td><strong>P.O attachment<strong></td>';
+    assetDetailsTableRows += '<td><strong>P.O Attachment<strong></td>';
     assetDetailsTableRows += '<td>'+assetDetailsRecord.p_o_attachment__c +'</td>';
     assetDetailsTableRows += '<td><strong>PO Attachment URL<strong></td>';
     if(assetDetailsRecord.po_attachment_url__c!="demo"){
@@ -1066,6 +1062,21 @@
     assetDetailsTableRows +='<td></td>';
     }
     assetDetailsTableRows += '</tr>'; 
+    
+    assetDetailsTableRows += '<tr>';
+    assetDetailsTableRows += '<td><strong>PO Attachment URL By Accounts<strong></td>';
+    if(assetDetailsRecord.po_attachment_url_by_accounts__c!="demo"){
+    if(assetDetailsRecord.po_attachment_url_by_accounts__c!=null){
+    assetDetailsTableRows += '<td>'+'<a href="'+assetDetailsRecord.po_attachment_url_by_accounts__c+'" target="_blank">Click to View </a></td>';
+    }
+    }
+    else{
+    assetDetailsTableRows +='<td></td>';
+    }
+    assetDetailsTableRows += '<td><strong><strong></td>';
+    assetDetailsTableRows += '<td></td>';
+    assetDetailsTableRows += '</tr>'; 
+    
     assetDetailsTableRows += '<tr>';
       assetDetailsTableRows += '<td colspan="4" style="background-color:#d3d3d3;"><h5>Received Stage</h5></td>'; 
       assetDetailsTableRows += '</tr>';
@@ -1085,7 +1096,11 @@
       
       assetDetailsTableRows += '<tr>';
       assetDetailsTableRows += '<td><strong>Date Of Receiving (Goods)<strong></td>';
+      if(assetDetailsRecord.date_of_receiving_goods__c == null)
+      assetDetailsTableRows += '<td>'+asset+'</td>';
+      else
       assetDetailsTableRows += '<td>'+receiveDate+'</td>';
+
       assetDetailsTableRows += '<td><strong><strong></td>';
       assetDetailsTableRows += '<td></td>';
       assetDetailsTableRows += '</tr>';
@@ -1383,7 +1398,7 @@ $('#editassetForm').on('click',function(event){
  $('#assetRequisitionEditModal').modal('hide');
  }
  else{
- alert('Updates :'+jqXHR.responseText);
+ alert('Error :'+jqXHR.responseText);
  }
  
  }) 
@@ -1418,6 +1433,8 @@ $('.approvalpopup').on('click',function(event){
           '</div>';
           $('#approvalerrorMessages').empty();
           $('#approvalerrorMessages').append(errorHtml); 
+          $('#approvalpopup')[0].reset()
+              //document.getElementById("approvalpopup").reset()
        }
        else{
         let comment = document.getElementById('commentTextarea').value;
@@ -1434,6 +1451,8 @@ $('.approvalpopup').on('click',function(event){
               '</div>';
               $('#approvalerrorMessages').empty();
               $('#approvalerrorMessages').append(errorHtml); 
+              $('#approvalpopup')[0].reset()
+             // document.getElementById("accountsapprovalpopup").reset()
               if(resp=='Approval Sent Successfully !'){
                     //    $('#taskForm')[0].reset()
                         let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
@@ -1443,6 +1462,8 @@ $('.approvalpopup').on('click',function(event){
                   '</div>';
                   $('#approvalerrorMessages').empty();
                   $('#approvalerrorMessages').append(errorHtml);
+                  $('#approvalpopup')[0].reset()
+                 // document.getElementById("accountsapprovalpopup").reset()
                       }
           })
        }
@@ -1488,6 +1509,7 @@ function accountsApprovalFunctionality(){
       '</div>';
       $('#accApprovalerrorMessages').empty();
       $('#accApprovalerrorMessages').append(errorHtml); 
+      $('#accountsapprovalpopup')[0].reset()
       if(resp=='Approval Sent Successfully !'){
            //    $('#taskForm')[0].reset()
                let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ resp+
@@ -1497,6 +1519,7 @@ function accountsApprovalFunctionality(){
           '</div>';
           $('#accApprovalerrorMessages').empty();
           $('#accApprovalerrorMessages').append(errorHtml);
+          $('#accountsapprovalpopup')[0].reset()
              }
  })
  .fail(function(jqXHR, status, error){

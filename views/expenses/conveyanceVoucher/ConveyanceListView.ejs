@@ -81,8 +81,8 @@
             sequence : 'Sequence',
             deleteAction: 'Action',
             name: 'Conveyance Voucher ',
-            TravellingPurpose : 'Purpose of Travelling',
-            modeOfTravel : 'Nature Of Travel',
+            TravellingPurpose : 'Purpose of Travel',
+            modeOfTravel : 'Mode of Conveyance',
             createDdate : 'Created Date',
 
         }
@@ -191,9 +191,9 @@
                                   htmlTable += '<td>'+conveyanceRecord.expname+'</td>';
                               htmlTable += '</tr>';
                               htmlTable += '<tr>';
-                                htmlTable += '<td><strong>From</strong></td>';
+                                htmlTable += '<td><strong>From Date</strong></td>';
                                 htmlTable += '<td>'+conveyanceRecord.from__c.slice(0, 10)+'</td>';
-                                htmlTable += '<td><strong>To</strong></td>';
+                                htmlTable += '<td><strong>To Date</strong></td>';
                                 htmlTable += '<td>'+conveyanceRecord.to__c.slice(0, 10)+'</td>';
                               htmlTable += '</tr>';
                               htmlTable += '<tr>';
@@ -208,14 +208,14 @@
                                   htmlTable += '<td>'+conveyanceRecord.activitycode+'</td>';
                                   else
                                   htmlTable += '<td></td>';
-                                  htmlTable += '<td><strong>KM. TRAVELLED</strong></td>';
+                                  htmlTable += '<td><strong>Km. Travelled</strong></td>';
                                 htmlTable += '<td>'+conveyanceRecord.kms_travelled__c+'</td>';
 
                               htmlTable += '</tr>';
                               htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Purpose of Travel</strong></td>';
                                 htmlTable += '<td>'+conveyanceRecord.purpose_of_travel__c+'</td>';
-                                htmlTable += '<td><strong>Create Date</strong></td>';
+                                htmlTable += '<td><strong>Created Date</strong></td>';
                                 htmlTable += '<td>'+strDate+'</td>';
                               htmlTable += '</tr>';
                                htmlTable += '<tr>';

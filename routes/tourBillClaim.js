@@ -76,15 +76,30 @@ router.post('/saveTourBillClaim',(request, response) => {
     console.log('tourBillClaimName  '+tourBillClaimName+ ' parentExpenseId : '+parentExpenseId);
     console.log('tourBillClaimFormData  '+JSON.stringify(request.body));
 
+    const schema=joi.object({
+      tourBillClaimName:joi.string().required().label('Please Fill Tour Bill Claim Name'),
+      tour:joi.string().invalid(' ').required().label('Please Fill Tour Bill Claim Name'),
+      tourBillClaim: joi.string().min(1).max(255).required().label('Please enter Tour Bill Claim Name, ranging from 1-80 Characters'),
+
+        })
+  let result=schema.validate({tourBillClaimName:tourBillClaimName,tour:tourBillClaimName,tourBillClaim:tourBillClaimName});
+  if(result.error){
+      console.log('fd'+result.error);
+      response.send(result.error.details[0].context.label);    
+  }
+    else{
+
     pool.query('INSERT INTO salesforce.Tour_Bill_Claim__c (name, expense__c) values($1, $2) returning id',[tourBillClaimName,parentExpenseId])
     .then((tourBillClaimInsertResult) => {
             console.log('tourBillClaimInsertResult '+JSON.stringify(tourBillClaimInsertResult));
-            response.send('Success');
+            response.send('Saved Successfully !');
     })
+
     .catch((tourBillClaimInsertError) => {
         console.log('tourBillClaimInsertError  '+tourBillClaimInsertError.stack);
         response.send('Error Occured  !');
     })
+  }
 
 })
 
@@ -378,14 +393,15 @@ router.post('/airRailBusCharges',verify, (request, response) => {
               arrival_Dt:joi.date().max('now').label('Arrival Date must be less than or equals to Today '),
               departure_Dated:joi.date().required().label('Please enter Departure Date'),
               departure_Date:joi.date().max('now').label('Departure Date must be less than or equals to Today '),
-              arrival_Date:joi.date().less(joi.ref('departure_Dated')).label('Departure date should be greater than or equal to Arrival date.'),
+              arrival_Date:joi.date().max(joi.ref('departure_Dated')).label('Departure date should be greater than or equal to Arrival date.'),
               projectTask:joi.string().required().label('Please select Activity Code '),
               arrival_Station:joi.string().required().label(' Please select Arrival Station.'),
               departure_Station:joi.string().required().label('Please select Departure Station'),
               amount:joi.number().required().label('Please enter Amount'),
+              amt:joi.number().min(0).label('Amount cannot be negative.'),
               imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
           })
-          let Result=schema.validate({arrival_Dted:bdy.arrival_Date[i],arrival_Dt:bdy.arrival_Date[i],departure_Dated:bdy.departure_Date[i],arrival_Date:bdy.arrival_Date[i],departure_Date:bdy.departure_Date[i],arrival_Date:bdy.arrival_Date[i],projectTask:bdy.projectTask[i],amount:bdy.amount[i],arrival_Station:bdy.arrival_Station[i],departure_Station:bdy.departure_Station[i],imgpath:bdy.imgpath[i]});
+          let Result=schema.validate({arrival_Dted:bdy.arrival_Date[i],arrival_Dt:bdy.arrival_Date[i],departure_Dated:bdy.departure_Date[i],arrival_Date:bdy.arrival_Date[i],departure_Date:bdy.departure_Date[i],arrival_Date:bdy.arrival_Date[i],projectTask:bdy.projectTask[i],amount:bdy.amount[i],amt:bdy.amount[i],arrival_Station:bdy.arrival_Station[i],departure_Station:bdy.departure_Station[i],imgpath:bdy.imgpath[i]});
           console.log('validaton result '+JSON.stringify(Result.error));
                 if(Result.error)
                 {
@@ -417,14 +433,15 @@ router.post('/airRailBusCharges',verify, (request, response) => {
               arrival_Dt:joi.date().max('now').label('Arrival Date must be less than or equals to Today '),
               departure_Dated:joi.date().required().label('Please enter Departure Date'),
               departure_Date:joi.date().max('now').label('Departure Date must be less than or equals to Today '),
-              arrival_Date:joi.date().less(joi.ref('departure_Dated')).label('Departure date should be greater than or equal to Arrival date.'),
+              arrival_Date:joi.date().max(joi.ref('departure_Dated')).label('Departure date should be greater than or equal to Arrival date.'),
               projectTask:joi.string().required().label('Please select Activity Code '),
               arrival_Station:joi.string().required().label(' Please select Arrival Station.'),
               departure_Station:joi.string().required().label('Please select Departure Station'),
               amount:joi.number().required().label('Please enter Amount'),
+              amt:joi.number().min(0).label('Amount cannot be negative.'),
               imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
           })
-          let Result=schema.validate({projectTask:bdy.projectTask,arrival_Dted:bdy.arrival_Date,arrival_Dt:bdy.arrival_Date,arrival_Date:bdy.arrival_Date,departure_Dated:bdy.departure_Date,departure_Date:bdy.departure_Date,amount:bdy.amount,arrival_Station:bdy.arrival_Station,departure_Station:bdy.departure_Station,imgpath:bdy.imgpath});
+          let Result=schema.validate({projectTask:bdy.projectTask,arrival_Dted:bdy.arrival_Date,arrival_Dt:bdy.arrival_Date,arrival_Date:bdy.arrival_Date,departure_Dated:bdy.departure_Date,departure_Date:bdy.departure_Date,amount:bdy.amount,amt:bdy.amount,arrival_Station:bdy.arrival_Station,departure_Station:bdy.departure_Station,imgpath:bdy.imgpath});
           console.log('validaton result '+JSON.stringify(Result.error));
           if(Result.error)
           {
@@ -533,10 +550,11 @@ router.post('/conveyanceCharges',verify, (request, response) => {
           place:joi.string().required().label('Please enter Place'), 
           projectTask:joi.string().required().label('Please select Activity Code'),
           amount:joi.number().required().label('Please enter Amount'),
+          amt:joi.number().min(0).label('Amount cannot be negative.'),
           imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
         //  activity_code:joi.required,
             })
-            let result= schema.validate({projectTask:bodyResult.projectTask[i],dated:bodyResult.date[i],date:bodyResult.date[i],place:bodyResult.place[i],imgpath:bodyResult.imgpath[i],amount:bodyResult.amount[i]});
+            let result= schema.validate({projectTask:bodyResult.projectTask[i],dated:bodyResult.date[i],date:bodyResult.date[i],place:bodyResult.place[i],imgpath:bodyResult.imgpath[i],amount:bodyResult.amount[i],amt:bodyResult.amount[i]});
             if(result.error)
             {
                 console.log('fd'+result.error)
@@ -575,11 +593,12 @@ router.post('/conveyanceCharges',verify, (request, response) => {
           place:joi.string().required().label('Please enter Place'), 
           projectTask:joi.string().required().label('Please select Activity Code'),
           amount:joi.number().required().label('Please enter Amount'),
+          amt:joi.number().min(0).label('Amount cannot be negative.'),
           imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
         //  activity_code:joi.required,
       })
           
-          let result= schema.validate({projectTask:bodyResult.projectTask,dated:bodyResult.date,date:bodyResult.date,place:bodyResult.place,imgpath:bodyResult.imgpath,amount:bodyResult.amount});
+          let result= schema.validate({projectTask:bodyResult.projectTask,dated:bodyResult.date,date:bodyResult.date,place:bodyResult.place,imgpath:bodyResult.imgpath,amount:bodyResult.amount,amt:bodyResult.amount});
       if(result.error)
       {
           console.log('fd'+result.error)
@@ -862,40 +881,40 @@ console.log(' activity_code '+activity_code );
           {
            schema =joi.object({
          //   stayOption:joi.string().required().label('Please select Stay Option'),
-           projectTask:joi.string().required().label('Please select Activity Code.'),
-           placeJourney: joi.string().required().label('Please select Place of Journey.'),
-           fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
+            projectTask:joi.string().required().label('Please select Activity Code.'),
+          placeJourney: joi.string().required().label('Please select Place of Journey.'),
+          fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
            fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
            fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
-        //   fromTimes:joi.time().required().label('Please select FROM(Departure Time from Residence) Time'),
            toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
            toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-         //  toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
+           toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            actualAMTForBL:joi.number().required().label('Please enter Actual Boarding lodging Amount'),
+           amt:joi.number().min(0).label('Actual Boarding lodging Amount cannot be negative.'),
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           })
 
-          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
+          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],toTimes:toTime[i],actualAMTForBL:actualAMTForBL[i],amt:actualAMTForBL[i],imgpath:imgpath[i]});
         }
         else if(stayOption[i] == 'Own Stay')
         {
 
            schema =joi.object({
          //   stayOption:joi.string().required().label('Please Choose Stay Option'),
-           projectTask:joi.string().required().label('Please select Activity Code.'),
-           placeJourney: joi.string().required().label('Please select Place of Journey.'),
-           fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
-           fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
-           fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
-           toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
-           toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
-           fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
-          // toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
+         projectTask:joi.string().required().label('Please select Activity Code.'),
+         placeJourney: joi.string().required().label('Please select Place of Journey.'),
+         fromDated:joi.date().required().label('Please select FROM(Departure Time from Residence)'),
+          fromDat:joi.date().max('now').required().label('Please select FROM(Departure Time from Residence) less than or equals to Today'),
+          fromTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select FROM(Departure Time from Residence) Time'),
+          toDated:joi.date().required().label('Please select TO(Arrival Time to Residence)'),
+          toDate:joi.date().max('now').required().label('TO(Arrival Time to Residence must be less than or equals to Today'),
+          fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
+          toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            // imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           })
 
-          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i]});
+          result=schema.validate({projectTask:projectTask[i],fromDated:fromDate[i],fromDat:fromDate[i],fromTimes:fromTime[i],placeJourney:placeJourney[i], fromDate:fromDate[i],toDated:toDate[i],toDate:toDate[i],toTimes:toTime[i]});
         }
        
       //  result=schema.validate({stayOption:stayOption[i],projectTask:projectTask[i],placeJourney:placeJourney[i], toDate:toDate[i],fromDate:fromDate[i],actualAMTForBL:actualAMTForBL[i],imgpath:imgpath[i]});
@@ -978,10 +997,11 @@ console.log(' activity_code '+activity_code );
            fromDate:joi.date().required().less(joi.ref('toDate')).label('From(Departure Time from Residence) must be less than To (Arrival Time to Residence)'),
            toTimes:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select TO (Arrival Time to Residence)Time'),
            actualAMTForBL:joi.number().required().label('Please enter Actual Boarding lodging Amount'),
+           amt:joi.number().min(0).label('Actual Boarding lodging Amount cannot be negative.'),
            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments').required(),
           
         })
-         result=schema.validate({projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,toDated:toDate,fromDate:fromDate,fromTimes:fromTime,toDate:toDate,toTimes:toTime,actualAMTForBL:actualAMTForBL,imgpath:imgpath});
+         result=schema.validate({projectTask:projectTask,placeJourney:placeJourney,fromDated:fromDate,fromDat:fromDate,toDated:toDate,fromDate:fromDate,fromTimes:fromTime,toDate:toDate,toTimes:toTime,actualAMTForBL:actualAMTForBL,amt:actualAMTForBL,imgpath:imgpath});
 
       }
       else if(stayOption == 'Own Stay')
@@ -1267,12 +1287,14 @@ router.post('/telephoneFood',verify, (request, response) => {
         {
           const schema= joi.object({
             foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
+            famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
             laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
+            lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
             projectTask:joi.string().required().label('Please select Activity Code. '),
             imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
             })   // .or('foodingExpenses','laundryExpenses')
     
-          let result= schema.validate({projectTask:request.body.projectTask, foodingExpenses:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,imgpath:request.body.imgpath});
+          let result= schema.validate({projectTask:request.body.projectTask, foodingExpenses:request.body.foodingExpenses,famt:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,lamt:request.body.laundryExpenses,imgpath:request.body.imgpath});
                   if(result.error)
                     {
                       console.log('Vladtion '+JSON.stringify(result.error));
@@ -1297,12 +1319,14 @@ router.post('/telephoneFood',verify, (request, response) => {
             {
               const schema= joi.object({
                 foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
+                famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
                 laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
+                lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
                 projectTask:joi.string().required().label('Please select Activity Code. '),
                 imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
                 })   // .or('foodingExpenses','laundryExpenses')
         
-              let result= schema.validate({projectTask:request.body.projectTask[i],foodingExpenses:request.body.foodingExpenses[i],laundryExpenses:request.body.laundryExpenses[i],imgpath:request.body.imgpath[i]});
+              let result= schema.validate({projectTask:request.body.projectTask[i],foodingExpenses:request.body.foodingExpenses[i],famt:request.body.foodingExpenses[i],laundryExpenses:request.body.laundryExpenses[i],lamt:request.body.laundryExpenses[i],imgpath:request.body.imgpath[i]});
                       if(result.error)
                         {
                           console.log('Vladtion '+JSON.stringify(result.error));
@@ -1643,9 +1667,10 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
             particulars_mode:joi.string().required().label('Please enter Particulars(Mode)'),
             projectTask:joi.string().label('Please select Activity Code '),
             amount:joi.number().required().label('Please enter Amount'),
+            amt:joi.number().min(0).label('Amount cannot be negative.'),
             imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
         })
-        let result = schema.validate({projectTask:request.body.projectTask,dated:request.body.date,date:request.body.date,amount:request.body.amount,particulars_mode:request.body.particulars_mode ,imgpath:request.body.imgpath})
+        let result = schema.validate({projectTask:request.body.projectTask,dated:request.body.date,date:request.body.date,amount:request.body.amount,amt:request.body.amount,particulars_mode:request.body.particulars_mode ,imgpath:request.body.imgpath})
         console.log('validation '+JSON.stringify(result));
         if(result.error)
         {
@@ -1677,9 +1702,10 @@ router.get('/miscellaneousCharge',verify,(request,response)=>{
                 particulars_mode:joi.string().required().label('Please enter Particulars(Mode)'),
                 projectTask:joi.string().label('Please select Activity Code '),
                 amount:joi.number().required().label('Please enter Amount'),
+                amt:joi.number().min(0).label('Amount cannot be negative.'),
                 imgpath:joi.string().invalid('demo').required().label('Please Upload File/Attachment'),
              })
-            let result = schema.validate({projectTask:request.body.projectTask[i],dated:request.body.date[i],date:request.body.date[i],amount:request.body.amount[i],particulars_mode:request.body.particulars_mode[i],imgpath:request.body.imgpath[i]})
+            let result = schema.validate({projectTask:request.body.projectTask[i],dated:request.body.date[i],date:request.body.date[i],amount:request.body.amount[i],amt:request.body.amount[i],particulars_mode:request.body.particulars_mode[i],imgpath:request.body.imgpath[i]})
             console.log('validation '+JSON.stringify(result));
             if(result.error)
             {

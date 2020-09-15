@@ -36,6 +36,31 @@
 
 </div>
 
+<div id="taskViewModal" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="align-items: center;">Timesheet Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+  
+          <div id="detailLoadingSpinner">
+            <center> <img src="/spinner-gif-transparent-background-14.gif" />  </center>
+        </div>
+        <table id="taskViewTable" class="table">
+
+        </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div id="timesheetEditModal" class="modal fade ">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -142,7 +167,7 @@
         },
         tableDidUpdate: () => {
         console.log('table did update');
-   //      anchorClickFunctionalities();
+        anchorClickFunctionalities();
         
         },
         tableWillUnmount: () => console.log('table will unmount'),
@@ -173,6 +198,7 @@
             console.log('response listViewTimesheet'+JSON.stringify(response));
             table.setData(response, columns);
             namemodal();
+            anchorClickFunctionalities();
             anotherEditFunctionality();
             
 
@@ -197,7 +223,78 @@
     
         return [year, month ,day].join('-');
     }
-
+    function anchorClickFunctionalities(){
+      $('a.taskreferenceTag').on('click',function(event){
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+        $('#taskViewModal').modal('show');
+        let timesheetId = this.id;
+        $('#detailLoadingSpinner').show();
+       // alert('taskId'+taskId);
+        $.ajax({
+          url : '/timesheets/fetchTimesheetDetail',
+          type:'get',
+          data : {
+            timesheetId : timesheetId
+          },
+          dataType: 'json',
+        })
+        
+        .done((res)=>{
+          $('#detailLoadingSpinner').hide();
+          console.log("jhdgjhd"+JSON.stringify(res));
+          if(res.length>0)
+          {
+            let taskRecord = res[0];
+            let htmlTable = '';
+                              htmlTable += '<tr>';
+                                  htmlTable += '<td><strong>Project</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.projname+'</td>';
+                                  htmlTable += '<td><strong>Project Task</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.taskname+'</td>';
+                              htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Description</strong></td>';
+                                htmlTable += '<td>'+taskRecord.description__c+'</td>';
+                                  htmlTable += '<td><strong>Incurred By</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.usrname+'</td>';
+                              htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Related Task Status</strong></td>';
+                                htmlTable += '<td>'+taskRecord.related_task_status__c+'</td>';
+                                  htmlTable += '<td><strong>Representative</strong></td>';
+                                  htmlTable += '<td>'+taskRecord.contname+'</td>';
+                              htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Date Incurred</strong></td>';
+                                htmlTable += '<td>'+taskRecord.date__c.split('T')[0]+'</td>';
+                                htmlTable += '<td><strong>Calculated Hours</strong></td>';
+                                htmlTable += '<td>'+taskRecord.calculated_hours__c+'</td>';
+                            htmlTable += '</tr>';
+                              htmlTable += '<tr>';
+                                htmlTable += '<td><strong>Start Time</strong></td>';
+                                htmlTable += '<td>'+taskRecord.start_time__c+'</td>';
+                                htmlTable += '<td><strong>End Time</strong></td>';
+                                htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
+                            htmlTable += '</tr>';
+                            htmlTable += '<tr>';
+                              htmlTable += '<td><strong>Calculated Hours</strong></td>';
+                              htmlTable += '<td>'+taskRecord.calculated_hours__c+'</td>';
+                              htmlTable += '<td><strong>Start Time</strong></td>';
+                              htmlTable += '<td>'+taskRecord.start_time__c+'</td>';
+                          htmlTable += '</tr>';
+                            htmlTable += '<tr>';
+                              htmlTable += '<td><strong> End Time</strong></td>';
+                              htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
+                              htmlTable += '<td></td>';
+                              htmlTable += '<td></td>';
+                          htmlTable += '</tr>';
+                              $('#taskViewTable').empty();
+                              $('#taskViewTable').html(htmlTable);
+          }
+        })
+      })
+    }
     function namemodal(){
         $('a.taskreferenceTag').on('click',function(event){
             event.stopImmediatePropagation();

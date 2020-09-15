@@ -21,7 +21,11 @@ router.get('/assetDetails',verify,(request, response)=> {
     var userId = request.user.sfid;
     var objUser = request.user;
     console.log('Asset userId : '+userId);
-    let qry ='SELECT asset.sfid, asset.isHerokuApprovalButtonDisabled__c,asset.Name, proj.name as projname, proj.sfid as projId, asset.Approval_Status__c, asset.Number_Of_IT_Product__c, asset.Number_Of_Non_IT_Product__c, asset.Procurement_IT_total_amount__c, asset.Procurement_Non_IT_total_amount__c, asset.Total_amount__c FROM  salesforce.Asset_Requisition_Form__c asset '+
+    let qry ='SELECT asset.sfid, asset.isHerokuApprovalButtonDisabled__c,asset.Name, proj.name as projname, proj.sfid as projId,'+
+            'asset.Approval_Status__c, asset.Manager_Approval__c, asset.Procurement_Head_Approval__c, asset.Procurement_Committee_Approval__c, '+
+            'asset.Procurement_Comt_Approval_for_fortnight__c, asset.Management_Approval__c, asset.Chairperson_Approval__c, asset.Management_Approval_less_than_3_quotes__c, '+
+            'asset.Management_Approval_for_fortnight_limit__c, asset.Management_Approval_Activity_Code__c, '+
+             'asset.Number_Of_IT_Product__c, asset.Number_Of_Non_IT_Product__c, asset.Procurement_IT_total_amount__c, asset.Procurement_Non_IT_total_amount__c, asset.Total_amount__c FROM  salesforce.Asset_Requisition_Form__c asset '+
              'INNER JOIN salesforce.Milestone1_Project__c proj '+
              'ON asset.project_department__c =  proj.sfid '+
              ' WHERE asset.Submitted_By_Heroku_User__c = $1 AND asset.sfid IS NOT NULL';
@@ -47,7 +51,12 @@ router.get('/assetDetails',verify,(request, response)=> {
               obj.itamount = assetQueryResult.rows[i].procurement_it_total_amount__c;
               obj.nonitamount = assetQueryResult.rows[i].procurement_non_it_total_amount__c;
               obj.totalamount = assetQueryResult.rows[i].total_amount__c;
-              if(assetQueryResult.rows[i].approval_status__c == 'Pending' || assetQueryResult.rows[i].approval_status__c == 'Rejected')
+              if(assetQueryResult.rows[i].manager_approval__c == 'Pending' || assetQueryResult.rows[i].procurement_head_approval__c == 'Pending' ||
+                 assetQueryResult.rows[i].procurement_committee_approval__c == 'Pending' || assetQueryResult.rows[i].procurement_comt_approval_for_fortnight__c == 'Pending' || 
+                 assetQueryResult.rows[i].management_approval__c == 'Pending' || assetQueryResult.rows[i].chairperson_approval__c == 'Pending' ||
+                 assetQueryResult.rows[i].management_approval_less_than_3_quotes__c == 'Pending' || assetQueryResult.rows[i].management_approval_for_fortnight_limit__c == 'Pending' || 
+                 assetQueryResult.rows[i].management_approval_activity_code__c == 'Pending'
+              )
               {
                 obj.approvalbutton = '<button href="#" class="btn btn-primary approvalpopup" disabled = "true" id="'+assetQueryResult.rows[i].sfid+'" >1st Stage Approval</button>'
                 obj.editbutton = '<button href="#" disabled="true" class="btn btn-primary assetRequisitionEditModal" id="'+assetQueryResult.rows[i].sfid+'" >Edit</button>';
@@ -328,7 +337,7 @@ router.get('/details',verify, async(request, response) => {
  'asset.Comittee_Rejected_Count__c,asset.Procurement_Committee_Status__c,asset.Accounts_Approval__c,asset.Procurement_Head_Approval__c,asset.Approval_Status__c,'+
  'asset.Number_Of_IT_Product__c,asset.Number_Of_Non_IT_Product__c,asset.Procurement_IT_total_amount__c,asset.Procurement_Non_IT_total_amount__c, asset.Total_amount__c,proj.name as projname,proj.sfid, '+
  'asset.Management_Approval_Activity_Code__c,asset.Management_Approval_for_fortnight_limit__c, '+
- 'asset.Management_Approval_less_than_3_quotes__c,asset.Procurement_Comt_Approval_for_fortnight__c, '+
+ 'asset.Management_Approval_less_than_3_quotes__c,asset.Procurement_Comt_Approval_for_fortnight__c,asset.PO_Attachment_URL_By_Accounts__c, '+
   'asset.P_O_attachment__c,po_attachment_url__c,asset.advance_payment_status__c,asset.payment_status__c,asset.Status__c,asset.Payment_Received_Acknowledgement__c,asset.receiver_name__c,asset.received_quantity_goods__c,asset.date_of_receiving_goods__c, '+
   'asset.utr_number_transaction_details__c, asset.advance_payment_status__c, '+
   'asset.if_3_quotations_specify_Reason__c,asset.reason_for_non_registered_GST_Vendor__c, asset.Pricing_Terms_Cost_comparison__c, asset.Delivery_Terms_Delivery_Place__c, asset.Delivery_Terms_Delivery_Time__c,asset.Delivery_cost_Incl__c '+
@@ -461,10 +470,11 @@ router.post('/insertAsssetForm',(request,response)=>{
   
 const schema=joi.object({
     assetRequisitionName:joi.string().required().label('Please Fill Asset Requisition Name'),
+    asset: joi.string().min(1).max(255).required().label('Asset Requisition Name is too long'),
     project:joi.string().required().label('Please choose Project/Department'),
-    planDate:joi.string().required().label('Please fill Target Date of receiving'),
+    planDate:joi.string().required().label('Please fill Target Date of Receiving'),
 })
-let result=schema.validate({assetRequisitionName,project,planDate});
+let result=schema.validate({assetRequisitionName,project,planDate,asset:assetRequisitionName});
 if(result.error){
     console.log('fd'+result.error);
     response.send(result.error.details[0].context.label);    
@@ -610,7 +620,7 @@ router.post('/updateasset',(request,response)=>{
         }).catch((eroor)=>{console.log(JSON.stringify(eroor.stack))})
      }
      else{
-         response.send('Choose Status Closed only When payment is Released ')
+         response.send('Final Payment Status can be chosen as Closed only when Final Payment Status is Released.')
      }
     
     }
@@ -735,9 +745,9 @@ router.post('/nonItProducts', (request,response) => {
              vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
             itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
             quantity:joi.number().required().label('Please enter Quantity.'),
-            quanty:joi.number().min(0).label('The quantity cannot be negative.'),
+            quanty:joi.number().min(0).label('The Quantity cannot be negative.'),
             budget:joi.number().required().label('Please enter Budget.'),
-            budg:joi.number().min(0).label('The budget cannot be negative.'),
+            budg:joi.number().min(0).label('The Budget cannot be negative.'),
         })
         let result=schema.validate({state:state,items:items,itemsCategory:itemsCategory,district:district,vendor:vendor,itemSpecification:itemSpecification,quantity:quantity,quanty:quantity,budget:budget,budg:budget});
         console.log('validation hsh '+JSON.stringify(result.error));
@@ -789,9 +799,9 @@ router.post('/nonItProducts', (request,response) => {
                 vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
                 itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
                 quantity:joi.number().required().label('Please enter Quantity.'),
-                quanty:joi.number().min(0).label('The quantity cannot be negative.'),
+                quanty:joi.number().min(0).label('The Quantity cannot be negative.'),
                 budget:joi.number().required().label('Please enter Budget.'),
-                budg:joi.number().min(0).label('The budget cannot be negative.'),
+                budg:joi.number().min(0).label('The Budget cannot be negative.'),
     
             })
             let result=schema.validate({state:state[i],items:items[i],itemsCategory:itemsCategory[i],district:district[i],vendor:vendor[i],itemSpecification:itemSpecification[i],quantity:quantity[i],quanty:quantity[i],budget:budget[i],budg:budget[i]});
@@ -901,7 +911,7 @@ router.post('/itProducts', (request,response) => {
              vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
              itemSpecification:joi.string().required().label('Please fill Item Specification.'),
              quantity:joi.number().required().label('Please enter Quantity.'),
-             quanty:joi.number().min(0).label('The quantity cannot be negative.'),
+             quanty:joi.number().min(0).label('The Quantity cannot be negative.'),
              budget:joi.number().required().label('Please enter Budget.'),
              budg:joi.number().min(0).label('The budget cannot be negative.'),
             })
@@ -951,7 +961,7 @@ router.post('/itProducts', (request,response) => {
                 vendor:joi.string().required().label(' Please select Vendor from Vendor Picklist.'),
                 itemSpecification:joi.string().required().label('Please fill Item Specification.'),          
                 quantity:joi.number().required().label('Please enter Quantity.'),
-                quanty:joi.number().min(0).label('The quantity cannot be negative.'),
+                quanty:joi.number().min(0).label('The Quantity cannot be negative.'),
                 budget:joi.number().required().label('Please enter Budget.'),
                 budg:joi.number().min(0).label('The budget cannot be negative.'),
             })
@@ -1366,7 +1376,7 @@ router.get('/getNonItProcurementListVIew/:parentAssetId',verify,(request,respons
 router.get('/NonItProcurementList',(request,response)=>{
     let parentAssetId=request.query.parentId;
     console.log('nonIT DETAIL LIST for parent id=  '+parentAssetId);
-    let qry='SELECT proc.sfid,proc.Name as procName ,proc.Items__c ,proc.Products_Services_Name__c,vend.name as vendorName,proc.Product_Service__c,proc.Quantity__c, proc.Budget__c,proc.Impaneled_Vendor__c '+
+    let qry='SELECT proc.sfid,proc.Name as procName ,proc.Items__c ,proc.Products_Services_Name__c,vend.name as vendorName,proc.Product_Service__c,proc.Quantity__c, proc.Number_of_quotes__c, proc.Budget__c,proc.Impaneled_Vendor__c '+
     'FROM salesforce.Product_Line_Item__c proc '+
     'INNER JOIN salesforce.Impaneled_Vendor__c vend '+
     'ON proc.Impaneled_Vendor__c =  vend.sfid '+
@@ -1388,6 +1398,7 @@ router.get('/NonItProcurementList',(request,response)=>{
               obj.item_category = eachRecord.products_services_name__c;
               obj.quantity = eachRecord.quantity__c;
               obj.budget = eachRecord.budget__c;
+              obj.no = eachRecord.number_of_quotes__c;
               obj.vendor=eachRecord.vendorname;
            //   obj.editAction = '<button href="#" class="btn btn-primary editProcurement" id="'+eachRecord.sfid+'" >Edit</button>'
              obj.deleteAction = '<button href="#" class="btn btn-primary deleteProcIt" id="'+eachRecord.sfid+'" >Delete</button>'
@@ -1784,8 +1795,8 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
               (eachRequisitionForm.management_approval_for_fortnight_limit__c == null) &&
               (eachRequisitionForm.management_approval_activity_code__c == null )
           ){
-              console.log('all approval fields are null');
-              response.send('Please send the record for approval first !');
+              console.log('All Approval fields are null');
+              response.send('Please send the record for 1st approval stage , then only it can be send for Accounts Approval.');
           }
           else if((eachRequisitionForm.manager_approval__c == 'Pending') ||
           ( eachRequisitionForm.procurement_head_approval__c == 'Pending') ||
@@ -1798,7 +1809,7 @@ router.post('/sendProcurementAccountsApproval',(request, response) => {
           (  eachRequisitionForm.management_approval_activity_code__c == 'Pending')
           )
           {
-              console.log('one of the fields are is pending state');
+              console.log('One of the fields are is pending state');
               response.send('You cannot send for accounts approval until there is a pending status !');
           }
           else{
@@ -2218,7 +2229,7 @@ router.post('/uploadFiless',(request,response)=>{
         pool.query(updateQuerry,[hide])
         .then((queryResultUpdate)=>{
             console.log('queryResultUpdate '+JSON.stringify(queryResultUpdate));
-            response.send('succesfully inserted');
+            response.send('Attachment saved Successfully');
         }).catch((eroor)=>{console.log(JSON.stringify(eroor.stack))})
 
     }

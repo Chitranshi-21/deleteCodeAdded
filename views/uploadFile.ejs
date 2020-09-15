@@ -12,6 +12,8 @@
       <div class="col-md-5">
         <a class="btn btn-primary btn-md bg-gray" href="/procurement/assetRequisitionViewRel/<%=parentAssetId %>" >Go To Asset Requisition </a>
       </br>
+      <div class="">
+        <div id="errorMessages"></div>
 <form name="notesupload" id="notesupload" >
     <div class="form-group">
        <div class="row">
@@ -25,13 +27,14 @@
      </div>
      
      <div class="">
-         <button type="submit" class="btn btn-primary" id="uploadattachmentBuuton" data-dismiss="modal">Save</button>
+         <button type="submit" class="btn btn-primary" id="uploadattachmentBuuton" data-dismiss="modal" style="margin-left: 140px;">Save</button>
      </div>
      </div>
      </div>
      </div>
     
    </form>
+</div>
    <script>
     $(document).ready(() => {
 
@@ -66,9 +69,17 @@
                     .fail((jqXHR, status, error) => {
                           console.log('jqXHR  '+JSON.stringify(jqXHR));
                          // alert('data succesfully inserted ');
-                          if(jqXHR.responseText=='succesfully inserted'){
-                            alert('data succesfully inserted ');
-                            $('#assetRequisitionEditModal').modal('hide');
+                          if(jqXHR.responseText=='Attachment saved Successfully'){
+                          //  alert('data succesfully inserted ');
+                            document.getElementById("notesupload").reset()
+                            let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                            '</div>';
+                            $('#errorMessages').empty();
+                            $('#errorMessages').append(errorHtml); 
+                          //  $('#assetRequisitionEditModal').modal('hide');
     
                           }
                           

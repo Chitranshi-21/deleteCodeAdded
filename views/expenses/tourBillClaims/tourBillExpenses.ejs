@@ -395,11 +395,29 @@
                       if(jqXHR.responseText == 'Success')
                       {
                         alert('Saved Successfully !');
-                        $('#createTourBillClaimModal').modal('hide');
+                     
+                      //  $('#createTourBillClaimModal').modal('hide');
+                      let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                            '</div>';
+                            $('#errorMessages').empty();
+                            $('#errorMessages').append(errorHtml); 
+                        document.getElementById("tourBillClaimForm").reset()
                       }
                       else
                       {
-                        alert('There occured error while saving !');
+                      
+                        //alert('There occured error while saving !');
+                        let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                            '</div>';
+                            $('#errorMessages').empty();
+                            $('#errorMessages').append(errorHtml); 
+                        document.getElementById("tourBillClaimForm").reset()
                       }
                       console.log('text  '+text+' err :'+err);
                 })
@@ -422,12 +440,14 @@
             </button>
           </div>
           <div class="modal-body">
+            <div class="">
+              <div id="errorMessages"></div>
             <form  id="tourBillClaimForm" class="needs-validation" novalidate >
   
             <div class="form-group">  
                 <div class="row">
                   <div class="col-md-6">
-                    <label for="validationTooltip01">Tour Bill Claim Name</label>
+                    <label for="validationTooltip01">Tour Bill Claim View</label>
                     <input type="text" class="form-control" id="validationTooltip01" value="" placeholder="Tour Bill Claim Name"  name="tourBillClaimName" required>
                   </div>
               </div>
@@ -446,6 +466,7 @@
               </div>
   
             </form>
+            </div>
           </div>
         </div>
       </div>
