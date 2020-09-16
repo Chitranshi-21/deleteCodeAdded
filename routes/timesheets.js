@@ -252,16 +252,17 @@ router.post('/createtask',async (request, response) => {
   {
      schema=joi.object({
       taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().invalid(' ').required().label('Please enter Task Description!'),
+      task:joi.string().min(5).required().label('Please enter Task Description!'),
       taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
+      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
   
      // depart:joi.string().min(1).max(255).required().label('Department value too long.'),
         })
 
-   result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status});
+   result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status,assignedresource:assignedresource});
   }
 
   else if(deadline == 'Select')
@@ -277,32 +278,36 @@ router.post('/createtask',async (request, response) => {
   {
     schema=joi.object({
       taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().invalid(' ').required().label('Please enter Task Description!'),
+      task:joi.string().min(5).required().label('Please enter Task Description!'),
       taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
+      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
       plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
+  
     })
 
-    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status,plannedendtime:plannedendtime});
+    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status,plannedendtime:plannedendtime});
   }
 
   else if(deadline == 'blocktime')
   {
     schema=joi.object({
       taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().invalid(' ').required().label('Please enter Task Description!'),
+      task:joi.string().min(5).required().label('Please enter Task Description!'),
       taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
+      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
+    
       //plannedstarttime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned Start Time !'),
      // plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
      //plantime:joi.string().required().less(joi.ref('plannedendtime')).label('Planned Start time should be less than Planned End time. !'),
     })
 
-    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status});
+    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status});
   }
  
 if(result.error){
@@ -321,23 +326,7 @@ if(result.error){
     console.log('startminutes '+startminutes);
     console.log('endhours '+endhours);
     console.log('endminutes '+endminutes);
-      /*  if (starthours > 11) 
-        {
-          suffixStart += "PM";
-        } 
-        else
-        {
-        suffixStart += "AM";
-        }
-        if (endhours > 11) 
-        {
-          suffixEnd += "PM";
-        } 
-        else
-        {
-          suffixEnd += "AM";
-        }
-*/
+     
   startTime = (starthours > 12) ? (starthours-12 + ':' + startminutes + ':00'+' PM') : (starthours + ':' + startminutes + ':00' +' AM');
   endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
 
@@ -1408,7 +1397,7 @@ router.get('/getTasklist',verify,(request,response)=>{
                    'FROM salesforce.Milestone1_Task__c tsk '+ 
                    'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
                    'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.Project_Name__c= proj.sfid '+
-                   'WHERE  tsk.Assigned_Manager__c= $1 ';
+                   'WHERE  tsk.Assigned_Manager__c= $1 AND tsk.sfid IS NOT NULL ';
                    
  console.log('queryText  taskkkkkkkkkkkkkkkkkkk',queryText);
   pool
@@ -1451,7 +1440,7 @@ router.get('/getTasklist',verify,(request,response)=>{
 router.get('/fetchTaskDetail',verify,(request,response)=>{
   let tskId=request.query.taskId;
   console.log('task ID '+tskId);
-  let queryText = 'SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c,tsk.Project_Milestone__c,catego.name as categoname, tsk.assigned_manager__c, tsk.deadLine_type__c,tsk.task_stage__c,tsk.start_date__c,tsk.end_time__c,tsk.Task_Type__c,tsk.Planned_Hours__c,tsk.Start_Time__c,cont.sfid as contid ,cont.name as contname,proj.name as projname,tsk.createddate '+
+  let queryText = 'SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c,tsk.Project_Milestone__c,catego.name as categoname, tsk.assigned_manager__c, tsk.deadLine_type__c,tsk.task_stage__c,tsk.start_date__c,tsk.end_time__c,tsk.Task_Type__c,tsk.total_hours__c,tsk.Planned_Hours__c,tsk.Start_Time__c,cont.sfid as contid ,cont.name as contname,proj.name as projname,tsk.createddate '+
   'FROM salesforce.Milestone1_Task__c tsk '+ 
   'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
   'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.Project_Name__c= proj.sfid '+

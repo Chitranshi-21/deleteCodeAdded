@@ -265,6 +265,12 @@
                                   htmlTable += '<td><strong>Representative</strong></td>';
                                   htmlTable += '<td>'+taskRecord.contname+'</td>';
                               htmlTable += '</tr>';
+                              htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Information</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
                               htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Date Incurred</strong></td>';
                                 htmlTable += '<td>'+taskRecord.date__c.split('T')[0]+'</td>';
@@ -277,18 +283,7 @@
                                 htmlTable += '<td><strong>End Time</strong></td>';
                                 htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
                             htmlTable += '</tr>';
-                            htmlTable += '<tr>';
-                              htmlTable += '<td><strong>Calculated Hours</strong></td>';
-                              htmlTable += '<td>'+taskRecord.calculated_hours__c+'</td>';
-                              htmlTable += '<td><strong>Start Time</strong></td>';
-                              htmlTable += '<td>'+taskRecord.start_time__c+'</td>';
-                          htmlTable += '</tr>';
-                            htmlTable += '<tr>';
-                              htmlTable += '<td><strong> End Time</strong></td>';
-                              htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
-                              htmlTable += '<td></td>';
-                              htmlTable += '<td></td>';
-                          htmlTable += '</tr>';
+                           
                               $('#taskViewTable').empty();
                               $('#taskViewTable').html(htmlTable);
           }

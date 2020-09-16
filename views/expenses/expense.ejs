@@ -509,6 +509,45 @@
 </div>
 
 <!-- Create Tour Bill Claim Modal Start -->
+<div id="createTourBillClaim" class="modal fade bs-example-modal-lg" tabindex ="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createTaskModal">Create New Tour Bill Claim</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <div id="errorMessagesss"></div>
+        <form  id="taskForm" class="needs-validation" novalidate >
+
+        <div class="form-group">  
+            <div class="row">
+              <div class="col-md-6">
+                <label for="validationTooltip01">Tour Bill Claim Name</label>
+                <input type="text" class="form-control" id="validationTooltip01" value="" placeholder="Task Name"  name="taskname" required>
+              </div>
+          </div>
+        </div>   
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit" id="expenseSubmitbutton"  class="btn btn-primary">Save</button>
+          </div>
+
+        </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Create Tour Bill Claim Modal End -->
+
+<!-- Create Tour Bill Claim Modal Start -->
 <div id="createTourBillClaimModal" class="modal fade bs-example-modal-lg" tabindex ="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -520,7 +559,7 @@
       </div>
       <div class="modal-body">
         <div class="">
-          <div id="errorMessages"></div>
+          <div id="errorMessagesss"></div>
         <form  id="tourBillClaimForm" class="needs-validation" novalidate >
 
         <div class="form-group">  
@@ -529,7 +568,12 @@
                 <label for="validationTooltip01">Tour Bill Claim Name</label>
                 <input type="text" class="form-control" id="validationTooltip01" value="" placeholder="Tour Bill Claim Name"  name="tourBillClaimName" required>
               </div>
+          </div>
+        </div> 
+        <div class="form-group">  
+            <div class="row">
               <div class="col-md-6">
+                <input type="hidden" class="form-control" id="hiddenExpenseId"   name="parentExpenseId" required>
               </div>
           </div>
         </div>   
@@ -547,9 +591,7 @@
 </div>
 
 
-
 <!-- Create Tour Bill Claim Modal End -->
-
 
 
 <!-- Approval Comment Modal End -->
@@ -1142,14 +1184,12 @@
 
             /***** Creating Tour Bill Claim ****/
 
-            $("a.tourBillClaim").click(function(){
-
+             /***** Creating Tour Bill Claim ****/
+             $("a.tourBillClaim").click(function(){
               $('#createTourBillClaimModal').modal('show');
-
               $('#tourBillClaimSubmitbutton').on('click',function(event){
                 event.stopImmediatePropagation();
                 event.stopPropagation();
-
                   $('#tourBillClaimForm').submit(function(e){
                       e.preventDefault();
                       e.stopImmediatePropagation();
@@ -1165,45 +1205,41 @@
                         dataType : 'json'
                       })
                       .done((response) => {
-                          console.log('response  '+response);
-                      })
-                      .fail((jqXHR,text,err) => {
-                            console.log('jqXHR   '+JSON.stringify(jqXHR));
-                            if(jqXHR.responseText == 'Saved Successfully !')
-                            {
-                              alert('Saved Successfully !');
-                              document.getElementById("tourBillClaimForm").reset()
-                           //  $('#createTourBillClaimModal')[0].reset()
-                             let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-                              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                              '<span aria-hidden="true">&times;</span>'+
-                              '</button>'+
-                              '</div>';
-                              $('#errorMessages').empty();
-                              $('#errorMessages').append(errorHtml); 
-                              $('#createTourBillClaimModal')[0].reset()
-                              $('#createTourBillClaimModal').modal('hide');
-                            }
-                            else
-                            {
-                             alert('There occured error while saving !');
-                             document.getElementById("tourBillClaimForm").reset()
-                        //alert('There occured error while saving !');
-                        let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                        '</div>';
-                        $('#errorMessages').empty();
-                        $('#errorMessages').append(errorHtml); 
-                      //  $('#createTourBillClaimModal')[0].reset()
-                            }
-                            console.log('text  '+text+' err :'+err);
+                        console.log('resonse :'+JSON.stringify(response));
+                        
+                        })
+                        .fail((jqXHR,text,err) => {
+
+                          if(jqXHR.responseText== "Saved Successfully !")
+                             {
+                                  alert('Successfully Inserted!');
+                                $('#tourBillClaimForm')[0].reset()
+                                let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+jqXHR.responseText+
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                                '<span aria-hidden="true">&times;</span>'+
+                                '</button>'+
+                                '</div>';
+                                $('#errorMessages').empty();
+                                $('#errorMessages').append(errorHtml); 
+                              }
+                              else
+                              {
+                                console.log('jqXHR   '+JSON.stringify(jqXHR));
+                                  alert('Error: '+jqXHR.responseText);
+                                let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+jqXHR.responseText+
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                                '<span aria-hidden="true">&times;</span>'+
+                                '</button>'+
+                                '</div>';
+                                $('#errorMessages').empty();
+                                $('#errorMessages').append(errorHtml); 
+                              }
+                          
                       })
                     })
               })
-
           })  
+
 
 /***********************************************************************************************************************
   PRINT FUNCTIONALITY
@@ -1652,8 +1688,8 @@ $('.printexp').on('click', function(event){
                 if(jqXHR.responseText=='Successfully Inserted'){
                $('#taskForm')[0].reset()
               // $('#taskForm').modal('hide');
-               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ response+
-            '<button type="button" class="close" data-dismiss="alert-success" aria-label="Close">'+
+               let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
               '<span aria-hidden="true">&times;</span>'+
             '</button>'+
           '</div>';

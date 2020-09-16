@@ -190,7 +190,7 @@
         },
         tableDidUpdate: () => {
         console.log('table did update');
-   //      anchorClickFunctionalities();
+         anchorClickFunctionalities();
         
         },
         tableWillUnmount: () => console.log('table will unmount'),
@@ -265,38 +265,55 @@
                                 htmlTable += '<td><strong> Task Type</strong></td>';
                                 htmlTable += '<td>'+taskRecord.task_type__c+'</td>';
                                   htmlTable += '<td><strong>Project Task Category</strong></td>';
-                                  htmlTable += '<td>'+taskRecord.contname+'</td>';
+                                  htmlTable += '<td>'+taskRecord.categoname+'</td>';
                               htmlTable += '</tr>';
                               htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Assigned Resource</strong></td>';
-                                htmlTable += '<td>'+taskRecord.categoname+'</td>';
+                                htmlTable += '<td>'+taskRecord.contname+'</td>';
                                   htmlTable += '<td><strong>DeadLine Type</strong></td>';
                                   htmlTable += '<td>'+taskRecord.deadline_type__c+'</td>';
                               htmlTable += '</tr>';
-                              htmlTable += '<tr>';
-                                htmlTable += '<td><strong>Plans Hour</strong></td>';
-                                htmlTable += '<td>'+taskRecord.planned_hours__c+'</td>';
-                                htmlTable += '<td><strong> Task Type</strong></td>';
-                                htmlTable += '<td>'+taskRecord.task_type__c+'</td>';
-                            htmlTable += '</tr>';
+                             
                               htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Status</strong></td>';
                                 htmlTable += '<td>'+taskRecord.task_stage__c+'</td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '</tr>';
+                                htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Task Information:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr>';
                                 htmlTable += '<td><strong>Planned start date</strong></td>';
                                 htmlTable += '<td>'+taskRecord.start_date__c.split('T')[0]+'</td>';
-                            htmlTable += '</tr>';
-                            htmlTable += '<tr>';
-                              htmlTable += '<td><strong>Planned Hours</strong></td>';
+                                htmlTable += '<td><strong>Planned Hours</strong></td>';
                               htmlTable += '<td>'+taskRecord.planned_hours__c+'</td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr>';
                               htmlTable += '<td><strong>Start Time</strong></td>';
                               htmlTable += '<td>'+taskRecord.start_time__c+'</td>';
-                          htmlTable += '</tr>';
-                            htmlTable += '<tr>';
                               htmlTable += '<td><strong> End Time</strong></td>';
                               htmlTable += '<td>'+taskRecord.end_time__c+'</td>';
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Metrics Actuals:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+                            htmlTable += '<tr>';
+                              htmlTable += '<td><strong>Actual Hours</strong></td>';
+                              htmlTable += '<td>'+taskRecord.total_hours__c+'</td>';
                               htmlTable += '<td></td>';
                               htmlTable += '<td></td>';
                           htmlTable += '</tr>';
+                            
                               $('#taskViewTable').empty();
                               $('#taskViewTable').html(htmlTable);
           }

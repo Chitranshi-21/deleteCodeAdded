@@ -333,13 +333,22 @@
             {
               var starthours = Number(startDate.match(/^(\d+)/)[1]);
             var startminutes = Number(startDate.match(/:(\d+)/)[1]);
+          //  var startAMPM = startDate.match(/\s(.*)$/)[1];
             var endhours = Number(endDate.match(/^(\d+)/)[1]);
             var endminutes = Number(endDate.match(/:(\d+)/)[1]);
+           // var endAMPM = endDate.match(/\s(.*)$/)[1];
           //  var AMPM = startDate.match(/\s(.*)$/)[1];
             console.log('starthours '+starthours);
             console.log('startminutes '+startminutes);
+       //     console.log('startAMPM '+startAMPM);
             console.log('endhours '+endhours);
             console.log('endminutes '+endminutes);
+          //  console.log('endAMPM '+endAMPM);
+
+            if(startDate > endDate)
+            {
+              alert('Error: Planned Start time should be less than Planned End time. !')
+            }
            
             if(starthours > endhours)
             {
@@ -377,7 +386,8 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
-
+                        $("#createTaskModal").modal("hide");
+                        window.location.reload()
                     }
                     else
                     {
@@ -390,6 +400,8 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
+                        $("#createTaskModal").modal("hide");
+                        window.location.reload()
                     }
                 })
                 .fail((jqXHR, status, error) =>{
@@ -402,6 +414,8 @@
                         '</div>';
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
+                        $("#createTaskModal").modal("hide");
+                        window.location.reload()
                 });
             }
             }
@@ -431,7 +445,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
-
+                        window.location.reload()
                     }
                     else
                     {
@@ -444,6 +458,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
+                        window.location.reload()
                     }
                 })
                 .fail((jqXHR, status, error) =>{
@@ -456,6 +471,7 @@
                         '</div>';
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
+                        window.location.reload()
                 });
             }
            
@@ -465,12 +481,31 @@
         e.preventDefault();
         var values = $(this).serialize();
         console.log('values   '+values);
-       $("#submitbuttonnn").attr("disabled", true);
-        $.ajax({
-                url: "/timesheets/fillactuals",
-                type: "post",
-                data: values ,
-          })
+        var startDate = $('#startTime').val();
+        console.log('startTime '+startDate);
+        var endDate = $('#endTime').val();
+            console.log('endTime '+endDate);
+           if(startDate == '')
+            {
+              alert('Error: Please Fill Actual Start Time');
+            }
+          
+          else if(endDate == '')
+            {
+              alert('Error: Please Fill Actual End Time');
+            }
+           else if(startDate > endDate)
+            {
+              alert('Error: Actual Start Time should be less than Actual End Time. !')
+            }
+          else
+            {
+              $("#submitbuttonnn").attr("disabled", true);
+              $.ajax({
+                      url: "/timesheets/fillactuals",
+                      type: "post",
+                      data: values ,
+                     })
                 .done((data)=>{
                     console.log('data '+JSON.stringify(data))
                     let resp = JSON.stringify(data);
@@ -513,6 +548,8 @@
                         $('#errorMessagesss').empty();
                         $('#errorMessagesss').append(errorHtml); 
                 });
+            }
+   
         })
         $('#bootstrapModalFullCalendar').fullCalendar({
             header: {
@@ -620,7 +657,7 @@
                 
                     if(seletedDate.getTime() > currentDate.getTime())
                     {
-                          alert('You cannot fill timesheet ahead of the current date !');
+                          alert('You cannot fill timesheet of the today date !');
                     }
                     else
                     {
@@ -630,7 +667,7 @@
                             $("#fillActualsModal").modal("show");
                             $('#projectName').change(() => {            
                             var selectedProject = $("#projectName option:selected").val();
-                            alert("You have selected the project : " + selectedProject );
+                          //  alert("You have selected the project : " + selectedProject );
                             let select = document.getElementById("selectedTask");
                              let length = select.options.length;
                               for (i = length-1; i > 0; i--) {
@@ -1081,12 +1118,12 @@
           <div class="row">
             <div class="col-md-6">
               <label for="validationTooltip02">Actual Start Time</label>
-              <input type="time" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" name="plannedStartTimeTimesheet" required>
+              <input type="time" class="form-control" id="startTime" placeholder="Last name" value="Otto" name="plannedStartTimeTimesheet" required>
             </div>
             
             <div class="col-md-6">
               <label for="validationTooltip02">Actual End Time</label>
-              <input type="time" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" name="plannedEndTimeTimesheet" required>
+              <input type="time" class="form-control" id="endTime" placeholder="Last name" value="Otto" name="plannedEndTimeTimesheet" required>
             </div>
           </div>  
         </div>
