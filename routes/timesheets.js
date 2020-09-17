@@ -257,7 +257,7 @@ router.post('/createtask',async (request, response) => {
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
-      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
+      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
   
      // depart:joi.string().min(1).max(255).required().label('Department value too long.'),
         })
@@ -282,7 +282,7 @@ router.post('/createtask',async (request, response) => {
       taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
-      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
+      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
       plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
   
@@ -299,7 +299,7 @@ router.post('/createtask',async (request, response) => {
       taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
       projectname:joi.string().required().label('Please select Project !'),
       type:joi.string().required().label('Please select Task Type !'),
-      assignedresource:joi.string().invalid('None').required().label('Please choose Assigned Resource!'),
+      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
       status:joi.string().invalid('None').required().label('Please choose Status'),
     
       //plannedstarttime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned Start Time !'),
@@ -422,20 +422,21 @@ router.post('/fillactuals',(request, response) => {
       actualEndTimeTimesheet:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please select Actual End Time !'),
      // actual:joi.string().required().less(joi.ref('actualStartTimeTimesheet')).label('Planned Start time should be less than Planned End time. !'),
       descriptionTimesheet:joi.string().required().label('Please enter Description !'),
-      descriptionTimesheets:joi.string().invalid(' ').required().label('Please enter Description '),
+      descriptionTimesheets:joi.string().min(5).required().label('Please enter Description '),
+      description:joi.string().invalid('').required().label('Please enter Description '),
       descr:joi.string().min(1).max(80).required().label('Description too long. !'),
    
   
      // depart:joi.string().min(1).max(255).required().label('Department value too long.'),
         })
-  let result=schema.validate({projectname:projectName,project:projectName,selectedTask:selectedTask,task:selectedTask,statusTimesheet:statusTimesheet,status:statusTimesheet,actualStartTimeTimesheet:actualStartTimeTimesheet,actualEndTimeTimesheet:actualEndTimeTimesheet,descriptionTimesheet:descriptionTimesheet,descriptionTimesheets:descriptionTimesheet,descr:descriptionTimesheet});
+  let result=schema.validate({projectname:projectName,project:projectName,selectedTask:selectedTask,task:selectedTask,statusTimesheet:statusTimesheet,status:statusTimesheet,actualStartTimeTimesheet:actualStartTimeTimesheet,actualEndTimeTimesheet:actualEndTimeTimesheet,descriptionTimesheet:descriptionTimesheet,descriptionTimesheets:descriptionTimesheet,description:descriptionTimesheet,descr:descriptionTimesheet});
   if(result.error){
       console.log('fd'+result.error);
       response.send(result.error.details[0].context.label);    
   }
     else{
     pool
-    .query('INSERT INTO salesforce.Milestone1_Time__c (Projecttimesheet__c, Date__c, Project_Task__c, Representative__c, Start_Time__c, End_Time__c, Description__c) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING sfid',[projectName,dateIncurred,selectedTask,representative,actualStartTimeTimesheet,actualEndTimeTimesheet,descriptionTimesheet])
+    .query('INSERT INTO salesforce.Milestone1_Time__c (Projecttimesheet__c, Date__c, Project_Task__c, Representative__c,Related_Task_Status__c,Start_Time__c, End_Time__c, Description__c) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING sfid',[projectName,dateIncurred,selectedTask,representative,statusTimesheet,actualStartTimeTimesheet,actualEndTimeTimesheet,descriptionTimesheet])
     .then((timesheetQueryResult) => {
       
       console.log('timesheetQueryResult  '+JSON.stringify(timesheetQueryResult));

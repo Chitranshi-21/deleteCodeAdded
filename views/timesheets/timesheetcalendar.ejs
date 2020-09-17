@@ -401,7 +401,7 @@
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
                         $("#createTaskModal").modal("hide");
-                        window.location.reload()
+                       // window.location.reload()
                     }
                 })
                 .fail((jqXHR, status, error) =>{
@@ -415,7 +415,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#createTaskModal").modal("hide");
-                        window.location.reload()
+                      //  window.location.reload()
                 });
             }
             }
@@ -458,7 +458,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
-                        window.location.reload()
+                       // window.location.reload()
                     }
                 })
                 .fail((jqXHR, status, error) =>{
@@ -471,7 +471,7 @@
                         '</div>';
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
-                        window.location.reload()
+                     //   window.location.reload()
                 });
             }
            
@@ -521,7 +521,7 @@
                         $('#errorMessagesss').empty();
                         $('#errorMessagesss').append(errorHtml); 
                         $("#submitbuttonnn").attr("disabled", false);
-
+                        window.location.reload()
                     }
                     else
                     {
@@ -1132,8 +1132,7 @@
           <div class="row">
             <div class="col-md-6">
                   <label for="validationTooltip02">Description</label>
-                  <textarea rows="5" class="form-control" id="validationTooltip02" name="descriptionTimesheet" value=" " required >
-                  </textarea>
+                  <textarea class="form-control" id="descriptionTimesheet" rows="3" autocomplete="off" name="descriptionTimesheet"></textarea>
             </div>
 
             <div class="col-md-6">
