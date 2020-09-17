@@ -407,7 +407,7 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
                           plannedHoursMap.set(date, eachTask.planned_hours__c);
                           console.log('if Block '+eachTask.planned_hours__c);
                           if(eachTask.planned_hours__c != null)
-                            plannedHoursMap.set(date, eachTask.planned_hours__c.toFixed(2));
+                            plannedHoursMap.set(date, eachTask.planned_hours__c);
                           else
                             plannedHoursMap.set(date, 0);
                         }
@@ -415,9 +415,8 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
                         {
                             
                             let previousHours = plannedHoursMap.get(date);
-                            previousHours = previousHours.toFixed(2);
                             console.log('date   '+date +'  else Block Previous Hours : '+previousHours);
-                            let currentHours = eachTask.planned_hours__c.toFixed(2);
+                            let currentHours = eachTask.planned_hours__c;
                             console.log('date   '+date +'  else Block Current Hours : '+currentHours);
                             if(currentHours != null)
                             {
@@ -676,7 +675,6 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
       projTeampram.push('$' + i);
       lstProjTeam.push(projTeamResult.rows[i-2].team__c);
      }
-
   }).catch((projectTeamQuery)=>{
     console.log('anjksdnjds'+JSON.stringify(projectTeamQuery.stack));
   })
@@ -741,7 +739,7 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
                              plannedHoursMap.set(date, eachTask.planned_hours__c);
                              console.log('if Block '+eachTask.planned_hours__c);
                              if(eachTask.planned_hours__c != null)
-                               plannedHoursMap.set(date, eachTask.planned_hours__c.toFixed(2));
+                               plannedHoursMap.set(date, eachTask.planned_hours__c);
                              else
                                plannedHoursMap.set(date, 0);
                            }
@@ -749,9 +747,8 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
                            {
                                
                                let previousHours = plannedHoursMap.get(date);
-                               previousHours = previousHours.toFixed(2);
                                console.log('date   '+date +'  else Block Previous Hours : '+previousHours);
-                               let currentHours = eachTask.planned_hours__c.toFixed(2);
+                               let currentHours = eachTask.planned_hours__c;
                                console.log('date   '+date +'  else Block Current Hours : '+currentHours);
                                if(currentHours != null)
                                {
@@ -1044,7 +1041,7 @@ router.get('/geteventsProj',verify,async function(req,res,next){
                     plannedHoursMap.set(date, eachTask.planned_hours__c);
                     console.log('if Block '+eachTask.planned_hours__c);
                     if(eachTask.planned_hours__c != null)
-                      plannedHoursMap.set(date, eachTask.planned_hours__c.toFixed(2));
+                      plannedHoursMap.set(date, eachTask.planned_hours__c);
                     else
                       plannedHoursMap.set(date, 0);
                   }
@@ -1052,9 +1049,8 @@ router.get('/geteventsProj',verify,async function(req,res,next){
                   {
                       
                       let previousHours = plannedHoursMap.get(date);
-                      previousHours = previousHours.toFixed(2);
                       console.log('date   '+date +'  else Block Previous Hours : '+previousHours);
-                      let currentHours = eachTask.planned_hours__c.toFixed(2);
+                      let currentHours = eachTask.planned_hours__c;
                       console.log('date   '+date +'  else Block Current Hours : '+currentHours);
                       if(currentHours != null)
                       {
@@ -1257,7 +1253,7 @@ router.get('/getevents',verify, async function(req, res, next) {
                     plannedHoursMap.set(date, eachTask.planned_hours__c);
                     console.log('if Block '+eachTask.planned_hours__c);
                     if(eachTask.planned_hours__c != null)
-                      plannedHoursMap.set(date, eachTask.planned_hours__c.toFixed(2));
+                      plannedHoursMap.set(date, eachTask.planned_hours__c);
                     else
                       plannedHoursMap.set(date, 0);
                   }
@@ -1265,9 +1261,8 @@ router.get('/getevents',verify, async function(req, res, next) {
                   {
                       
                       let previousHours = plannedHoursMap.get(date);
-                      previousHours = previousHours.toFixed(2);
                       console.log('date   '+date +'  else Block Previous Hours : '+previousHours);
-                      let currentHours = eachTask.planned_hours__c.toFixed(2);
+                      let currentHours = eachTask.planned_hours__c;
                       console.log('date   '+date +'  else Block Current Hours : '+currentHours);
                       if(currentHours != null)
                       {
