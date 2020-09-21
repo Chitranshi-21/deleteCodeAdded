@@ -168,7 +168,7 @@
          //   alert("team view & all project");
             $.ajax({ 
               type: 'GET',
-              url: '/users/geteventsTeam',
+              url: '/users/geteventsTeams',
               data : {
                   'date': today
               },
@@ -208,7 +208,7 @@
           .fail(function(jqXHR, textStatus, err){
               console.log('AJAX error response :',textStatus);
           })
-          }
+        }
           else if(selectProj!='allproject' && selectedView=='teamview'){
             console.log('Team View & particula project'+selectProj);
          /*   $.ajax({ 
@@ -386,7 +386,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
-                        $("#createTaskModal").modal("hide");
+                      //  $("#createTaskModal").modal("hide");
                         window.location.reload()
                     }
                     else
@@ -400,7 +400,7 @@
                         $('#errorMessages').empty();
                         $('#errorMessages').append(errorHtml); 
                         $("#submitbutton").attr("disabled", false);
-                        $("#createTaskModal").modal("hide");
+                      //  $("#createTaskModal").modal("hide");
                        // window.location.reload()
                     }
                 })

@@ -23,6 +23,8 @@ router.get('/expenseApprovalsList',verify, (request, response) => {
                 for(let i=0, len = customApprovalResult.rows.length ; i < len ; i++ )
                 {
                     let crDate = new Date(customApprovalResult.rows[i].createddate);
+                    crDate.setHours(crDate.getHours() + 5);
+                    crDate.setMinutes(crDate.getMinutes() + 30);
                     let strDate = crDate.toLocaleString();
                     let obj = {};
                     obj.sequence = (i+1);

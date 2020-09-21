@@ -139,7 +139,7 @@
 <p id="expenseId"><%= expenseId %></p>
 <p id="tourBillId"></p>
 
-<center><h3 style="text-align: center; margin-top: 20px;">Tour Bill Claim</h3></center>     
+<center><h3 style="text-align: center; margin-top: 20px;">Tour Bill Claim Expenses</h3></center>     
 <div class="container">
 <div class="row mt-5 mb-3 align-items-center">
     <div class="col-md-6">
@@ -711,6 +711,7 @@
 
                 $('#tourBillClaimSubmitbutton').on('click',function(){
                     $('#tourBillClaimForm').submit(function(e){
+                      $("#tourBillClaimSubmitbutton").attr("disabled", true);
                         e.preventDefault();
                         var values = $(this).serialize();
                         console.log('tour Bill Claim values  '+values);
@@ -731,6 +732,7 @@
                               {
                                // alert('Saved Successfully !');
                                 console.log('jqXHR '+JSON.stringify(jqXHR));
+                              
                                 let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
                                   '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
                                   '<span aria-hidden="true">&times;</span>'+
@@ -738,6 +740,8 @@
                                   '</div>';
                                   $('#errorMessages').empty();
                                   $('#errorMessages').append(errorHtml); 
+                                  $("#tourBillClaimSubmitbutton").attr("disabled", false);
+                                  window.location.reload()
                                // $('#createTourBillClaimModal').modal('hide');
                               }
                               else
@@ -750,6 +754,7 @@
                                   '</div>';
                                   $('#errorMessages').empty();
                                   $('#errorMessages').append(errorHtml); 
+                                  $("#tourBillClaimSubmitbutton").attr("disabled", false);
                                // $('#createTourBillClaimModal').modal('hide');
                               }
                               console.log('text  '+text+' err :'+err);

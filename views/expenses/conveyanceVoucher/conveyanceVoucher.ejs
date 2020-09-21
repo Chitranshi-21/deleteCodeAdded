@@ -11,12 +11,14 @@
       <div class="row mt-5">
        
           <div class="col-md-10 m-auto">
-      <div class="col-md-5">
+      <div class="col-md-10">
           <a class="btn btn-primary btn-md bg-gray" href="/expense/ConveyanceListView?expenseId=<%= parentExpenseId %>" id="createNewPettyCashButton">Go To Conveyance</a>
           <a class="btn btn-primary btn-md bg-gray" href="/expense/expenseViewRel/<%= parentExpenseId %>" >Go To Expense </a>
+          <a class="btn btn-primary btn-md bg-gray" href="https://res.cloudinary.com/hfmqrflec/image/upload/v1600428120/expense%20document/LLF_-_Local_Conveyance_and_Reimbursement_Policy_eptz2u.pdf" target="_blank" >Conveyance Voucher Policy Document </a>
+
       </div>
    <br />
-   <h4 align="center">Enter Conveyance Voucher Form Details</h4>
+   <h4 align="center">Conveyance Voucher Expenses</h4>
    <br />
    
    <div class="">
@@ -45,7 +47,7 @@
      </table>
      <div align="center">
     
-      <input type="submit" style="background-color:#2C3E50;" name="submit" class="btn btn-info" value="Submit" />
+      <input type="submit" style="background-color:#2C3E50;" id="submitButton" name="submit" class="btn btn-info" value="Submit" />
      </div>
     </div>
    </form>
@@ -183,6 +185,7 @@ $(document).ready(function(){
 
 $(function () {
   $('form#formdata').bind('submit', function () {
+    $("#submitButton").attr("disabled", true);
     $.ajax({
       type: 'post',
       url: '/expense/conveyanceform',
@@ -198,7 +201,8 @@ $(function () {
               '</button>'+
             '</div>';
             $('#errorMessages').empty();
-            $('#errorMessages').append(errorHtml);  
+            $('#errorMessages').append(errorHtml); 
+            $("#submitButton").attr("disabled", false); 
         }
         else
         {
@@ -210,6 +214,7 @@ $(function () {
             '</div>';
             $('#errorMessages').empty();
             $('#errorMessages').append(errorHtml);  
+            $("#submitButton").attr("disabled", false);
         }
         
        

@@ -219,175 +219,174 @@ router.get('/getdata',verify, function(req, response, next)
 });
 
 router.post('/createtask',async (request, response) => {
-    var formData = request.body;
-    console.log('formData  '+JSON.stringify(formData));
-    console.log('ffff '+formData.taskname);
-    var startTime,endTime;
-    var suffixStart = '';
-    var suffixEnd = '';
-  var taskname = formData.taskname,
-        status = formData.status,
-        projectname = formData.projectname, 
-        taskdate = formData.taskdate, 
-        assignedresource = formData.assignedresource,
-        tasktype = formData.tasktype,
-        plannedstarttime = formData.plannedstarttime,
-        plannedendtime = formData.plannedendtime;
-        deadline = formData.deadline,
+  var formData = request.body;
+  console.log('formData  '+JSON.stringify(formData));
+  console.log('ffff '+formData.taskname);
+  var startTime,endTime;
+  var suffixStart = '';
+  var suffixEnd = '';
+var taskname = formData.taskname,
+      status = formData.status,
+      projectname = formData.projectname, 
+      taskdate = formData.taskdate, 
+      assignedresource = formData.assignedresource,
+      tasktype = formData.tasktype,
+      plannedstarttime = formData.plannedstarttime,
+      plannedendtime = formData.plannedendtime;
+      deadline = formData.deadline,
 
-  console.log('taskname '+taskname);
-  console.log('status : '+status);
-  console.log('projectname  '+projectname);
-  console.log('taskdate '+taskdate);
-  var dateParts = taskdate.split('/');
+console.log('taskname '+taskname);
+console.log('status : '+status);
+console.log('projectname  '+projectname);
+console.log('taskdate '+taskdate);
+var dateParts = taskdate.split('/');
 
-  console.log('assignedresource  '+assignedresource);
-  console.log('tasktype   '+tasktype);
+console.log('assignedresource  '+assignedresource);
+console.log('tasktype   '+tasktype);
 
-  console.log('plannedstarttime  '+plannedstarttime);
-  console.log('plannedendtime '+plannedendtime);
-  console.log('deadline '+deadline);
-  let schema,result ; 
-  if(deadline == undefined || deadline == '')
-  {
-     schema=joi.object({
-      taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().min(5).required().label('Please enter Task Description!'),
-      taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
-      projectname:joi.string().required().label('Please select Project !'),
-      type:joi.string().required().label('Please select Task Type !'),
-      status:joi.string().invalid('None').required().label('Please choose Status'),
-      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
-  
-     // depart:joi.string().min(1).max(255).required().label('Department value too long.'),
-        })
+console.log('plannedstarttime  '+plannedstarttime);
+console.log('plannedendtime '+plannedendtime);
+console.log('deadline '+deadline);
+let schema,result ; 
+if(deadline == undefined || deadline == '')
+{
+   schema=joi.object({
+    taskname:joi.string().required().label('Please enter Task Description!'),
+    task:joi.string().invalid(' ').required().label('Please enter Task Description!'),
+    taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
+    projectname:joi.string().required().label('Please select Project !'),
+    type:joi.string().required().label('Please select Task Type !'),
+    status:joi.string().invalid('None').required().label('Please choose Status'),
+    assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
 
-   result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status,assignedresource:assignedresource});
-  }
+   // depart:joi.string().min(1).max(255).required().label('Department value too long.'),
+      })
 
-  else if(deadline == 'Select')
-  {
-    schema=joi.object({
-      deadline:joi.string().invalid('Select').required().label('Please select Deadline Type!'),
-
-    })
-
-    result=schema.validate({deadline:deadline});
-  }
-  else if(deadline == 'Deadlines')
-  {
-    schema=joi.object({
-      taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().min(5).required().label('Please enter Task Description!'),
-      taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
-      projectname:joi.string().required().label('Please select Project !'),
-      type:joi.string().required().label('Please select Task Type !'),
-      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
-      status:joi.string().invalid('None').required().label('Please choose Status'),
-      plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
-  
-    })
-
-    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status,plannedendtime:plannedendtime});
-  }
-
-  else if(deadline == 'blocktime')
-  {
-    schema=joi.object({
-      taskname:joi.string().required().label('Please enter Task Description!'),
-      task:joi.string().min(5).required().label('Please enter Task Description!'),
-      taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
-      projectname:joi.string().required().label('Please select Project !'),
-      type:joi.string().required().label('Please select Task Type !'),
-      assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
-      status:joi.string().invalid('None').required().label('Please choose Status'),
-    
-      //plannedstarttime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned Start Time !'),
-     // plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
-     //plantime:joi.string().required().less(joi.ref('plannedendtime')).label('Planned Start time should be less than Planned End time. !'),
-    })
-
-    result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status});
-  }
- 
-if(result.error){
-    console.log('fd'+result.error);
-    response.send(result.error.details[0].context.label);    
+ result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,status:request.body.status,assignedresource:assignedresource});
 }
-  else{
-  
-   if(deadline == 'blocktime')
-   {
-    var starthours = Number(plannedstarttime.match(/^(\d+)/)[1]);
-    var startminutes = Number(plannedstarttime.match(/:(\d+)/)[1]);
-    var endhours = Number(plannedendtime.match(/^(\d+)/)[1]);
-    var endminutes = Number(plannedendtime.match(/:(\d+)/)[1]);
-    console.log('starthours '+starthours);
-    console.log('startminutes '+startminutes);
-    console.log('endhours '+endhours);
-    console.log('endminutes '+endminutes);
-     
-  startTime = (starthours > 12) ? (starthours-12 + ':' + startminutes + ':00'+' PM') : (starthours + ':' + startminutes + ':00' +' AM');
-  endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
 
+else if(deadline == 'Select')
+{
+  schema=joi.object({
+    deadline:joi.string().invalid('Select').required().label('Please select Deadline Type!'),
+
+  })
+
+  result=schema.validate({deadline:deadline});
+}
+else if(deadline == 'Deadlines')
+{
+  schema=joi.object({
+    taskname:joi.string().required().label('Please enter Task Description!'),
+    task:joi.string().min(5).required().label('Please enter Task Description!'),
+    taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
+    projectname:joi.string().required().label('Please select Project !'),
+    type:joi.string().required().label('Please select Task Type !'),
+    assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
+    status:joi.string().invalid('None').required().label('Please choose Status'),
+    plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
+
+  })
+
+  result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status,plannedendtime:plannedendtime});
+}
+
+else if(deadline == 'blocktime')
+{
+  schema=joi.object({
+    taskname:joi.string().required().label('Please enter Task Description!'),
+    task:joi.string().min(5).required().label('Please enter Task Description!'),
+    taskn:joi.string().min(1).max(80).required().label(' Task Description too long.'),
+    projectname:joi.string().required().label('Please select Project !'),
+    type:joi.string().required().label('Please select Task Type !'),
+    assignedresource:joi.string().invalid('None').required().label('Please Assign Resource!'),
+    status:joi.string().invalid('None').required().label('Please choose Status'),
+  
+    //plannedstarttime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned Start Time !'),
+   // plannedendtime:joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required().label('Please fill Planned End Time !'),
+   //plantime:joi.string().required().less(joi.ref('plannedendtime')).label('Planned Start time should be less than Planned End time. !'),
+  })
+
+  result=schema.validate({taskname:taskname,task:taskname,taskn:taskname,type:tasktype,projectname:projectname,assignedresource:assignedresource,status:request.body.status});
+}
+
+if(result.error){
+  console.log('fd'+result.error);
+  response.send(result.error.details[0].context.label);    
+}
+else{
+
+ if(deadline == 'blocktime')
+ {
+  var starthours = Number(plannedstarttime.match(/^(\d+)/)[1]);
+  var startminutes = Number(plannedstarttime.match(/:(\d+)/)[1]);
+  var endhours = Number(plannedendtime.match(/^(\d+)/)[1]);
+  var endminutes = Number(plannedendtime.match(/:(\d+)/)[1]);
+  console.log('starthours '+starthours);
+  console.log('startminutes '+startminutes);
+  console.log('endhours '+endhours);
+  console.log('endminutes '+endminutes);
+   
+startTime = (starthours > 12) ? (starthours-12 + ':' + startminutes + ':00'+' PM') : (starthours + ':' + startminutes + ':00' +' AM');
+endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
+
+console.log('startTime '+startTime);
+console.log('endTime '+endTime);
+
+ }
+else if(deadline == 'Deadlines')
+ {
+  var endhours = Number(plannedendtime.match(/^(\d+)/)[1]);
+  var endminutes = Number(plannedendtime.match(/:(\d+)/)[1]);
+  console.log('endhours '+endhours);
+  console.log('endminutes '+endminutes);
+  endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
+  startTime = plannedstarttime;
   console.log('startTime '+startTime);
   console.log('endTime '+endTime);
 
-   }
-  else if(deadline == 'Deadlines')
-   {
-    var endhours = Number(plannedendtime.match(/^(\d+)/)[1]);
-    var endminutes = Number(plannedendtime.match(/:(\d+)/)[1]);
-    console.log('endhours '+endhours);
-    console.log('endminutes '+endminutes);
-    endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
-    startTime = plannedstarttime;
-    console.log('startTime '+startTime);
-    console.log('endTime '+endTime);
+ }
+ else
+ {
+startTime = plannedstarttime;
+endTime = plannedendtime;
+ }
 
-   }
-   else
-   {
-  startTime = plannedstarttime;
-  endTime = plannedendtime;
-   }
- 
-    pool
- // let qry='SELECT Id, Name FROM Milestone1_Milestone__c WHERE Project__c =$1 AND Name =$2,'+[projectname,'Timesheets'];
- pool.query('SELECT Id,sfid, Name,project__c FROM salesforce.Milestone1_Milestone__c WHERE project__c = $1 AND Name = $2',[projectname, 'Timesheets'])
- // pool.query('SELECT id,sfid from salesforce.Milestone1_Milestone__c WHERE Name = $1',['Timesheet Category'])
- .then((milestoneQueryResult) => {
-    console.log('milestoneQueryResult '+JSON.stringify(milestoneQueryResult.rows))
-      if(milestoneQueryResult.rowCount > 0)
-      {
-          console.log('milestoneQueryResult '+JSON.stringify(milestoneQueryResult.rows));
-          var timesheetMilestoneId =  milestoneQueryResult.rows[0].sfid;
-          console.log('timesheetMilestoneId Inside Milestone : '+timesheetMilestoneId +' Name :'+milestoneQueryResult.rows[0].name);   /*'a020p000001cObIAAU'*/
-            pool
-              .query('INSERT INTO salesforce.Milestone1_Task__c (Name, project_milestone__c, RecordTypeId, Task_Stage__c, Project_Name__c, Start_Date__c, Assigned_Manager__c,Task_Type__c ,Start_Time__c,End_Time__c) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',[taskname,timesheetMilestoneId ,'0120p000000C8plAAC',status,projectname,taskdate,assignedresource,tasktype,startTime,endTime])
-              .then((saveTaskResult) => {
-                      console.log('saveTaskResult =====>>>>>>>>>>>>  : '+JSON.stringify(saveTaskResult.rows[0]));
-      //  response.send('savedInserted');
-    //  console.log('inserted Id '+saveTaskResult.rows[0]);
-                 response.send('Task saved Successfully');
-                  })
-                    .catch((saveTaskError) => {
-                     console.log('saveTaskError  '+saveTaskError.stack);
-                      console.log('saveTaskError._hc_err  : '+saveTaskError._hc_err.msg);
-                       response.send('Error Occured');
-                  }) 
+  pool
+// let qry='SELECT Id, Name FROM Milestone1_Milestone__c WHERE Project__c =$1 AND Name =$2,'+[projectname,'Timesheets'];
+pool.query('SELECT Id,sfid, Name,project__c FROM salesforce.Milestone1_Milestone__c WHERE project__c = $1 AND Name = $2',[projectname, 'Timesheets'])
+// pool.query('SELECT id,sfid from salesforce.Milestone1_Milestone__c WHERE Name = $1',['Timesheet Category'])
+.then((milestoneQueryResult) => {
+  console.log('milestoneQueryResult '+JSON.stringify(milestoneQueryResult.rows))
+    if(milestoneQueryResult.rowCount > 0)
+    {
+        console.log('milestoneQueryResult '+JSON.stringify(milestoneQueryResult.rows));
+        var timesheetMilestoneId =  milestoneQueryResult.rows[0].sfid;
+        console.log('timesheetMilestoneId Inside Milestone : '+timesheetMilestoneId +' Name :'+milestoneQueryResult.rows[0].name);   /*'a020p000001cObIAAU'*/
+          pool
+            .query('INSERT INTO salesforce.Milestone1_Task__c (Name, project_milestone__c, RecordTypeId, Task_Stage__c, Project_Name__c, Start_Date__c, Assigned_Manager__c,Task_Type__c ,Start_Time__c,End_Time__c) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',[taskname,timesheetMilestoneId ,'0120p000000C8plAAC',status,projectname,taskdate,assignedresource,tasktype,startTime,endTime])
+            .then((saveTaskResult) => {
+                    console.log('saveTaskResult =====>>>>>>>>>>>>  : '+JSON.stringify(saveTaskResult.rows[0]));
+    //  response.send('savedInserted');
+  //  console.log('inserted Id '+saveTaskResult.rows[0]);
+               response.send('Task saved Successfully');
+                })
+                  .catch((saveTaskError) => {
+                   console.log('saveTaskError  '+saveTaskError.stack);
+                    console.log('saveTaskError._hc_err  : '+saveTaskError._hc_err.msg);
+                     response.send('Error Occured');
+                }) 
 
-        }
+      }
 
-  })
-  .catch((milestoneQueryError) => {
-      console.log('milestoneQueryError '+milestoneQueryError.stack);
-  })
+})
+.catch((milestoneQueryError) => {
+    console.log('milestoneQueryError '+milestoneQueryError.stack);
+})
 
 }
-  
-});
 
+});
 
 router.post('/fillactuals',(request, response) => {
     var fillActualsFormData = request.body;
@@ -513,7 +512,7 @@ router.post('/fillactuals',(request, response) => {
        console.log('error '+JSON.stringify(error.stack));
      })
  }) */
-router.get('/getallTeamdetails',verify,async(request,response)=>{
+ router.get('/getallTeamdetails',verify,async(request,response)=>{
   console.log('request.user '+JSON.stringify(request.user));
   var userId = request.user.sfid;
   var userName = request.user.name;
@@ -864,9 +863,13 @@ router.get('/getTeamdetails',verify,async(request,response)=>{
   else{
     let teamProjId=[];
     let lstTaskOfRelatedDate1 =[];
-    let projectTeamQuery='SELECT id,name,sfid,Project__c,Team__c FROM salesforce.Project_Team__c WHERE Project__c IS NOT NULL';
-    console.log('TEAM VIEW ALL PROJECTS');
-    pool.query(projectTeamQuery)
+    let projectID =[];
+    let projectTeamQuery='SELECT projteam.id,projteam.name,projteam.sfid as sfid,projteam.Project__c,team.sfid as tsfid, team.Manager__c '+
+    'FROM salesforce.Project_Team__c projteam '+
+    'INNER JOIN salesforce.Team__c team ON projteam.team__c =  team.sfid '+
+    'WHERE projteam.Project__c IS NOT NULL AND team.Manager__c = $1 ';
+    console.log('TEAM VIEW ALL PROJECTS'+projectTeamQuery);
+    pool.query(projectTeamQuery,[userId])
     .then((projTeamResult)=>{
     console.log('projectTeam '+JSON.stringify(projTeamResult.rows)+'rows '+projTeamResult.rowCount);
     if(projTeamResult.rowCount<1){
@@ -875,39 +878,29 @@ router.get('/getTeamdetails',verify,async(request,response)=>{
     }
     else{
       let projectTeamMap = new Map();
-       projTeampram.push('$' + 1);
-        lstProjTeam.push(userId);
-       for(var i = 2; i <= projTeamResult.rows.length+1; i++) {
+      // projTeampram.push('$' + 1);
+      //  lstProjTeam.push(userId);
+       for(var i = 1; i <= projTeamResult.rows.length; i++) {
         projTeampram.push('$' + i);
-        lstProjTeam.push(projTeamResult.rows[i-2].team__c);
-        projectTeamMap.set(projTeamResult.rows[i-2].team__c,projTeamResult.rows[i-2].project__c);
+        lstProjTeam.push(projTeamResult.rows[i-1].tsfid);
+        projectID.push(projTeamResult.rows[i-1].project__c);
+       // projectTeamMap.set(projTeamResult.rows[i-2].team__c,projTeamResult.rows[i-2].project__c);
        }
-      /* Team ehere team manager is curret uSer or not  */
-      let teamQry = 'SELECT Id, sfid , Manager__c, name FROM salesforce.Team__c WHERE Manager__c = $1 AND sfid IN ('+ projTeampram.join(',')+ ')';
+      /* Team ehere team manager is curret User or not  */
+     // let teamQry = 'SELECT Id, sfid , Manager__c, name FROM salesforce.Team__c WHERE Manager__c = $1 AND sfid IN ('+ projTeampram.join(',')+ ')';
+     let teamQry = 'SELECT Id, sfid , Manager__c, name FROM salesforce.Team__c';
       console.log('teamQry '+teamQry);
-      pool.query(teamQry,lstProjTeam)
+      pool.query(teamQry)
       .then((teamQueryResult)=>{
-        console.log('team query result ='+JSON.stringify(teamQueryResult.rows));
+        console.log('team query result ='+JSON.stringify(teamQueryResult.rowCount));
         if(teamQueryResult.rowCount>0){
 
-          for(var i = 1; i <= teamQueryResult.rows.length; i++) {
-            teamParam.push('$' + i);
-            lstTeams.push(teamQueryResult.rows[i-1].sfid);
-            var teamid=teamQueryResult.rows[i-1].sfid;
-            //console.log(teamid+'  88888888888888*********************'+projectTeamMap.has(teamid));
-            if(projectTeamMap.has(teamid)){
-            //  console.log('taemfek '+teamQueryResult.rows[i-1].sfid);
-              teamProjId.push(projectTeamMap.get(teamQueryResult.rows[i-1].sfid));
-              console.log('event project '+projectTeamMap.get(teamQueryResult.rows[i-1].sfid));
-            }
-          }
-        
-          console.log(' lstTeams '+lstTeams+' teamParam '+teamParam);
           /* TEAM member   */
-          console.log(' lstTeams '+lstTeams+' teamParam '+teamParam +'teamProjId '+teamProjId);
-          let teamUserQuery='SELECT Id, sfid,representative__c , team__c FROM salesforce.Team_Member__c WHERE team__c IN ('+ teamParam.join(',')+ ')';
+        //  console.log(' lstTeams '+lstTeams+' teamParam '+teamParam +'teamProjId '+teamProjId);
+          let teamUserQuery='SELECT Id, sfid,representative__c , team__c FROM salesforce.Team_Member__c WHERE team__c IN ('+ projTeampram.join(',')+ ')';
           console.log('teamUserQuery '+teamUserQuery);
-          pool.query(teamUserQuery,lstTeams) 
+          console.log('lstProjTeam  '+lstProjTeam);
+          pool.query(teamUserQuery,lstProjTeam) 
           .then((memberQryResult)=>{
             console.log('member result '+JSON.stringify(memberQryResult.rowCount));
             if(memberQryResult.rowCount>0){
@@ -920,19 +913,19 @@ router.get('/getTeamdetails',verify,async(request,response)=>{
                }
                /* TAsk Query Started  */
                teamtskqry='SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c, tsk.Start_Date__c,tsk.assigned_manager__c,tsk.Planned_Hours__c,cont.sfid as contid ,cont.name as contname,proj.name as projname '+
-'                   FROM salesforce.Milestone1_Task__c tsk '+
-                    'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
-                    'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.Project_Name__c= proj.sfid '+
-                    'WHERE Start_Date__c = $1 AND  Assigned_Manager__c IN ('+ teamMemberParam.join(',')+ ')'+' AND tsk.sfid != \''+''+'\''; 
+                          'FROM salesforce.Milestone1_Task__c tsk '+
+                           'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
+                            'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.Project_Name__c= proj.sfid '+
+                              'WHERE Start_Date__c = $1 AND  Assigned_Manager__c IN ('+ teamMemberParam.join(',')+ ')'+' AND tsk.sfid != \''+''+'\''; 
                     console.log('teamtskqry for selected PRoject 1' +teamtskqry +' member Param '+teamMemberParam +'member '+teamMember);
                     pool.query(teamtskqry,teamMember)
                     .then((teamtskqueryresult)=>{
                      // lstTaskOfRelatedDate=teamtskqueryresult.rows;
                       console.log('team task query result '+JSON.stringify(teamtskqueryresult.rowCount));
                       teamtskqueryresult.rows.forEach((eachTask) =>{
-                        for(var i = 1; i <= teamProjId.length; i++){
-                          if(eachTask.project_name__c==teamProjId[i-1]){
-                            console.log('eachProject '+teamProjId[i-1]);
+                        for(var i = 1; i <= projectID.length; i++){
+                          if(eachTask.project_name__c==projectID[i-1]){
+                            console.log('eachProject '+projectID[i-1]);
                             lsttask.push(eachTask.sfid);
                             lstTaskOfRelatedDate1.push(eachTask);
                           }
@@ -1051,307 +1044,307 @@ router.get('/getTeamdetails',verify,async(request,response)=>{
   }
   })
 
- router.get('/getdetails',verify, async(request, response) => {
+  router.get('/getdetails',verify, async(request, response) => {
   
-  console.log('request.user '+JSON.stringify(request.user));
-  var userId = request.user.sfid;
-  var userName = request.user.name;
+    console.log('request.user '+JSON.stringify(request.user));
+    var userId = request.user.sfid;
+    var userName = request.user.name;
+    
+    console.log('userId : '+userId+'  userName  : '+userName);
+    var selproject=request.query.selproject;
+    var selectedDate = request.query.date;
+    console.log('date  '+selectedDate);
+    console.log('selected project '+selproject);
+    var lstTasksToShow = [],contname=[];
+    var projectParams = [], projectIDs = [];
+    var timesheetParams = [], taskIDs = [];
+    var status = [];
+    var projectMap = new Map();
+    var timesheetMap = new Map();
+    var lstTaskOfRelatedDate ;
+    let plannedHoursMap = new Map();
+    let actualHoursMap = new Map();
+    function convert(str) {
+      var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+      return [date.getFullYear(), mnth, day].join("-");
+    } 
   
-  console.log('userId : '+userId+'  userName  : '+userName);
-  var selproject=request.query.selproject;
-  var selectedDate = request.query.date;
-  console.log('date  '+selectedDate);
-  console.log('selected project '+selproject);
-  var lstTasksToShow = [],contname=[];
-  var projectParams = [], projectIDs = [];
-  var timesheetParams = [], taskIDs = [];
-  var status = [];
-  var projectMap = new Map();
-  var timesheetMap = new Map();
-  var lstTaskOfRelatedDate ;
-  let plannedHoursMap = new Map();
-  let actualHoursMap = new Map();
-  function convert(str) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
-  } 
-
-let tskqry='SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c, tsk.Task_Stage__c,tsk.Start_Date__c,tsk.assigned_manager__c,tsk.Planned_Hours__c,cont.sfid as contid ,cont.name as contname, proj.name as projname '+
-'FROM salesforce.Milestone1_Task__c tsk '+
-'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
-'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.project_name__c = proj.sfid '+
-'WHERE Start_Date__c = $1 AND tsk.assigned_manager__c=$2 AND tsk.sfid != \''+''+'\'';
-console.log('tskqry '+tskqry);
-await
-  pool.query(tskqry,[selectedDate,userId])
-  .then((taskQueryResult) => {
-      console.log('Query Result '+JSON.stringify(taskQueryResult.rows));  
-      lstTaskOfRelatedDate = taskQueryResult.rows;
-      for(let i=0; i< taskQueryResult.rowCount ; i++)
-      {
-
-          projectIDs.push(taskQueryResult.rows[i].project_name__c);
-          taskIDs.push(taskQueryResult.rows[i].sfid)
-          contname.push(taskQueryResult.rows[i].contname)
-          status.push(taskQueryResult.rows[i].task_stage__c)
-          projectParams.push('$'+(i+1));
-          timesheetParams.push('$'+(i+1));
-      }  
-
-      console.log('projectIDs  : '+projectIDs);
-      console.log('taskIDs  : '+taskIDs);
-      console.log('projectParams    : '+ projectParams);
-      console.log('timesheetParams  : '+timesheetParams);
-      console.log('contname    : '+ contname); 
-      console.log('task_stage__c    : '+ status); 
-      if(taskQueryResult.rowCount>0){
-      var timesheetQuery = 'SELECT sfid, date__c, calculated_hours__c, project_Task__c  FROM salesforce.Milestone1_Time__c WHERE sfid != \''+''+'\' AND Project_Task__c IN ('+ timesheetParams.join(',') +')';
-      console.log('timesheert Query '+timesheetQuery);
-      pool.query(timesheetQuery,taskIDs)
-      .then((timesheetQueryResult) => {
-        console.log('timesheetQueryResult   :  '+JSON.stringify(timesheetQueryResult.rows));
-        
-        if(timesheetQueryResult.rowCount > 0)
-         {
-              timesheetQueryResult.rows.forEach((eachTimesheet) => {
-       
-          let fillingDate = eachTimesheet.project_task__c;
-           console.log('project_task__c  '+fillingDate);
-
-           if( ! actualHoursMap.has(fillingDate))
-         {
-             if(eachTimesheet.calculated_hours__c != null)
-               actualHoursMap.set(fillingDate, eachTimesheet.calculated_hours__c);
-             else
-               actualHoursMap.set(fillingDate, 0);
-         }
-         else
-         {
-            let previousFilledHours =  actualHoursMap.get(fillingDate);
-            let currentFilledHours = eachTimesheet.calculated_hours__c;
-            if(currentFilledHours != null)
-            {
-               actualHoursMap.set(fillingDate, (previousFilledHours + currentFilledHours));
-            }
-            else
-               actualHoursMap.set(fillingDate, (previousFilledHours + 0));
-         }
-
-         for(let time of actualHoursMap)
-         {
-           console.log('time  : '+time);
-         }
-       
-     })
-   }
-
-
-   if(lstTaskOfRelatedDate != null)
-   {
-       lstTaskOfRelatedDate.forEach((eachTask) => {
-             let taskDetail = {};
-             taskDetail.name = eachTask.tskname;
-             taskDetail.plannedHours = eachTask.planned_hours__c;
- 
-             if(actualHoursMap.has(eachTask.sfid))
-               taskDetail.actualHours = actualHoursMap.get(eachTask.sfid);
-             else
-               taskDetail.actualHours = '';
-             console.log('Inside Last Loop timesheetMap.get(eachTask.sfid)++++++    '+actualHoursMap.get(eachTask.sfid));
-             console.log('start_date__c '+eachTask.start_date__c);
-             let dt =eachTask.start_date__c.getTime()+19800000;
-             let start_date__c=new Date(dt);
-             console.log('start_date__c new '+start_date__c);
-             taskDetail.date = start_date__c ;
-             taskDetail.projectName = eachTask.projname
-             taskDetail.userName =eachTask.contname;
-             taskDetail.assigned =eachTask.contid;
-             taskDetail.currentuser=userName;
-             taskDetail.status=eachTask.task_stage__c;
-             console.log('task detail '+JSON.stringify(taskDetail));
- 
-             lstTasksToShow.push(taskDetail);
-       })
-   }
-  // lstTasksToShow.push(lstmember);
-   console.log('  lstTasksToShow  : '+JSON.stringify(lstTasksToShow));
-   response.send(lstTasksToShow);
-
-
-
-
-
-
-
-
-  })
-  .catch((timesheetQueryError) => {
-        console.log('timesheetQueryError   :  '+timesheetQueryError.stack);
-  })
-      }
-  })
-  .catch((taskQueryError) =>{
-      console.log('task Query Error '+taskQueryError.stack);
-      response.send(403);
-  })
-  
-  
-})
- 
-
-
-
-router.get('/getdetailsproject',verify,async(request,response)=>{
-  console.log('request.user '+JSON.stringify(request.user));
-  var userId = request.user.sfid;
-  var userName = request.user.name;
-  
-  console.log('userId : '+userId+'  userName  : '+userName);
-  var selproject=request.query.selproject;
-  var selectedDate = request.query.date;
-  console.log('date  '+selectedDate);
-  console.log('selected project '+selproject);
-  var lstTasksToShow = [],contname=[];
-  var projectParams = [], projectIDs = [];
-  var timesheetParams = [], taskIDs = [];
-  var status = [];
-  var projectMap = new Map();
-  var timesheetMap = new Map();
-  var lstTaskOfRelatedDate ;
-  let plannedHoursMap = new Map();
-  let actualHoursMap = new Map();
-  function convert(str) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
-  } 
-  
-let tskqry='SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c, tsk.Start_Date__c,tsk.assigned_manager__c,tsk.task_stage__c,tsk.Planned_Hours__c,cont.sfid as contid ,cont.name as contname, proj.name as projname '+
-'FROM salesforce.Milestone1_Task__c tsk '+
-'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
-'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.project_name__c = proj.sfid '+
-'WHERE Start_Date__c = $1 AND tsk.Project_Name__c=$2 AND tsk.assigned_manager__c=$3 AND tsk.sfid != \''+''+'\'';
-console.log('tskqry '+tskqry);
+  let tskqry='SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c, tsk.Task_Stage__c,tsk.Start_Date__c,tsk.assigned_manager__c,tsk.Planned_Hours__c,cont.sfid as contid ,cont.name as contname, proj.name as projname '+
+  'FROM salesforce.Milestone1_Task__c tsk '+
+  'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
+  'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.project_name__c = proj.sfid '+
+  'WHERE Start_Date__c = $1 AND tsk.assigned_manager__c=$2 AND tsk.sfid != \''+''+'\'';
+  console.log('tskqry '+tskqry);
   await
-  pool.query(tskqry,[selectedDate,selproject,userId])
-  .then((taskQueryResult) => {
-      console.log('Query Result '+JSON.stringify(taskQueryResult.rows));  
-      lstTaskOfRelatedDate = taskQueryResult.rows;
-      for(let i=0; i< taskQueryResult.rowCount ; i++)
-      {
-
-          projectIDs.push(taskQueryResult.rows[i].project_name__c);
-          taskIDs.push(taskQueryResult.rows[i].sfid)
-          contname.push(taskQueryResult.rows[i].contname)
-          status.push(taskQueryResult.rows[i].task_stage__c)
-          projectParams.push('$'+(i+1));
-          timesheetParams.push('$'+(i+1));
-      }  
-
-      console.log('projectIDs  : '+projectIDs);
-      console.log('taskIDs  : '+taskIDs);
-      console.log('projectParams    : '+ projectParams);
-      console.log('timesheetParams  : '+timesheetParams);
-      console.log('contname    : '+ contname); 
-      console.log('task_stage__c    : '+ status); 
-      if(taskQueryResult.rowCount>0){
-      var timesheetQuery = 'SELECT sfid, date__c, calculated_hours__c, project_Task__c  FROM salesforce.Milestone1_Time__c WHERE sfid != \''+''+'\' AND Project_Task__c IN ('+ timesheetParams.join(',') +')';
-      console.log('timesheert Query '+timesheetQuery);
-      pool.query(timesheetQuery,taskIDs)
-      .then((timesheetQueryResult) => {
-        console.log('timesheetQueryResult   :  '+JSON.stringify(timesheetQueryResult.rows));
-        
-        if(timesheetQueryResult.rowCount > 0)
-         {
-              timesheetQueryResult.rows.forEach((eachTimesheet) => {
-       
-          let fillingDate = eachTimesheet.project_task__c;
-           console.log('project_task__c  '+fillingDate);
-
-           if( ! actualHoursMap.has(fillingDate))
-         {
-             if(eachTimesheet.calculated_hours__c != null)
-               actualHoursMap.set(fillingDate, eachTimesheet.calculated_hours__c);
-             else
-               actualHoursMap.set(fillingDate, 0);
-         }
-         else
-         {
-            let previousFilledHours =  actualHoursMap.get(fillingDate);
-            let currentFilledHours = eachTimesheet.calculated_hours__c;
-            if(currentFilledHours != null)
-            {
-               actualHoursMap.set(fillingDate, (previousFilledHours + currentFilledHours));
-            }
-            else
-               actualHoursMap.set(fillingDate, (previousFilledHours + 0));
-         }
-
-         for(let time of actualHoursMap)
-         {
-           console.log('time  : '+time);
-         }
-       
-     })
-   }
-
-
-   if(lstTaskOfRelatedDate != null)
-   {
-       lstTaskOfRelatedDate.forEach((eachTask) => {
-             let taskDetail = {};
-             taskDetail.name = eachTask.tskname;
-             taskDetail.plannedHours = eachTask.planned_hours__c;
-         //    taskDetail.status = eachTask.task_stage__c;
- 
-             if(actualHoursMap.has(eachTask.sfid))
-               taskDetail.actualHours = actualHoursMap.get(eachTask.sfid);
-             else
-               taskDetail.actualHours = '';
-             console.log('Inside Last Loop timesheetMap.get(eachTask.sfid)********    '+actualHoursMap.get(eachTask.sfid));
-             console.log('start_date__c ********* '+eachTask.start_date__c);
-             let dt =eachTask.start_date__c.getTime()+19800000;
-             let start_date__c=new Date(dt);
-             console.log('start_date__c new '+start_date__c);
-             taskDetail.date = start_date__c ;
-             taskDetail.projectName = eachTask.projname
-             taskDetail.userName =eachTask.contname;
-             taskDetail.assigned =eachTask.contid;
-             taskDetail.currentuser=userName;
-             taskDetail.status =eachTask.task_stage__c;
-             console.log('task detail '+JSON.stringify(taskDetail));
- 
-             lstTasksToShow.push(taskDetail);
+    pool.query(tskqry,[selectedDate,userId])
+    .then((taskQueryResult) => {
+        console.log('Query Result '+JSON.stringify(taskQueryResult.rows));  
+        lstTaskOfRelatedDate = taskQueryResult.rows;
+        for(let i=0; i< taskQueryResult.rowCount ; i++)
+        {
+  
+            projectIDs.push(taskQueryResult.rows[i].project_name__c);
+            taskIDs.push(taskQueryResult.rows[i].sfid)
+            contname.push(taskQueryResult.rows[i].contname)
+            status.push(taskQueryResult.rows[i].task_stage__c)
+            projectParams.push('$'+(i+1));
+            timesheetParams.push('$'+(i+1));
+        }  
+  
+        console.log('projectIDs  : '+projectIDs);
+        console.log('taskIDs  : '+taskIDs);
+        console.log('projectParams    : '+ projectParams);
+        console.log('timesheetParams  : '+timesheetParams);
+        console.log('contname    : '+ contname); 
+        console.log('task_stage__c    : '+ status); 
+        if(taskQueryResult.rowCount>0){
+        var timesheetQuery = 'SELECT sfid, date__c, calculated_hours__c, project_Task__c  FROM salesforce.Milestone1_Time__c WHERE sfid != \''+''+'\' AND Project_Task__c IN ('+ timesheetParams.join(',') +')';
+        console.log('timesheert Query '+timesheetQuery);
+        pool.query(timesheetQuery,taskIDs)
+        .then((timesheetQueryResult) => {
+          console.log('timesheetQueryResult   :  '+JSON.stringify(timesheetQueryResult.rows));
+          
+          if(timesheetQueryResult.rowCount > 0)
+           {
+                timesheetQueryResult.rows.forEach((eachTimesheet) => {
+         
+            let fillingDate = eachTimesheet.project_task__c;
+             console.log('project_task__c  '+fillingDate);
+  
+             if( ! actualHoursMap.has(fillingDate))
+           {
+               if(eachTimesheet.calculated_hours__c != null)
+                 actualHoursMap.set(fillingDate, eachTimesheet.calculated_hours__c);
+               else
+                 actualHoursMap.set(fillingDate, 0);
+           }
+           else
+           {
+              let previousFilledHours =  actualHoursMap.get(fillingDate);
+              let currentFilledHours = eachTimesheet.calculated_hours__c;
+              if(currentFilledHours != null)
+              {
+                 actualHoursMap.set(fillingDate, (previousFilledHours + currentFilledHours));
+              }
+              else
+                 actualHoursMap.set(fillingDate, (previousFilledHours + 0));
+           }
+  
+           for(let time of actualHoursMap)
+           {
+             console.log('time  : '+time);
+           }
+         
        })
-   }
-  // lstTasksToShow.push(lstmember);
-   console.log('  lstTasksToShow  : '+JSON.stringify(lstTasksToShow));
-   response.send(lstTasksToShow);
-
-
-
-
-
-
-
-
-  })
-  .catch((timesheetQueryError) => {
-        console.log('timesheetQueryError   :  '+timesheetQueryError.stack);
-  })
-      }
-  })
-  .catch((taskQueryError) =>{
-      console.log('task Query Error '+taskQueryError.stack);
-      response.send(403);
-  })
+     }
   
   
-})
-
+     if(lstTaskOfRelatedDate != null)
+     {
+         lstTaskOfRelatedDate.forEach((eachTask) => {
+               let taskDetail = {};
+               taskDetail.name = eachTask.tskname;
+               taskDetail.plannedHours = eachTask.planned_hours__c.toFixed(2);
+   
+               if(actualHoursMap.has(eachTask.sfid))
+                 taskDetail.actualHours = actualHoursMap.get(eachTask.sfid);
+               else
+                 taskDetail.actualHours = '';
+               console.log('Inside Last Loop timesheetMap.get(eachTask.sfid)++++++    '+actualHoursMap.get(eachTask.sfid));
+               console.log('start_date__c '+eachTask.start_date__c);
+               let dt =eachTask.start_date__c.getTime()+19800000;
+               let start_date__c=new Date(dt);
+               console.log('start_date__c new '+start_date__c);
+               taskDetail.date = start_date__c ;
+               taskDetail.projectName = eachTask.projname
+               taskDetail.userName =eachTask.contname;
+               taskDetail.assigned =eachTask.contid;
+               taskDetail.currentuser=userName;
+               taskDetail.status=eachTask.task_stage__c;
+               console.log('task detail '+JSON.stringify(taskDetail));
+   
+               lstTasksToShow.push(taskDetail);
+         })
+     }
+    // lstTasksToShow.push(lstmember);
+     console.log('  lstTasksToShow  : '+JSON.stringify(lstTasksToShow));
+     response.send(lstTasksToShow);
+  
+  
+  
+  
+  
+  
+  
+  
+    })
+    .catch((timesheetQueryError) => {
+          console.log('timesheetQueryError   :  '+timesheetQueryError.stack);
+    })
+        }
+    })
+    .catch((taskQueryError) =>{
+        console.log('task Query Error '+taskQueryError.stack);
+        response.send(403);
+    })
+    
+    
+  })
+   
+  
+  
+  
+  router.get('/getdetailsproject',verify,async(request,response)=>{
+    console.log('request.user '+JSON.stringify(request.user));
+    var userId = request.user.sfid;
+    var userName = request.user.name;
+    
+    console.log('userId : '+userId+'  userName  : '+userName);
+    var selproject=request.query.selproject;
+    var selectedDate = request.query.date;
+    console.log('date  '+selectedDate);
+    console.log('selected project '+selproject);
+    var lstTasksToShow = [],contname=[];
+    var projectParams = [], projectIDs = [];
+    var timesheetParams = [], taskIDs = [];
+    var status = [];
+    var projectMap = new Map();
+    var timesheetMap = new Map();
+    var lstTaskOfRelatedDate ;
+    let plannedHoursMap = new Map();
+    let actualHoursMap = new Map();
+    function convert(str) {
+      var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+      return [date.getFullYear(), mnth, day].join("-");
+    } 
+    
+  let tskqry='SELECT tsk.Id,tsk.sfid as sfid,tsk.name as tskname,tsk.Project_Name__c, tsk.Start_Date__c,tsk.assigned_manager__c,tsk.task_stage__c,tsk.Planned_Hours__c,cont.sfid as contid ,cont.name as contname, proj.name as projname '+
+  'FROM salesforce.Milestone1_Task__c tsk '+
+  'INNER JOIN salesforce.Contact cont ON tsk.assigned_manager__c = cont.sfid '+
+  'INNER JOIN salesforce.Milestone1_Project__c proj ON tsk.project_name__c = proj.sfid '+
+  'WHERE Start_Date__c = $1 AND tsk.Project_Name__c=$2 AND tsk.assigned_manager__c=$3 AND tsk.sfid != \''+''+'\'';
+  console.log('tskqry '+tskqry);
+    await
+    pool.query(tskqry,[selectedDate,selproject,userId])
+    .then((taskQueryResult) => {
+        console.log('Query Result '+JSON.stringify(taskQueryResult.rows));  
+        lstTaskOfRelatedDate = taskQueryResult.rows;
+        for(let i=0; i< taskQueryResult.rowCount ; i++)
+        {
+  
+            projectIDs.push(taskQueryResult.rows[i].project_name__c);
+            taskIDs.push(taskQueryResult.rows[i].sfid)
+            contname.push(taskQueryResult.rows[i].contname)
+            status.push(taskQueryResult.rows[i].task_stage__c)
+            projectParams.push('$'+(i+1));
+            timesheetParams.push('$'+(i+1));
+        }  
+  
+        console.log('projectIDs  : '+projectIDs);
+        console.log('taskIDs  : '+taskIDs);
+        console.log('projectParams    : '+ projectParams);
+        console.log('timesheetParams  : '+timesheetParams);
+        console.log('contname    : '+ contname); 
+        console.log('task_stage__c    : '+ status); 
+        if(taskQueryResult.rowCount>0){
+        var timesheetQuery = 'SELECT sfid, date__c, calculated_hours__c, project_Task__c  FROM salesforce.Milestone1_Time__c WHERE sfid != \''+''+'\' AND Project_Task__c IN ('+ timesheetParams.join(',') +')';
+        console.log('timesheert Query '+timesheetQuery);
+        pool.query(timesheetQuery,taskIDs)
+        .then((timesheetQueryResult) => {
+          console.log('timesheetQueryResult   :  '+JSON.stringify(timesheetQueryResult.rows));
+          
+          if(timesheetQueryResult.rowCount > 0)
+           {
+                timesheetQueryResult.rows.forEach((eachTimesheet) => {
+         
+            let fillingDate = eachTimesheet.project_task__c;
+             console.log('project_task__c  '+fillingDate);
+  
+             if( ! actualHoursMap.has(fillingDate))
+           {
+               if(eachTimesheet.calculated_hours__c != null)
+                 actualHoursMap.set(fillingDate, eachTimesheet.calculated_hours__c);
+               else
+                 actualHoursMap.set(fillingDate, 0);
+           }
+           else
+           {
+              let previousFilledHours =  actualHoursMap.get(fillingDate);
+              let currentFilledHours = eachTimesheet.calculated_hours__c;
+              if(currentFilledHours != null)
+              {
+                 actualHoursMap.set(fillingDate, (previousFilledHours + currentFilledHours));
+              }
+              else
+                 actualHoursMap.set(fillingDate, (previousFilledHours + 0));
+           }
+  
+           for(let time of actualHoursMap)
+           {
+             console.log('time  : '+time);
+           }
+         
+       })
+     }
+  
+  
+     if(lstTaskOfRelatedDate != null)
+     {
+         lstTaskOfRelatedDate.forEach((eachTask) => {
+               let taskDetail = {};
+               taskDetail.name = eachTask.tskname;
+               taskDetail.plannedHours = eachTask.planned_hours__c.toFixed(2);
+           //    taskDetail.status = eachTask.task_stage__c;
+   
+               if(actualHoursMap.has(eachTask.sfid))
+                 taskDetail.actualHours = actualHoursMap.get(eachTask.sfid);
+               else
+                 taskDetail.actualHours = '';
+               console.log('Inside Last Loop timesheetMap.get(eachTask.sfid)********    '+actualHoursMap.get(eachTask.sfid));
+               console.log('start_date__c ********* '+eachTask.start_date__c);
+               let dt =eachTask.start_date__c.getTime()+19800000;
+               let start_date__c=new Date(dt);
+               console.log('start_date__c new '+start_date__c);
+               taskDetail.date = start_date__c ;
+               taskDetail.projectName = eachTask.projname
+               taskDetail.userName =eachTask.contname;
+               taskDetail.assigned =eachTask.contid;
+               taskDetail.currentuser=userName;
+               taskDetail.status =eachTask.task_stage__c;
+               console.log('task detail '+JSON.stringify(taskDetail));
+   
+               lstTasksToShow.push(taskDetail);
+         })
+     }
+    // lstTasksToShow.push(lstmember);
+     console.log('  lstTasksToShow  : '+JSON.stringify(lstTasksToShow));
+     response.send(lstTasksToShow);
+  
+  
+  
+  
+  
+  
+  
+  
+    })
+    .catch((timesheetQueryError) => {
+          console.log('timesheetQueryError   :  '+timesheetQueryError.stack);
+    })
+        }
+    })
+    .catch((taskQueryError) =>{
+        console.log('task Query Error '+taskQueryError.stack);
+        response.send(403);
+    })
+    
+    
+  })
+  
  router.get('/getrelatedtasks',verify,(request, response) => {
 
    var projectId =  request.query.projectId;
@@ -1417,7 +1410,7 @@ router.get('/getTasklist',verify,(request,response)=>{
           obj.sequence = i;
           obj.name = '<a href="#" class="taskreferenceTag" id="'+eachRecord.sfids+'" >'+eachRecord.tskname+'</a>';
           obj.assigned = eachRecord.contname;
-          obj.hrs=eachRecord.planned_hours__c;
+          obj.hrs=eachRecord.planned_hours__c.toFixed(2);
           obj.startTime=eachRecord.start_time__c;
           obj.endtime=eachRecord.end_time__c;
           obj.taskType=eachRecord.task_type__c;

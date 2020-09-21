@@ -838,6 +838,8 @@ router.get('/boardingLodgingCharges/:parentTourBillId', verify, (request, respon
 
 router.post('/boardingLodgingCharges',verify, (request, response) => {
 let objUser = request.user;
+var startTime,endTime;
+var arrStartTime = [], arrEndTime = [];
 console.log('body Boarding Charges '+JSON.stringify(request.body));
 
 console.log('typeof(request.body.date)   : '+typeof(request.body.stayOption));
@@ -938,13 +940,54 @@ console.log(' activity_code '+activity_code );
             lstcharges.push(fromDateTime[i]);      
             let toDateTime = toDate[i]+'T'+toTime[i]+':00';
             lstcharges.push(toDateTime[i]);
+            
 */
-            let fromDateTime = fromDate[i]+'T'+fromTime[i]+':00';
+            var starthours = Number(fromTime[i].match(/^(\d+)/)[1]);
+            var startminutes = Number(fromTime[i].match(/:(\d+)/)[1]);
+            var endhours = Number(toTime[i].match(/^(\d+)/)[1]);
+            var endminutes = Number(toTime[i].match(/:(\d+)/)[1]);
+            console.log('starthours '+starthours);
+            console.log('startminutes '+startminutes);
+            console.log('endhours '+endhours);
+            console.log('endminutes '+endminutes);
+            
+            arrStartTime[i] = (starthours > 12) ? (starthours-12 + ':' + startminutes + ':00'+' PM') : (starthours + ':' + startminutes + ':00' +' AM');
+            arrEndTime[i] = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
+
+            console.log('startTime '+arrStartTime[i]);
+            console.log('endTime '+arrEndTime[i]);
+
+
+
+
+            let fromDateTime = fromDate[i]+' '+fromTime[i]+':00';
             console.log('fromDateTime  : '+fromDateTime);
-            lstcharges.push(fromDateTime);      
-            let toDateTime = toDate[i]+'T'+toTime[i]+':00';
+
+            let strDate = new Date(fromDateTime);
+            console.log('strDate  : '+strDate);
+
+            strDate.setHours(strDate.getHours() + 1);
+            strDate.setMinutes(strDate.getMinutes() - 60);
+            let strartDate = strDate.toUTCString();
+            console.log('fromDateTime  : '+fromDateTime);
+            console.log('strartDate  : '+strartDate);
+
+            lstcharges.push(strartDate);   
+
+            let toDateTime = toDate[i]+' '+toTime[i]+':00';
             console.log('toDateTime  : '+toDateTime);
-            lstcharges.push(toDateTime);
+
+            let endDate = new Date(toDateTime);
+            console.log('endDate  : '+endDate);
+
+            endDate.setHours(endDate.getHours() + 1);
+            endDate.setMinutes(endDate.getMinutes() - 60);
+            let enDate = endDate.toUTCString();
+
+            console.log('endDate  : '+endDate);
+            console.log('enDate  : '+enDate);
+            lstcharges.push(enDate);
+            
 
          
               lstcharges.push(totalAllowances[i]);  
@@ -1037,13 +1080,51 @@ console.log(' activity_code '+activity_code );
                 lstcharges.push(placeJourney);
                 lstcharges.push(tier3City);
                 lstcharges.push(projectTask);
+
+
+                var starthours = Number(fromTime.match(/^(\d+)/)[1]);
+                var startminutes = Number(fromTime.match(/:(\d+)/)[1]);
+                var endhours = Number(toTime.match(/^(\d+)/)[1]);
+                var endminutes = Number(toTime.match(/:(\d+)/)[1]);
+                console.log('starthours '+starthours);
+                console.log('startminutes '+startminutes);
+                console.log('endhours '+endhours);
+                console.log('endminutes '+endminutes);
+                
+                startTime = (starthours > 12) ? (starthours-12 + ':' + startminutes + ':00'+' PM') : (starthours + ':' + startminutes + ':00' +' AM');
+                endTime = (endhours > 12) ? (endhours-12 + ':' + endminutes + ':00'+' PM') : (endhours + ':' + endminutes + ':00'+' AM');
+    
+                console.log('startTime '+startTime);
+                console.log('endTime '+endTime);
+    
               
-                let fromDateTime = fromDate+'T'+fromTime+':00';
+                let fromDateTime = fromDate+' '+startTime;
+
+                let strDate = new Date(fromDateTime);
+                console.log('strDate  : '+strDate);
+
+                strDate.setHours(strDate.getHours() + 1);
+                strDate.setMinutes(strDate.getMinutes() - 60);
+                let strartDate = strDate.toUTCString();
                 console.log('fromDateTime  : '+fromDateTime);
-                lstcharges.push(fromDateTime);      
-                let toDateTime = toDate+'T'+toTime+':00';
-                console.log('toDateTime  : '+toDateTime);
-                lstcharges.push(toDateTime);
+                console.log('strartDate  : '+strartDate);
+                lstcharges.push(strartDate);     
+
+                let toDateTime = toDate+' '+endTime;
+
+                let endDate = new Date(toDateTime);
+                console.log('endDate  : '+endDate);
+
+                endDate.setHours(endDate.getHours() + 1);
+                endDate.setMinutes(endDate.getMinutes() - 60);
+                let enDate = endDate.toUTCString();
+
+                console.log('endDate  : '+endDate);
+                console.log('enDate  : '+enDate);
+
+              
+                console.log('toDateTime  : '+enDate);
+                lstcharges.push(enDate);
 
                 lstcharges.push(totalAllowances);
                 lstcharges.push(dailyAllowances);
@@ -1267,97 +1348,99 @@ router.get('/telephoneFood/:parentTourBillId',verify, (request, response) => {
     response.render('./expenses/tourBillClaims/telephoneFoodCharges',{objUser, parentTourBillId : parentTourBillId});
 });
 
-router.post('/telephoneFood',verify, (request, response) => {
 
-  let body = request.body;
-    console.log('request.body  :  '+JSON.stringify(body));
-   /*  const schema= joi.object({
-        foodingExpenses:joi.number().required().label('Choose "0" if No Fooding Expense' ),
-        laundryExpenses:joi.number().required().label('choose "0" if No Laundry Expense'),
-        imgpath:joi.string().invalid('demo').label('Upload your File/Attachments').required(),
-        })   // .or('foodingExpenses','laundryExpenses')
-    let result= schema.validate({foodingExpenses:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,imgpath:request.body.imgpath});
-    if(result.error)
-    {
-        console.log('Vladtion '+JSON.stringify(result.error));
-        response.send(result.error.details[0].context.label);
-    } */
-        let numberOfRows, lstTelephoneFood = [];
-        if(typeof(request.body.foodingExpenses) != 'object')
-        {
-          const schema= joi.object({
-            foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
-            famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
-            laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
-            lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
-            projectTask:joi.string().required().label('Please select Activity Code. '),
-            imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
-            })   // .or('foodingExpenses','laundryExpenses')
-    
-          let result= schema.validate({projectTask:request.body.projectTask, foodingExpenses:request.body.foodingExpenses,famt:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,lamt:request.body.laundryExpenses,imgpath:request.body.imgpath});
-                  if(result.error)
-                    {
-                      console.log('Vladtion '+JSON.stringify(result.error));
-                      response.send(result.error.details[0].context.label);
-                     } 
-                     else{
-                      numberOfRows = 1;
-                       let singleTelephoneFoodRecord = [];
-                        singleTelephoneFoodRecord.push(request.body.foodingExpenses);
-                        singleTelephoneFoodRecord.push(request.body.laundryExpenses);
-                        singleTelephoneFoodRecord.push(request.body.projectTask);
-                        singleTelephoneFoodRecord.push(request.body.remarks);
-                        singleTelephoneFoodRecord.push(request.body.imgpath);
-                        singleTelephoneFoodRecord.push(request.body.parentTourBillId);
-                       lstTelephoneFood.push(singleTelephoneFoodRecord);
-                      }
-        } 
-        else
-        {
-            numberOfRows = request.body.foodingExpenses.length;
-            for(let i=0; i< numberOfRows ; i++)
-            {
-              const schema= joi.object({
-                foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
-                famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
-                laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
-                lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
-                projectTask:joi.string().required().label('Please select Activity Code. '),
-                imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
-                })   // .or('foodingExpenses','laundryExpenses')
-        
-              let result= schema.validate({projectTask:request.body.projectTask[i],foodingExpenses:request.body.foodingExpenses[i],famt:request.body.foodingExpenses[i],laundryExpenses:request.body.laundryExpenses[i],lamt:request.body.laundryExpenses[i],imgpath:request.body.imgpath[i]});
-                      if(result.error)
-                        {
-                          console.log('Vladtion '+JSON.stringify(result.error));
-                          response.send(result.error.details[0].context.label);
-                         } 
-                         else{
-                          let singleTelephoneFoodRecord = [];
-                          singleTelephoneFoodRecord.push(request.body.foodingExpenses[i]);
-                          singleTelephoneFoodRecord.push(request.body.laundryExpenses[i]);
-                          singleTelephoneFoodRecord.push(request.body.projectTask[i]);
-                          singleTelephoneFoodRecord.push(request.body.remarks[i]);
-                          singleTelephoneFoodRecord.push(request.body.imgpath[i]);
-                          singleTelephoneFoodRecord.push(request.body.parentTourBillId[i]);
-                          lstTelephoneFood.push(singleTelephoneFoodRecord);
-                         }
-             }
-         }
-        console.log('lstTelephoneFood  '+JSON.stringify(lstTelephoneFood));
-        let telephoneFoodInsertQuery = format('INSERT INTO salesforce.Telephone_Fooding_Laundry_Expenses__c (Fooding_Expense__c, Laundry_Expense__c, Activity_Code_Project__c,Remarks__c,heroku_image_url__c, Tour_Bill_Claim__c) VALUES %L returning id',lstTelephoneFood);
-    
-        pool.query(telephoneFoodInsertQuery)
-        .then((telephoneFoodInsertQueryResult) => {
-            console.log('telephoneFoodInsertQueryResult  '+JSON.stringify(telephoneFoodInsertQueryResult.rows));
-            response.send('Telephone & Food Form Saved Successfully !');
-        })
-        .catch((telephoneFoodInsertQueryError) => {
-            console.log('telephoneFoodInsertQueryError  '+telephoneFoodInsertQueryError.stack);
-            response.send('Error Occured !');
-        })  
-});
+  router.post('/telephoneFood',verify, (request, response) => {
 
+    let body = request.body;
+      console.log('request.body  :  '+JSON.stringify(body));
+     /*  const schema= joi.object({
+          foodingExpenses:joi.number().required().label('Choose "0" if No Fooding Expense' ),
+          laundryExpenses:joi.number().required().label('choose "0" if No Laundry Expense'),
+          imgpath:joi.string().invalid('demo').label('Upload your File/Attachments').required(),
+          })   // .or('foodingExpenses','laundryExpenses')
+      let result= schema.validate({foodingExpenses:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,imgpath:request.body.imgpath});
+      if(result.error)
+      {
+          console.log('Vladtion '+JSON.stringify(result.error));
+          response.send(result.error.details[0].context.label);
+      } */
+          let numberOfRows, lstTelephoneFood = [];
+          if(typeof(request.body.foodingExpenses) != 'object')
+          {
+            const schema= joi.object({
+              foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
+              famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
+              laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
+              lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
+              projectTask:joi.string().required().label('Please select Activity Code. '),
+              imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
+              })   // .or('foodingExpenses','laundryExpenses')
+      
+            let result= schema.validate({projectTask:request.body.projectTask, foodingExpenses:request.body.foodingExpenses,famt:request.body.foodingExpenses,laundryExpenses:request.body.laundryExpenses,lamt:request.body.laundryExpenses,imgpath:request.body.imgpath});
+                    if(result.error)
+                      {
+                        console.log('Vladtion '+JSON.stringify(result.error));
+                        response.send(result.error.details[0].context.label);
+                       } 
+                       else{
+                        numberOfRows = 1;
+                         let singleTelephoneFoodRecord = [];
+                          singleTelephoneFoodRecord.push(request.body.foodingExpenses);
+                          singleTelephoneFoodRecord.push(request.body.laundryExpenses);
+                          singleTelephoneFoodRecord.push(request.body.projectTask);
+                          singleTelephoneFoodRecord.push(request.body.remarks);
+                          singleTelephoneFoodRecord.push(request.body.imgpath);
+                          singleTelephoneFoodRecord.push(request.body.parentTourBillId);
+                         lstTelephoneFood.push(singleTelephoneFoodRecord);
+                        }
+          } 
+          else
+          {
+              numberOfRows = request.body.foodingExpenses.length;
+              for(let i=0; i< numberOfRows ; i++)
+              {
+                const schema= joi.object({
+                  foodingExpenses:joi.number().required().label('Please enter Fooding Expense (If no Fooding Expense then enter "0")'),
+                  famt:joi.number().min(0).label('Fooding Expense cannot be negative.'),
+                  laundryExpenses:joi.number().required().label('Please enter Laundry Expense (If no Laundry Expense then enter "0")'),
+                  lamt:joi.number().min(0).label('Laundry Expense cannot be negative.'),
+                  projectTask:joi.string().required().label('Please select Activity Code. '),
+                  imgpath:joi.string().invalid('demo').label('Please Upload File/Attachments.').required(),
+                  })   // .or('foodingExpenses','laundryExpenses')
+          
+                let result= schema.validate({projectTask:request.body.projectTask[i],foodingExpenses:request.body.foodingExpenses[i],famt:request.body.foodingExpenses[i],laundryExpenses:request.body.laundryExpenses[i],lamt:request.body.laundryExpenses[i],imgpath:request.body.imgpath[i]});
+                        if(result.error)
+                          {
+                            console.log('Vladtion '+JSON.stringify(result.error));
+                            response.send(result.error.details[0].context.label);
+                           } 
+                           else{
+                            let singleTelephoneFoodRecord = [];
+                            singleTelephoneFoodRecord.push(request.body.foodingExpenses[i]);
+                            singleTelephoneFoodRecord.push(request.body.laundryExpenses[i]);
+                            singleTelephoneFoodRecord.push(request.body.projectTask[i]);
+                            singleTelephoneFoodRecord.push(request.body.remarks[i]);
+                            singleTelephoneFoodRecord.push(request.body.imgpath[i]);
+                            singleTelephoneFoodRecord.push(request.body.parentTourBillId[i]);
+                            lstTelephoneFood.push(singleTelephoneFoodRecord);
+                           }
+               }
+           }
+          console.log('lstTelephoneFood  '+JSON.stringify(lstTelephoneFood));
+          let telephoneFoodInsertQuery = format('INSERT INTO salesforce.Telephone_Fooding_Laundry_Expenses__c (Fooding_Expense__c, Laundry_Expense__c, Activity_Code_Project__c,Remarks__c,heroku_image_url__c, Tour_Bill_Claim__c) VALUES %L returning id',lstTelephoneFood);
+      
+          pool.query(telephoneFoodInsertQuery)
+          .then((telephoneFoodInsertQueryResult) => {
+              console.log('telephoneFoodInsertQueryResult  '+JSON.stringify(telephoneFoodInsertQueryResult.rows));
+              response.send('Telephone & Food Form Saved Successfully !');
+          })
+          .catch((telephoneFoodInsertQueryError) => {
+              console.log('telephoneFoodInsertQueryError  '+telephoneFoodInsertQueryError.stack);
+              response.send('Error Occured !');
+          })  
+  });
+  
+  
 
 router.get('/telephoneFoodCharge',verify,(request,response)=>{
     let objUser = request.user;

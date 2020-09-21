@@ -35,7 +35,7 @@
      </table>
      <div align="center">
     
-      <input type="submit" style="background-color:#2C3E50;" name="submit" class="btn btn-info" value="Submit" />
+      <input type="submit" style="background-color:#2C3E50;" id="submitButton" name="submit" class="btn btn-info" value="Submit" />
      </div>
     </div>
    </form>
@@ -151,6 +151,7 @@ $(function () {
     }
     else
     {
+      $("#submitButton").attr("disabled", true);
       $.ajax({
       type: 'post',
       url: '/expense/tourBillClaim/miscellenousCharges',  
@@ -167,6 +168,7 @@ $(function () {
             '</div>';
             $('#errorMessages').empty();
             $('#errorMessages').append(errorHtml);
+            $("#submitButton").attr("disabled", false);
         }
         else
         {
@@ -177,6 +179,7 @@ $(function () {
             '</div>';
             $('#errorMessages').empty();
             $('#errorMessages').append(errorHtml);
+            $("#submitButton").attr("disabled", false);
         }
      
         }

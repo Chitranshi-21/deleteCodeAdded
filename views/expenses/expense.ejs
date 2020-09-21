@@ -350,7 +350,7 @@
   
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="submit" id="expenseSubmitbutton"  class="btn btn-primary">Save</button>
+                <button type="submit" id="expensebutton"  class="btn btn-primary">Save</button>
               </div>
   
             </form>
@@ -1191,6 +1191,7 @@
                 event.stopImmediatePropagation();
                 event.stopPropagation();
                   $('#tourBillClaimForm').submit(function(e){
+                    $("#tourBillClaimSubmitbutton").attr("disabled", true);
                       e.preventDefault();
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -1221,6 +1222,7 @@
                                 '</div>';
                                 $('#errorMessages').empty();
                                 $('#errorMessages').append(errorHtml); 
+                                $("#tourBillClaimSubmitbutton").attr("disabled", false);
                               }
                               else
                               {
@@ -1233,6 +1235,7 @@
                                 '</div>';
                                 $('#errorMessages').empty();
                                 $('#errorMessages').append(errorHtml); 
+                                $("#tourBillClaimSubmitbutton").attr("disabled", false);
                               }
                           
                       })
@@ -1662,6 +1665,7 @@ $('.printexp').on('click', function(event){
 
 
           $('#taskForm').submit(function(e){
+            $("#expensebutton").attr("disabled", true);
               e.preventDefault();
             //  alert('Going to create expnse');
               var values = $(this).serialize();
@@ -1685,8 +1689,10 @@ $('.printexp').on('click', function(event){
                 '</div>';
                 $('#errorMessages').empty();
                 $('#errorMessages').append(errorHtml); 
+                $("#expensebutton").attr("disabled", false);
                 if(jqXHR.responseText=='Successfully Inserted'){
                $('#taskForm')[0].reset()
+
               // $('#taskForm').modal('hide');
                let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ jqXHR.responseText+
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
@@ -1695,6 +1701,8 @@ $('.printexp').on('click', function(event){
           '</div>';
           $('#errorMessages').empty();
           $('#errorMessages').append(errorHtml);
+          $("#expensebutton").attr("disabled", false);
+          window.location.reload()
         
              }
               })

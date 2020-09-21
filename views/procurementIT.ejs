@@ -95,7 +95,7 @@
          </table>
          <div align="center">
         
-          <input type="submit" style="background-color:#2C3E50;" name="submit" class="btn btn-info" value="Submit" />
+          <input type="submit" style="background-color:#2C3E50;" id="submitButton" name="submit" class="btn btn-info" value="Submit" />
          </div>
         </div>
        </form>
@@ -365,6 +365,7 @@
     
     $(function () {
       $('form#formdata').bind('submit', function () {
+        $("#submitButton").attr("disabled", true);
         $.ajax({
           type: 'post',
           url: '/procurement/itProducts',   // Need to make changes in post method url
@@ -380,8 +381,10 @@
               '</div>';
               $('#errorMessages').empty();
               $('#errorMessages').append(errorHtml); 
+              $("#submitButton").attr("disabled", false);
               if(data=='Saved Successfully !'){
                 document.getElementById("formdata").reset();
+                $("#submitButton").attr("disabled", false);
               }
               
           }
