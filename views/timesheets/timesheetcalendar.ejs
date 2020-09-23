@@ -620,7 +620,8 @@
                         });
             
                     }
-                    if(seletedDate.getTime()<todaydate && seletedDate.getTime()>before)
+                 //   if(seletedDate.getTime()<todaydate && seletedDate.getTime()>before)
+                      if(seletedDate.getTime()>before)
                     {
                      // document.getElementById("taskForm").reset();
                       $("#createTaskModal").modal("show");
@@ -646,7 +647,7 @@
 
                     }
                     else{
-                      alert('The timesheet tasks are locked. You cannot create task before and after 7 days from today date. !');
+                      alert('The timesheet tasks are locked. You cannot create task before 7 days from today date. !');
                     }
                     
                 }

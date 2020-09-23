@@ -135,7 +135,8 @@
     $(document).ready(function() { 
         let columns ={
             sequence : 'Sequence',
-            editAction:'Action',
+           // editAction:'Action',
+            deleteAction: 'Action',
              name : 'Timesheet Name ',
              startTime:'Start Time',
              endtime:'End Time',
@@ -168,7 +169,7 @@
         tableDidUpdate: () => {
         console.log('table did update');
         anchorClickFunctionalities();
-        
+        additionaldeleteFunctionality();
         },
         tableWillUnmount: () => console.log('table will unmount'),
         tableDidUnmount: () => console.log('table did unmount'),
@@ -199,8 +200,8 @@
             table.setData(response, columns);
             namemodal();
             anchorClickFunctionalities();
-            anotherEditFunctionality();
-            
+          //  anotherEditFunctionality();
+          additionaldeleteFunctionality();
 
          })
          .fail((jqXHR,status,error)=>{
@@ -300,6 +301,41 @@
         })
 
     }
+
+    function additionaldeleteFunctionality()
+    {
+
+    $('.deleteTimesheet').on('click',function(event){
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    //  $('#parentId').hide();
+    // let parentId = document.getElementById('parentId').innerHTML;
+      let parentId = this.id;
+    console.log('TimesheetId  '+parentId);
+      alert('Are you sure to Delete this record !');
+  
+    $.ajax({
+    url : '/timesheets/deleteTimesheet/'+parentId,
+    type:'get',
+    dataType: 'json',
+
+    })
+    .done((response) => {
+          console.log('resonse   :'+response);
+          if(response == 200)
+          alert("Task Deleted Succesfullly !");
+          window.location.reload()
+         
+    })
+    .fail((jqXHR, status, error) => {
+          console.log('jqXHR  '+JSON.stringify(jqXHR));
+          window.location.reload()
+    }) 
+    })
+}
+
     function anotherEditFunctionality()
     {
         $('.editTimesheet').on('click',function(event){

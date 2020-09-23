@@ -157,7 +157,8 @@
        
         let columns ={
             sequence : 'Sequence',
-            editAction:'Action',
+            deleteAction: 'Action',
+           // editAction:'Action',
             name: 'Task ',
              assigned:'Assigned Resource',
              hrs:'Plan Hours',
@@ -191,7 +192,7 @@
         tableDidUpdate: () => {
         console.log('table did update');
          anchorClickFunctionalities();
-        
+         additionaldeleteFunctionality();
         },
         tableWillUnmount: () => console.log('table will unmount'),
         tableDidUnmount: () => console.log('table did unmount'),
@@ -221,8 +222,8 @@
             console.log('response response response response '+JSON.stringify(response));
             table.setData(response, columns);
             anchorClickFunctionalities();
-            anotherEditFunctionality();
-
+           // anotherEditFunctionality();
+            additionaldeleteFunctionality();
          })
          .fail((jqXHR,status,error)=>{
              console.log('jqXHR: '+jqXHR);
@@ -321,7 +322,39 @@
       })
     }
 
+    function additionaldeleteFunctionality()
+    {
 
+    $('.deleteTask').on('click',function(event){
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    //  $('#parentId').hide();
+    // let parentId = document.getElementById('parentId').innerHTML;
+      let parentId = this.id;
+    console.log('TaskId  '+parentId);
+      alert('Are you sure to Delete this record !');
+  
+    $.ajax({
+    url : '/timesheets/deleteTask/'+parentId,
+    type:'get',
+    dataType: 'json',
+
+    })
+    .done((response) => {
+          console.log('resonse   :'+response);
+          if(response == 200)
+          alert("Task Deleted Succesfullly !");
+          window.location.reload()
+         
+    })
+    .fail((jqXHR, status, error) => {
+          console.log('jqXHR  '+JSON.stringify(jqXHR));
+          window.location.reload()
+    }) 
+    })
+}
     
     function anotherEditFunctionality()
     {

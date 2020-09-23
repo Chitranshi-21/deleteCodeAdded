@@ -533,7 +533,9 @@
                   let airBusRailFare = responseData.airBusRailFare;
                   console.log('airBusRailFare  '+JSON.stringify(airBusRailFare));
                   let airBusRailFareHtml = '';
-                  if(airBusRailFare.length > 0)
+                  if(airBusRailFare != undefined)
+                  {
+                    if(airBusRailFare.length > 0)
                   {
                     airBusRailFareHtml = '<thead>';
                     airBusRailFareHtml += '<th>Air Rail Bus Fares</th>';
@@ -558,10 +560,13 @@
                     
                     $('#airRailBusTable').html(airBusRailFareHtml);
                   }
-    
-    
+                  }
+                 
                   let conveyanceCharges = responseData.conveyanceCharges;
                   console.log('conveyanceCharges  '+JSON.stringify(conveyanceCharges));
+                  if(conveyanceCharges != undefined)
+                  {
+
                   if(conveyanceCharges.length > 0)
                   {
                     let conveyanceChargesHtml = '<thead>';
@@ -582,9 +587,12 @@
                     
                     $('#conveyanceChargesTable').html(conveyanceChargesHtml);
                   }
-    
+                }
                   let boardingLodgingCharges = responseData.boardingLodgingCharges;
                   console.log('boardingLodgingCharges  '+JSON.stringify(boardingLodgingCharges));
+                  if(boardingLodgingCharges != undefined)
+                  {
+
                   if(boardingLodgingCharges.length > 0)
                   {
                     let boardingLodgingChargesHtml = '<thead>';
@@ -604,9 +612,12 @@
 
                     $('#boardingLodgingChargesTable').html(boardingLodgingChargesHtml);
                   }
-    
+                }
                   let telephoneFoodCharges = responseData.telephoneFoodCharges;
                   console.log('telephoneFoodCharges  '+JSON.stringify(telephoneFoodCharges));
+                  if(telephoneFoodCharges != undefined)
+                  {
+
                   if(telephoneFoodCharges.length > 0)
                   {
                       let telephoneFoodChargesHtml = '<thead>';
@@ -628,9 +639,11 @@
 
                     $('#telephoneFoodChargesTable').html(telephoneFoodChargesHtml);
                   }
-    
+                }
                   let miscellenousCharges = responseData.miscellenousCharges;
                   console.log('miscellenousCharges   '+JSON.stringify(miscellenousCharges));
+                  if(miscellenousCharges != undefined)
+                  {
                   if(miscellenousCharges.length > 0)
                   {
                     let miscellenousChargesHtml = '<thead>';
@@ -653,6 +666,7 @@
                     miscellenousChargesHtml += '</tbody>'
                     $('#miscellaneousChargesTable').html(miscellenousChargesHtml);
                   } 
+                }
               })
               .fail((jqXHR, textStatus, err) => {
                 $('#tourBillClaimTableSpinner').hide(); 

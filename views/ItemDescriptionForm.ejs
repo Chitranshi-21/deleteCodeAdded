@@ -59,7 +59,7 @@
     var itemsCategory = [ "Stationery", "Printing", "Electrical", "Events", "MaterialsOnRent", "Miscellaneous"];
     var Stationery = ["A4 Size Paper Rim", "Pen", "Pencil", "Sharpner", "Eraser", "Markers", "Files", "White", "Magnetic Board", "Other Items"];
     var Printing = ["Books", "Brochures", "Leaflets", "Binding", "Posters", "Backdrop", "Standees", "Caps", "Certificates", "Other Items"];
-    var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater", "Fans", "Other Items"];
+    var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater", "Fans","Plasma","Other Items"];
     var Events = ["Suggested Hostels", "Other Items"];
     var MaterialsOnRent = ["Projector", "AV Systems", "Hardware Peripherals", "Other Items"];
     var Miscellaneous = ["Maintenance", "Any Other Expense"];
@@ -97,6 +97,7 @@
 
      $(function () {
         $('form#formdata').bind('submit', function () {
+          $("#CreateVendor").attr("disabled", true);
           $.ajax({
             type: 'post',
             url: '/procurement/saveItemDescription',   // Need to make changes in post method url
@@ -104,17 +105,35 @@
             success: function (data) {
               console.log(data);
              // alert(data);
-              let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ data+
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                  '<span aria-hidden="true">&times;</span>'+
-                '</button>'+
+             if(data== 'Succesfully Inserted'){
+                document.getElementById("formdata").reset();
+                $("#CreateVendor").attr("disabled", false);
+                let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ data+
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+              '</button>'+
               '</div>';
               $('#errorMessages').empty();
               $('#errorMessages').append(errorHtml); 
-            }
-          });
-          
-          return false;
+              $("#CreateVendor").attr("disabled", false);
+             
+              }
+              else{
+                let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+data+
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+              '</button>'+
+              '</div>';
+              $('#errorMessages').empty();
+              $('#errorMessages').append(errorHtml); 
+              $("#submitButton").attr("disabled", false);
+              }
+              
+          }
+            
+        });
+        return false;
+         
         })
       }) 
 

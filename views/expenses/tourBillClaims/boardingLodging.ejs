@@ -41,7 +41,7 @@
     
     </div>
     <div id="boardingModal" class="modal modal-md fade">
-        <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Boarding &amp; Lodging View </h5>
@@ -50,7 +50,8 @@
               </button>
             </div>
             <div class="modal-body">
-      
+              <div class="row">
+              <div class="col-12">
               <div id="detailLoadingSpinner">
                 <center> <img src="/spinner-gif-transparent-background-14.gif" />  </center>
             </div>
@@ -58,6 +59,7 @@
     
             </table>
             </div>
+            </div></div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
@@ -65,7 +67,6 @@
         </div>
       </div>
       
-
    <!-- Conveyance Charge Edit Modal  Start -->
 
    <div id="boardingEditModal" class="modal fade ">
@@ -83,12 +84,12 @@
              <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                      <label for="boardingLoadingName">Name</label>
+                      <label for="boardingLoadingName">Boarding Lodging Number</label>
                       <input type="text" disabled class="form-control" id="boardingLoadingName" value=""   name="boardingLoadingName" required>
                     </div>
                     
                     <div class="col-md-6">
-                    <label for="tourName">TourBill Name</label>
+                    <label for="tourName">Tour Bill Claim</label>
                       <select id="tourName" class="custom-select custom-select-sm form-control" name="tourName">
                         
                       </select>
@@ -264,83 +265,26 @@
                           let strCreatedDate = createdDate.toLocaleString();
 
                           htmlTable += '<tr>';
-                              htmlTable += '<td><strong>Name</strong></td>';
+                              htmlTable += '<td><strong>Boarding Lodging Number</strong></td>';
                               htmlTable += '<td>'+boardingRecord.boardingname+'</td>';
-                              htmlTable += '<td><strong>TourBill Name</strong></td>';
+                              htmlTable += '<td><strong>Tour Bill Claim</strong></td>';
                               htmlTable += '<td>'+boardingRecord.tourbillname+'</td>';
                           htmlTable += '</tr>';
                            
                           htmlTable += '<tr>';
-                          htmlTable += '<td><strong>Place OF Journey</strong></td>';
-                          htmlTable += '<td>'+boardingRecord.place_journey__c+'</td>';
+                          htmlTable += '<td><strong>Activity Code</strong></td>';
+                            if(boardingRecord.activitycode != null)
+                            htmlTable += '<td>'+boardingRecord.activitycode+'</td>';
+                            else
+                            htmlTable += '<td></td>';
                           htmlTable += '<td><strong>Stay Option</strong></td>';
                           htmlTable += '<td>'+boardingRecord.stay_option__c+'</td>';
                           htmlTable += '</tr>';
 
                           htmlTable += '<tr>';
-                          htmlTable += '<td><strong>Tier 3 City</strong></td>';
-                          if(boardingRecord.correspondence_city__c != null)
-                            htmlTable += '<td>'+boardingRecord.correspondence_city__c+'</td>';
-                            else
-                            htmlTable += '<td></td>';
-                          htmlTable += '<td><strong>Activity Code</strong></td>';
-                          if(boardingRecord.activitycode != null)
-                            htmlTable += '<td>'+boardingRecord.activitycode+'</td>';
-                            else
-                            htmlTable += '<td></td>';
-                          htmlTable += '</tr>';
-
-                          htmlTable += '<tr>';
-                          htmlTable += '<td><strong>Own Stay Amount</strong></td>';
-                          htmlTable += '<td>'+boardingRecord.own_stay_amount__c+'</td>';
-                          htmlTable += '<td><strong>From(Dep. Time from Residence)</strong></td>';
-                          htmlTable += '<td>'+strfromDate+'</td>';
-                          htmlTable += '</tr>';
-
-                          htmlTable += '<tr>';
-                        
-                          htmlTable += '<td><strong>To(Arrival Time to Residence)</strong></td>';
-                          htmlTable += '<td>'+strtoDate+'</td>';
-                          htmlTable += '<td><strong>Numbey Of Day Stay</strong></td>';
-                              htmlTable += '<td>'+boardingRecord.number_of_days__c+'</td>';
-                          htmlTable += '</tr>';
-
-                          htmlTable += '<tr>';
-                            
-                              htmlTable += '<td><strong>Daily Allowance Per Day</strong></td>';
-                            htmlTable += '<td>'+boardingRecord.daily_allowance__c+'</td>';
-                            htmlTable += '<td><strong>Amount of B&L as per policy</strong></td>';
-                              htmlTable += '<td>'+boardingRecord.amount_of_b_l_as_per_policy__c+'</td>';
-                          htmlTable += '</tr>';
-                          htmlTable += '<tr>';
-
-                            htmlTable += '<tr>';
-                             
-                              htmlTable += '<td><strong>Amount for boarding and lodging(per day)</strong></td>';
-                            htmlTable += '<td>'+boardingRecord.amount_for_boarding_and_lodging__c+'</td>';
-                              htmlTable += '<td><strong>Actual Amount for B&L (as per incurred)</strong></td>';
-                              htmlTable += '<td>'+boardingRecord.actual_amount_for_boarding_and_lodging__c+'</td>';
-                          htmlTable += '</tr>';
-                          htmlTable += '<tr>';
-
-
-                          htmlTable += '<tr>';
-                              htmlTable += '<td><strong>Total Amount</strong></td>';
-                            htmlTable += '<td>'+boardingRecord.total_amount__c+'</td>';
-                            htmlTable += '<td><strong>Extra Amount</strong></td>';
-                              htmlTable += '<td>'+boardingRecord.extra_amount__c+'</td>';
-                             
-                              htmlTable += '</tr>';
-                          htmlTable += '<tr>';
-                            htmlTable += '<td><strong>Total Daily Allowance</strong></td>';
-                              htmlTable += '<td>'+boardingRecord.total_allowance__c+'</td>';
-                              htmlTable += '<td><strong>Created Date</strong></td>';
-                              htmlTable += '<td>'+strCreatedDate+'</td>';
-                          htmlTable += '</tr>';
-
-                          htmlTable += '<tr>';
-                                  
-                                  htmlTable += '<td><strong>View Image</strong></td>';
+                            htmlTable += '<td><strong>Place OF Journey</strong></td>';
+                          htmlTable += '<td>'+boardingRecord.place_journey__c+'</td>';
+                          htmlTable += '<td><strong>View Image</strong></td>';
                                   console.log('typeof(boardingRecord.heroku_image_url__c) '+typeof(boardingRecord.heroku_image_url__c));
                                   if(boardingRecord.heroku_image_url__c != null && boardingRecord.heroku_image_url__c != '')
                                       htmlTable += '<td><a target="_blank" href="'+boardingRecord.heroku_image_url__c+'" >Click Here</a></td>';
@@ -349,7 +293,120 @@
                                   
                                       htmlTable += '<td><strong></strong></td>';
                                       htmlTable += '<td></td>';
-                                  htmlTable += '</tr>';
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr>';
+                            htmlTable += '<td><strong>Tier 3 City</strong></td>';
+                          if(boardingRecord.correspondence_city__c != null)
+                            htmlTable += '<td>'+boardingRecord.correspondence_city__c+'</td>';
+                            else
+                            htmlTable += '<td></td>';
+                            
+                            htmlTable += '<td><strong></strong></td>';
+                            htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Journey Information:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                          htmlTable += '<tr>';
+                        
+                          htmlTable += '<td><strong>From(Dep. Time from Residence)</strong></td>';
+                          htmlTable += '<td>'+strfromDate+'</td>';
+                          htmlTable += '<td><strong>To(Arrival Time to Residence)</strong></td>';
+                          htmlTable += '<td>'+strtoDate+'</td>';
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr>';
+                         
+                           htmlTable += '<td><strong>Numbey Of Day Stay</strong></td>';
+                           htmlTable += '<td>'+boardingRecord.number_of_days__c+'</td>';
+                           htmlTable += '<td></td>';
+                          htmlTable += '<td></td>';
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Own Stay Information:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr>';
+                            htmlTable += '<td><strong>Own Stay Amount</strong></td>';
+                           htmlTable += '<td>'+boardingRecord.own_stay_amount__c+'</td>';
+                           htmlTable += '<td><strong>Total Own Stay Amount</strong></td>';
+                            htmlTable += '<td>'+boardingRecord.total_own_stay_amount__c+'</td>'; 
+                            htmlTable += '</tr>';
+                          htmlTable += '<tr>';
+                            
+                            htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Daily Allowance Amount:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr>';
+                              htmlTable += '<td><strong>Daily Allowance Per Day</strong></td>';
+                            htmlTable += '<td>'+boardingRecord.daily_allowance__c+'</td>';
+                            htmlTable += '<td><strong>Total Daily Allowance</strong></td>';
+                              htmlTable += '<td>'+boardingRecord.total_allowance__c+'</td>';                          
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >B & L Amount:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr>'; 
+                              htmlTable += '<td><strong>Total Amount of B&L (as per policy)</strong></td>';
+                              htmlTable += '<td>'+boardingRecord.amount_of_b_l_as_per_policy__c+'</td>';   
+                              htmlTable += '<td><strong>Amount for boarding and lodging(per day)</strong></td>';
+                            htmlTable += '<td>'+boardingRecord.amount_for_boarding_and_lodging__c+'</td>';
+                          htmlTable += '</tr>';
+
+                          htmlTable += '<tr>';
+                          htmlTable += '<td><strong>Actual Amount for B&L (as per incurred)</strong></td>';
+                          htmlTable += '<td>'+boardingRecord.actual_amount_for_boarding_and_lodging__c+'</td>';
+                          htmlTable += '<td><strong>Extra Amount for B&L (Stay)</strong></td>';
+                          htmlTable += '<td>'+boardingRecord.extra_amount__c+'</td>'; 
+                          htmlTable += '</tr>';
+                          htmlTable += '<tr>';
+
+                            htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >Voucher(Amount)Information:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<td><strong>Total Amount</strong></td>';
+                            htmlTable += '<td>'+boardingRecord.total_amount__c+'</td>'; 
+                            htmlTable += '<td></td>';
+                            htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+
+                            htmlTable += '<tr style="background-color:#d3d3d3";>';
+                                htmlTable += '<td><h5 >System Information:</h5></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                            htmlTable += '</tr>';
+                          
+                              htmlTable += '<td><strong>Created Date</strong></td>';
+                              htmlTable += '<td>'+strCreatedDate+'</td>';
+                              htmlTable += '<td></td>';
+                                htmlTable += '<td></td>';
+                          htmlTable += '</tr>';
+
+                          
     
                           $('#boardingTable').empty();
                           $('#boardingTable').html(htmlTable);

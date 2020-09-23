@@ -1415,7 +1415,8 @@ router.get('/getTasklist',verify,(request,response)=>{
           obj.endtime=eachRecord.end_time__c;
           obj.taskType=eachRecord.task_type__c;
           obj.createDdate = strDate;
-          obj.editAction = '<button href="#" class="btn btn-primary editTask" id="'+eachRecord.sfids+'" >Edit</button>'
+          obj.deleteAction = '<button href="#" class="btn btn-primary deleteTask" id="'+eachRecord.sfids+'" >Delete</button>'     
+      //    obj.editAction = '<button href="#" class="btn btn-primary editTask" id="'+eachRecord.sfids+'" >Edit</button>'
           i= i+1;
           modifiedTaskList.push(obj);
         })
@@ -1479,6 +1480,28 @@ router.post('/updateTask',verify,(request,response)=>{
     })
   })
 })
+
+router.get('/deleteTask/:parentId',(request,response)=>{
+
+  var taskId  = request.params.parentId;
+console.log('taskId Id1111 ='+taskId);
+
+    let deleteQuerry = 'DELETE FROM salesforce.Milestone1_Task__c '+
+    'WHERE sfid = $1';
+  console.log('deleteQuerry  '+deleteQuerry);
+  pool
+  .query(deleteQuerry,[taskId])
+  .then((deleteQuerry) => {     
+  console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+  response.send(200);
+  })
+  .catch((deleteError) => {
+  console.log('deleteError'+deleteError.stack);
+  response.send('Error');
+  })
+})
+
+
 /*****************************************   Task List View End  ********************************/
 
 /*****************************************   Timesheet List View Start ********************************/
@@ -1524,7 +1547,9 @@ router.get('/getTimesheetlist',verify,(request,response)=>{
           obj.endtime=eachRecord.end_time__c;
           obj.date=strDated1.split(',')[0];
           obj.createDdate = strDate;
-          obj.editAction = '<button href="#" class="btn btn-primary editTimesheet" id="'+eachRecord.sfid+'" >Edit</button>'
+         // obj.editAction = '<button href="#" class="btn btn-primary editTimesheet" id="'+eachRecord.sfid+'" >Edit</button>'
+          obj.deleteAction = '<button href="#" class="btn btn-primary deleteTimesheet" id="'+eachRecord.sfid+'" >Delete</button>'
+
           i= i+1;
           modifiedList.push(obj);
           
@@ -1612,6 +1637,26 @@ router.post('/updateTimesheet',verify,(request,response) => {
     response.send(querryError);
   })
 });
+
+router.get('/deleteTimesheet/:parentId',(request,response)=>{
+
+  var timesheetId  = request.params.parentId;
+console.log('taskId Id1111 ='+timesheetId);
+
+    let deleteQuerry = 'DELETE FROM salesforce.Milestone1_Time__c '+
+    'WHERE sfid = $1';
+  console.log('deleteQuerry  '+deleteQuerry);
+  pool
+  .query(deleteQuerry,[timesheetId])
+  .then((deleteQuerry) => {     
+  console.log('deleteQuerry =>>'+JSON.stringify(deleteQuerry));
+  response.send(200);
+  })
+  .catch((deleteError) => {
+  console.log('deleteError'+deleteError.stack);
+  response.send('Error');
+  })
+})
 
 /*****************************************   Timesheet List View End ********************************/
  

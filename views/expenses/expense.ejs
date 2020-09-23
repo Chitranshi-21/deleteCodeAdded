@@ -428,7 +428,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" onclick="printDiv('printExpensediv')" value="Click to print!" >click to Print</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-danger" id="closePrint" data-dismiss="modal" aria-label="Close">Close</button>
+  
       </div>
     </div>
   </div>
@@ -1744,6 +1745,11 @@ $('.printexp').on('click', function(event){
   
        document.body.innerHTML = originalContents;
   }
+
+  $('#closePrint').on('click',function(event){
+    $('#popupPrint').modal('hide');
+
+  });
 
 </script>
 

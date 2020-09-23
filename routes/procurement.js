@@ -1242,7 +1242,7 @@ router.get('/getProcurementApproval/:parentAssetId',verify,(request,response)=>{
 
 router.get('/getProcurementApprovalList',verify,(request,response)=>{
     let assetId=request.query.parentId;
-    console.log('AssetId'+assetId);
+    console.log('AssetId  '+assetId);
     pool
     .query('SELECT sfid, Name, Approval_Type__c, Status__c, Approver_s_Emails__c FROM salesforce.Approval__c WHERE Asset_Requisition_Form__c = $1 ',[assetId])
     .then((approvalQueryResult) => {
@@ -1253,7 +1253,7 @@ router.get('/getProcurementApprovalList',verify,(request,response)=>{
             approvalQueryResult.rows.forEach((eachRecord) => {
               let obj = {};
               obj.sequence = i;
-              obj.name = eachRecord.name;
+              obj.name = '<a href="#" class="approvalTag"" id="'+eachRecord.sfid+'" >'+eachRecord.name+'</a>';
               obj.type = eachRecord.approval_type__c;
               obj.status=eachRecord.status__c;
               obj.app_email = eachRecord.approver_s_emails__c;
@@ -1270,6 +1270,53 @@ router.get('/getProcurementApprovalList',verify,(request,response)=>{
     .catch((querryError)=>{
         console.log('QuerrError=>'+querryError.stack);
         response.send(querryError); 
+    })
+
+
+})
+
+router.get('/getProcurementApprovalDetails',verify,(request,response)=>{
+    let approvalId=request.query.approvalId;
+    console.log('approvalId  '+approvalId);
+    let approvalDetail={};
+    let qry='SELECT app.sfid, app.Name,app.Approval_Type__c,app.Status__c,app.Approver_s_Emails__c, asset.name as assetname, con.name as conname, app.Approval_Comment__c,app.Asset_Requisition_Form__c,app.Submitted_By_Heroku_User__c '+
+    'FROM salesforce.Approval__c app '+
+    'INNER JOIN salesforce.Asset_Requisition_Form__c asset '+
+    'ON app.Asset_Requisition_Form__c=asset.sfid '+
+    'INNER JOIN salesforce.Contact con '+
+    'ON app.Submitted_By_Heroku_User__c=con.sfid '+
+     'WHERE app.sfid=$1';
+
+     let historyQry='SELECT apphist.sfid,apphist.Name,apphist.Approval__c,apphist.Status__c,apphist.Approver_Email__c,apphist.Comment__c,apphist.Approver__c, usr.name as username '+
+     'FROM salesforce.Approval_History__c apphist '+
+     'INNER JOIN salesforce.User usr '+
+     'ON apphist.Approver__c=usr.sfid '+
+      'WHERE apphist.Approval__c = $1';
+  
+    console.log('Querryyy of approval' +qry);
+    console.log('history Query' +historyQry);
+
+    pool
+    .query(qry,[approvalId])
+    .then((querryResult)=>{
+    console.log('QuerryResult=>'+JSON.stringify(querryResult.rows));
+   approvalDetail.approval=querryResult.rows;
+    console.log('approvalDetailsQueryResult '+JSON.stringify(approvalDetail));
+    pool
+    .query(historyQry,[approvalId])
+                .then((queryResult)=>{
+                         console.log('queryResult'+JSON.stringify(queryResult));
+                         approvalDetail.history=queryResult.rows;
+                         console.log('approvalDetail list :'+JSON.stringify(approvalDetail));
+                         response.send(approvalDetail);
+                })
+                .catch((error)=>{
+                    console.log('erroror '+JSON.stringify(error.stack));
+                })
+                .catch((querryError)=>{
+                console.log('QuerrError '+querryError.stack);
+                response.send(querryError);
+                })
     })
 
 

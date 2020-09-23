@@ -111,11 +111,12 @@
                   "Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura", "Uttar Pradesh","Uttarakhand","West Bengal"];
        let dstrUP=["Noida","Ghaziabad","Kanpur Nagar","Kanpur Dehat","Unnao"];
        let dstrUK=["Almora","Bageshwar","Chamoli","Champawat","Dehradun","Haridwar","Nainital","Pauri Garhwal","Pithoragarh"];
+       let dstrJH=["Ranchi"];
 
         var itemsCategory = [ "Stationery", "Printing", "Electrical", "Events", "MaterialsOnRent", "Miscellaneous"];
         var Stationery = ["None","A4 Size Paper Rim", "Pen", "Pencil", "Sharpner", "Eraser", "Markers", "Files", "White", "Magnetic Board", "Other Items"];
         var Printing = ["Books", "Brochures", "Leaflets", "Binding", "Posters", "Backdrop", "Standees", "Caps", "Certificates", "Other Items"];
-        var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater", "Fans", "Other Items"];
+        var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater","Plasma","Fans", "Other Items"];
         var Events = ["Suggested Hostels", "Other Items"];
         var MaterialsOnRent = ["Projector", "AV Systems", "Hardware Peripherals", "Other Items"];
         var Miscellaneous = ["Maintenance", "Any Other Expense"];
@@ -203,6 +204,19 @@
               .append($("<option></option>")
               .attr("value",dstrUK[i])
               .text(dstrUK[i]))
+             }
+           }
+           else if(state=='Jharkhand')
+           {
+          //  alert('You Choose=> '+state);
+            $('#district'+cnt).attr("disabled",false);
+            $('#district'+cnt).clearQueue();
+             for(let i=0; i <dstrJH.length; i++)
+             {
+              $('#district'+cnt)
+              .append($("<option></option>")
+              .attr("value",dstrJH[i])
+              .text(dstrJH[i]))
              }
            }
            else{
@@ -383,18 +397,32 @@
             success: function (data) {
               console.log(data);
              // alert(data);
-              let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ data+
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                  '<span aria-hidden="true">&times;</span>'+
-                '</button>'+
-              '</div>';
-              $('#errorMessages').empty();
-              $('#errorMessages').append(errorHtml); 
-              $("#submitButton").attr("disabled", false);
-              if(data=='Saved Successfully'){
+             if(data=='Saved Successfully')
+             {
                 document.getElementById("formdata").reset();
                 $("#submitButton").attr("disabled", false);
-              }
+                let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ data+
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                '<span aria-hidden="true">&times;</span>'+
+                '</button>'+
+                 '</div>';
+                 $('#errorMessages').empty();
+                 $('#errorMessages').append(errorHtml); 
+                }
+                else
+                {
+                  let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+data+
+                  '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                   '<span aria-hidden="true">&times;</span>'+
+                    '</button>'+
+                    '</div>';
+                   $('#errorMessages').empty();
+                  $('#errorMessages').append(errorHtml); 
+                  $("#submitButton").attr("disabled", false);
+                }
+           
+             
+              
             }
           });
    //     var qt1=document.getElementById('file_1'+cnt).value();

@@ -492,7 +492,7 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
             {
                 console.log('plannedHoursMap.get(date)  : '+plannedHoursMap.get(date));
                 lstEvents.push({
-                  title : 'Planned Hours : '+plannedHoursMap.get(date),
+                  title : 'Planned Hours : '+(plannedHoursMap.get(date)).toFixed(2),
                   start : year+'-'+twoDigitMonth+'-'+day,   
                 });
                
@@ -835,7 +835,7 @@ router.get('/geteventsTeam',verify,async function(req,res,next){
                             {
                                 console.log('plannedHoursMap.get(date)  : '+plannedHoursMap.get(date));
                                 lstEvents.push({
-                                  title : 'Planned Hours : '+plannedHoursMap.get(date),
+                                  title : 'Planned Hours : '+(plannedHoursMap.get(date)).toFixed(2),
                                   start : year+'-'+twoDigitMonth+'-'+day,   
                                 });
                                
@@ -1139,7 +1139,7 @@ router.get('/geteventsProj',verify,async function(req,res,next){
       {
           console.log('plannedHoursMap.get(date)  : '+plannedHoursMap.get(date));
           lstEvents.push({
-            title : 'Planned Hours : '+plannedHoursMap.get(date),
+            title : 'Planned Hours : '+(plannedHoursMap.get(date)).toFixed(2),
             start : year+'-'+twoDigitMonth+'-'+day,   
           });
          
@@ -1359,7 +1359,7 @@ router.get('/getevents',verify, async function(req, res, next) {
       {
           console.log('plannedHoursMap.get(date)  : '+plannedHoursMap.get(date));
           lstEvents.push({
-            title : 'Planned Hours : '+plannedHoursMap.get(date),
+            title : 'Planned Hours : '+(plannedHoursMap.get(date)).toFixed(2),
             start : year+'-'+twoDigitMonth+'-'+day,   
           });
          

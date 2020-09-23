@@ -843,7 +843,7 @@ var arrStartTime = [], arrEndTime = [];
 console.log('body Boarding Charges '+JSON.stringify(request.body));
 
 console.log('typeof(request.body.date)   : '+typeof(request.body.stayOption));
-const {stayOption,projectTask,placeJourney,tier3City,fromDate ,fromTime,toDate,toTime,totalAllowances,dailyAllowances, amtForBL,actualAMTForBL,policyamtForBL, ownStayAmount,activity_code,imgpath ,parentTourBillId} =request.body;
+const {stayOption,projectTask,placeJourney,tier3City,fromDate ,fromTime,toDate,toTime,totalOwnStay,totalAllowances,dailyAllowances, amtForBL,actualAMTForBL,policyamtForBL, ownStayAmount,activity_code,imgpath ,parentTourBillId} =request.body;
 console.log('ulploadFile '+imgpath);
 console.log('From stayOption '+stayOption );
 console.log('projectTask '+projectTask );
@@ -853,6 +853,7 @@ console.log('From time '+fromTime );
 console.log('toDate  '+toDate );
 console.log('toTime time '+toTime );
 console.log('fromDate '+fromDate );
+console.log('totalOwnStay '+totalOwnStay );
 console.log('totalAllowances  '+totalAllowances);
 console.log('dailyAllowances  '+dailyAllowances);
 console.log(' amtForBL '+amtForBL );
@@ -989,8 +990,8 @@ console.log(' activity_code '+activity_code );
             lstcharges.push(enDate);
             
 
-         
-              lstcharges.push(totalAllowances[i]);  
+            lstcharges.push(totalOwnStay[i]); 
+            lstcharges.push(totalAllowances[i]);  
            
             lstcharges.push(dailyAllowances[i]);
 
@@ -1126,6 +1127,7 @@ console.log(' activity_code '+activity_code );
                 console.log('toDateTime  : '+enDate);
                 lstcharges.push(enDate);
 
+                lstcharges.push(totalOwnStay); 
                 lstcharges.push(totalAllowances);
                 lstcharges.push(dailyAllowances);
                 lstcharges.push(amtForBL);
@@ -1149,7 +1151,7 @@ console.log(' activity_code '+activity_code );
 }
    console.log('lstBoarding' +lstBoarding);
 
-    let lodgingboarding = format('INSERT INTO salesforce.Boarding_Lodging__c (Stay_Option__c, Place_Journey__c,Correspondence_City__c,Activity_Code_Project__c, From__c, To__c,Total_Allowance__c,Daily_Allowance__c,Amount_for_boarding_and_lodging__c, Actual_Amount_for_boarding_and_lodging__c	,Own_Stay_Amount__c,Heroku_Image_URL__c,Tour_Bill_Claim__c) VALUES %L returning id',lstBoarding);
+    let lodgingboarding = format('INSERT INTO salesforce.Boarding_Lodging__c (Stay_Option__c, Place_Journey__c,Correspondence_City__c,Activity_Code_Project__c, From__c, To__c,Total_Own_Stay_Amount__c,Total_Allowance__c,Daily_Allowance__c,Amount_for_boarding_and_lodging__c, Actual_Amount_for_boarding_and_lodging__c	,Own_Stay_Amount__c,Heroku_Image_URL__c,Tour_Bill_Claim__c) VALUES %L returning id',lstBoarding);
     console.log('qyyy '+lodgingboarding);
     pool
     .query(lodgingboarding)
@@ -1228,8 +1230,8 @@ router.get('/boardingLodgingListView',verify,(request,response)=>{
     let tourbillId = request.query.tourbillId;
     console.log('tourbillId  : '+tourbillId);
     let queryText = 'SELECT boradLoad.sfid, boradLoad.Number_Of_Days__c ,boradLoad.Stay_Option__c,boradLoad.Place_Journey__c, boradLoad.total_amount__c, boradLoad.name as boardingname ,tourBill.sfid  as tourId ,tourBill.name as tourbillname,boradLoad.createddate, '+
-                     'boradLoad.Correspondence_City__c, act.name as activityCode , boradLoad.Own_Stay_Amount__c, boradLoad.From__c, boradLoad.To__c, boradLoad.Number_Of_Days__c, boradLoad.Heroku_Image_URL__c, boradLoad.Daily_Allowance__c, '+
-                     'boradLoad.Amount_of_B_L_as_per_policy__c , boradLoad.Amount_for_boarding_and_lodging__c, boradLoad.Extra_Amount__c, boradLoad.Actual_Amount_for_boarding_and_lodging__c, boradLoad.Total_Allowance__c '+
+                     'boradLoad.Correspondence_City__c, act.name as activityCode , boradLoad.Own_Stay_Amount__c, boradLoad.total_own_stay_amount__c, boradLoad.From__c, boradLoad.To__c, boradLoad.Number_Of_Days__c, boradLoad.Heroku_Image_URL__c, boradLoad.Daily_Allowance__c, '+
+                     'boradLoad.Amount_of_B_L_as_per_policy__c , boradLoad.Amount_for_boarding_and_lodging__c, boradLoad.Extra_Amount__c, boradLoad.Actual_Amount_for_boarding_and_lodging__c, boradLoad.Total_Allowance__c, boradLoad.Total_Amount__c '+
                     'FROM salesforce.Boarding_Lodging__c boradLoad '+ 
                      'INNER JOIN salesforce.Tour_Bill_Claim__c tourBill '+
                      'ON boradLoad.Tour_Bill_Claim__c =  tourBill.sfid '+

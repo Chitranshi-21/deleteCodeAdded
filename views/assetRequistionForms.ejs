@@ -136,7 +136,7 @@
  <div class="modal-dialog modal-lg" role="document">
  <div class="modal-content">
  <div class="modal-header">
- <h5 class="modal-title" id="createTaskModal">Create New Asset Requisition Form</h5>
+ <h5 class="modal-title" id="createTaskModal">Asset Requisition Form</h5>
  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
  <span aria-hidden="true">&times;</span>
  </button>
@@ -1528,7 +1528,7 @@ function accountsApprovalFunctionality(){
  });
       }      //c     //c
 
-              $('#createAssetRequisitionFormButton').click(function() {
+         $('#createAssetRequisitionFormButton').click(function() {
         let projId = this.id;
       console.log('Before Show create Asset Requisition Form Button Modal ');
       $('#createAssetRequisitionForm').modal('show');
@@ -1631,6 +1631,7 @@ function accountsApprovalFunctionality(){
               $('#errorMessages').empty();
               $('#errorMessages').append(errorHtml); 
               $("#assetRequisitionSubmitbutton").attr("disabled", false);
+              window.location.reload()
                // document.getElementById("assetRequisitionForm").reset();
               }
       }) 
