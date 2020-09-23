@@ -105,6 +105,23 @@ $(document).ready(function(){
       html += '<td style="display:none;"><input  type="hidden" name="parentTourBillId" value="<%= parentTourBillId %>" class="form-control" /></td>';
       $('#item_table').append(html);
       $('#stay'+cnt).on("change" ,function(){
+        $('#activity_code'+cnt).val('');
+        $('#place'+cnt).val('');
+        $('#tier3City'+cnt).val('');
+        $('#fromDate'+cnt).val('');
+        $('#fromTime'+cnt).val('');
+        $('#toDate'+cnt).val('');
+        $('#toTime'+cnt).val('');
+        $('#totalOwnStay'+cnt).val('0');
+        $('#totalAllowances'+cnt).val('');
+        $('#dailyAllowances'+cnt).val('');
+        $('#actualAMTForBL'+cnt).val('');
+        $('#amtForBL'+cnt).val('');
+        $('#policyamtForBL'+cnt).val('');
+        $('#ownStayAmount'+cnt).val('');
+        $('#file_'+cnt).val('');
+
+        
         if(this.value != 'Stay')
         {
        // $('#activity_code'+cnt).attr("disabled",true);  OwnStay
@@ -310,11 +327,26 @@ $(document).ready(function(){
     html += '<td><input type="number" id="actualAMTForBL'+cnt+'" name="actualAMTForBL" class="form-control" /></td>';
     html += '<td style="display:none;" ><input type="hidden" id="policyamtForBL'+cnt+'" name="policyamtForBL"  class="form-control" /></td>';
     html += '<td><input type="number" id="ownStayAmount'+cnt+'" name="ownStayAmount" class="form-control" /></td>';
-    html += '<td><input type="file" onChange="chkFile(this,'+cnt+')" name="fileprety" id="fileprety" class="form-control" /><input type="hidden" value="demo" name="imgpath" id="file_'+cnt+'"></td>';
+    html += '<td><input type="file" onChange="chkFile(this,'+cnt+')" name="fileprety" class="form-control" /><input type="hidden" value="demo" name="imgpath" id="file_'+cnt+'"></td>';
     html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
     html += '<td style="display:none;"><input  type="hidden" name="parentTourBillId" value="<%= parentTourBillId %>" class="form-control" /></td>';
     $('#item_table').append(html);
     $('#stay'+cnt).on("change" ,function(){
+      $('#activity_code'+cnt).val('');
+        $('#place'+cnt).val('');
+        $('#tier3City'+cnt).val('');
+        $('#fromDate'+cnt).val('');
+        $('#fromTime'+cnt).val('');
+        $('#toDate'+cnt).val('');
+        $('#toTime'+cnt).val('');
+        $('#totalOwnStay'+cnt).val('0');
+        $('#totalAllowances'+cnt).val('');
+        $('#dailyAllowances'+cnt).val('');
+        $('#actualAMTForBL'+cnt).val('');
+        $('#amtForBL'+cnt).val('');
+        $('#policyamtForBL'+cnt).val('');
+        $('#ownStayAmount'+cnt).val('');
+        $('#file_'+cnt).val('');
         if(this.value != 'Stay')
         {
        // $('#activity_code'+cnt).attr("disabled",true);  OwnStay

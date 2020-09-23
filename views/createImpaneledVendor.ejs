@@ -1,43 +1,49 @@
 <% include ./partials/navbar %>
 <% include ./partials/footer %>
 <% include ./partials/messages %>
-<h3 style="text-align: center;">Create New Implaned Vendor </h3>
+<div class="container-fluid bg-gray" id="accordion-style-1" style="margin-left: 20px; margin-right: 20px;"></div>
+<h3 style="text-align: center;">Create New : Impaneled Vendor </h3>
 <div class="">
   <div id="errorMessages"></div>
 <form method="POST" name="createvendor" id ="formdata">
+
+  <div class="form-group">
+    <div class="row">
+        <div class="col-md-6">
+        <label for="state"> State  </label>
+        <select id="state" name="state" class="form-control item_unit"><option value="">Select</option></select>
+        </div>
+      <div class="col-md-6">
+        <label for="district">District </label>
+       <select id="district" name="district" class="form-control item_unit" ><option value="">Select</option></select>
+      </div>
+    </div>
+</div>
     <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-              <label for="name">Impaneled Vendor ID </label>
-            </div>
+        <div class="row">          
           <div class="col-md-6">
-            <label for="name">Vendor name </label>
+            <label for="name">Vendor Name </label>
              <input type="text" class="form-control" id="name" value=""   name="name" > 
           </div>
+          <div class="col-md-6">
+            <label for="cont">Contact No. </label>
+            <input type="number"  class="form-control" id="cont" value=""   name="cont" >
+          </div>
+        
         </div>
     </div>
-    <div class="form-group">
-      <div class="row">
-          <div class="col-md-6">
-          <label for="state"> State  </label>
-          <select id="state" name="state" class="form-control item_unit"><option value="">Select</option></select>
-          </div>
-        <div class="col-md-6">
-          <label for="district">  District </label>
-         <select id="district" name="district" class="form-control item_unit" ><option value="">Select</option></select>
-        </div>
-      </div>
-  </div>
+   
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
             <label for="authority">Name of Signing Authority from Vendor</label>
             <input type="text"  class="form-control" id="authority"    name="authority" >
             </div>
-          <div class="col-md-6">
-            <label for="cont">Contact No. </label>
-            <input type="number"  class="form-control" id="cont" value=""   name="cont" >
-          </div>
+            <div class="col-md-6">
+              <label for="pan"> Pan Number </label>
+               <input type="text" class="form-control" id="pan" value=""   name="pan" > 
+              </div>
+       
         </div>
     </div>
 
@@ -45,66 +51,47 @@
 
     <div class="form-group">
         <div class="row">
-            <div class="col-md-6">
-            <label for="bankkDet"> Bank Details(Name,Branch, etc)</label>
-             <input type="text" class="form-control" id="bankkDet" value=""   name="bankkDet" > 
-            </div>
-          <div class="col-md-6">
-            <label for="ifsc">Bank IFSC Code </label>
-            <input type="text"  class="form-control" id="ifsc" value=""   name="ifsc" >
-          </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-            <label for="pan"> Pan Number </label>
-             <input type="text" class="form-control" id="pan" value=""   name="pan" > 
-            </div>
-          <div class="col-md-6">
-            <label for="gst"> GST No.</label>
-            <input type="text"  class="form-control" id="gst" value=""   name="gst" >
-          </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-            <label for="add">Address/Web Address</label>
-             <input type="text" class="form-control" id="add" value=""   name="add" > 
-            </div>
           <div class="col-md-6">
             <label for="accNo">Bank Account Number </label>
             <input type="number"  class="form-control" id="accNo" placeholder="Plaese Fill 0 If no Account Number" value="0"  name="accNo" >
           </div>
+            <div class="col-md-6">
+            <label for="bankkDet"> Bank Details(Name,Branch, etc)</label>
+             <input type="text" class="form-control" id="bankkDet" value=""   name="bankkDet" > 
+            </div>  
         </div>
     </div>
 
-    
     <div class="form-group">
       <div class="row">
-        <div class="col-md-6">
-          <label for="url">Public  Quote Url  </label>
-           <input type="text" class="form-control" id="url" value=""   name="url" > 
+          <div class="col-md-6">
+          <label for="add">Address/Web Address</label>
+           <input type="text" class="form-control" id="add" value=""   name="add" > 
           </div>
-      <div class="col-md-6">
-        <label for="other"> Other/etc  </label>
-         <input type="text" class="form-control" id="other" value=""   name="other" > 
+          <div class="col-md-6">
+            <label for="ifsc">Bank IFSC Code </label>
+            <input type="text"  class="form-control" id="ifsc" value=""   name="ifsc" >
+          </div>
+       
+      </div>
+  </div>
+
+    <div class="form-group">
+        <div class="row">
+           
+            <div class="col-md-6">
+              <label for="gst"> GST No.</label>
+              <input type="text"  class="form-control" id="gst" value=""   name="gst" >
+            </div>
+            <div class="col-md-6">
+              <label for="other">Reason for not providing GST no.</label>
+                <input type="text" class="form-control" id="reason" value=""   name="reason" > 
+              </div>
         </div>
     </div>
   </div>
 
-  <div class="form-group">
-    <div class="row">
-    <div class="col-md-6">
-      <label for="other">Reason for not providing GST no.</label>
-        <input type="text" class="form-control" id="reason" value=""   name="reason" > 
-      </div>
-  </div>
-</div>
-  <button style="margin-left:850px ; border: 5px solid black; width:200px;height:90px;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
+  <button style="margin-left:810px ; border: 5px solid black; width:100px;height:50px;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
  <!--  <button  class="btn btn-primary" href="/procurement/getVendorsList">GOTO Impaneled Vendor List</button> -->
  <!-- <button type="button" style="margin-left:20px ; border: 5px solid black; width:200px;height:90px;" class="btn btn-primary" id="listOfVendor" data-dismiss="modal">ImapneledVendorList</button></form> -->
 </div>
@@ -219,8 +206,9 @@
 
     $(function () {
       $('form#formdata').bind('submit', function () {
+        $("#CreateVendor").attr("disabled", true);
         let data=$('form#formdata').serialize();
-        
+        let objUser = response.objUser;
      //   alert('Sumbit button clicked!' +data);
         $.ajax({
           type: 'post',
@@ -228,15 +216,37 @@
           data:$('form#formdata').serialize(),
           success: function (data) {
             console.log(data);
-           // alert(data);
-            let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ data+
-              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                '<span aria-hidden="true">&times;</span>'+
-              '</button>'+
-            '</div>';
-            $('#errorMessages').empty();
-            $('#errorMessages').append(errorHtml); 
-          }
+            let msg = data;
+       if(data == 'Saved Successfully !')
+       {
+        document.getElementById("formdata").reset();
+        let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ data+
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#errorMessages').empty();
+          $("#CreateVendor").attr("disabled", false);
+          $('#errorMessages').append(errorHtml);
+        
+         // window.location.href = ".routes/procurement/getvendorListView"+objUser;
+       }
+       else
+       {
+        let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+ data+
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+              '<span aria-hidden="true">&times;</span>'+
+            '</button>'+
+          '</div>';
+          $('#errorMessages').empty();
+          $('#errorMessages').append(errorHtml);
+         
+          $("#CreateVendor").attr("disabled", false);
+       }
+          },
+      fail:function(jqXHR ,status,error){
+        console.log('jqXHR '+JSON.stringify(jqXHR));        
+      }
         });
         
         return false;

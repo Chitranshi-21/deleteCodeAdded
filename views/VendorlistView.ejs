@@ -367,7 +367,7 @@
                                 vendorDetailRow += '<tr>';
                                     vendorDetailRow += '<td><strong>Impaneled Vendor ID<strong></td>';
                                     vendorDetailRow += '<td>'+eachRecord.name+'</td>';
-                                    vendorDetailRow += '<td><strong>  State<strong></td>';
+                                    vendorDetailRow += '<td><strong>State<strong></td>';
                                         vendorDetailRow += '<td>'+eachRecord.state__c+'</td>';
                                 vendorDetailRow += '</tr>'; 
 
@@ -380,48 +380,38 @@
                                 vendorDetailRow += '<tr>';
                     
                                 vendorDetailRow += '<tr>';
-                                    vendorDetailRow += '<td><strong>Name of Signing Authority from Vendor<strong></td>';
-                                    vendorDetailRow += '<td>'+eachRecord.name_of_signing_authority__c+'</td>';
                                     vendorDetailRow += '<td><strong>Contact no.<strong></td>';
                                     vendorDetailRow += '<td>'+eachRecord.contact_no__c+'</td>';
+                                    vendorDetailRow += '<td><strong>Name of Signing Authority from Vendor<strong></td>';
+                                    vendorDetailRow += '<td>'+eachRecord.name_of_signing_authority__c+'</td>';
                                 vendorDetailRow += '</tr>';
-                                vendorDetailRow += '<tr>';
-
-                                    vendorDetailRow += '<tr>';
-                                        vendorDetailRow += '<td><strong>Bank Details(Name,Branch, etc)<strong></td>';
-                                        vendorDetailRow += '<td>'+eachRecord.bank_details__c+'</td>';
-                                        vendorDetailRow += '<td><strong> Bank IFSC Code<strong></td>';
-                                        vendorDetailRow += '<td>'+eachRecord.bank_ifsc_code__c+'</td>';
-                                    vendorDetailRow += '</tr>';
-                                    vendorDetailRow += '<tr>';
 
                                 vendorDetailRow += '<tr>';
                                     vendorDetailRow += '<td><strong>PAN<strong></td>';
                                     vendorDetailRow += '<td>'+eachRecord.pan_no__c+'</td>';
+                                    vendorDetailRow += '<td><strong>Bank Account No.<strong></td>';
+                                    vendorDetailRow += '<td>'+eachRecord.bank_account_no__c+'</td>';
+                                vendorDetailRow += '</tr>';
+
+                                    vendorDetailRow += '<tr>';
+                                        vendorDetailRow += '<td><strong>Bank Details(Name,Branch, etc)<strong></td>';
+                                        vendorDetailRow += '<td>'+eachRecord.bank_details__c+'</td>';
+                                        vendorDetailRow += '<td><strong>Bank IFSC Code<strong></td>';
+                                        vendorDetailRow += '<td>'+eachRecord.bank_ifsc_code__c+'</td>';
+                                    vendorDetailRow += '</tr>';
+
+                                    vendorDetailRow += '<tr>';
                                     vendorDetailRow += '<td><strong>Address/Web Address<strong></td>';
                                     vendorDetailRow += '<td>'+eachRecord.address__c+'</td>';
-                                vendorDetailRow += '</tr>';
-                                vendorDetailRow += '<tr>';
-                                    vendorDetailRow += '<td><strong>  Bank Account No.<strong></td>';
-                                    vendorDetailRow += '<td>'+eachRecord.bank_account_no__c+'</td>';
-                                    vendorDetailRow += '<td><strong>Others/etc<strong></td>';
-                                    vendorDetailRow += '<td>'+eachRecord.others__c+'</td>';
-                                vendorDetailRow += '</tr>';
-                              
-                                vendorDetailRow += '<tr>';
-                                  
-                                  vendorDetailRow += '<td><strong>Quote Public URL<strong></td>';
-                                      vendorDetailRow += '<td>'+'<a href="'+eachRecord.quote_public_url__c+'" target="_blank">Click to View </a></td>';
-                                      vendorDetailRow += '<td><strong>GST No.<strong></td>';
+                                    vendorDetailRow += '<td><strong>GST No.<strong></td>';
                                         if(eachRecord.gst_no__c!=null){
                                             vendorDetailRow += '<td>'+eachRecord.gst_no__c+'</td>';
                                         }
                                         else{
                                             vendorDetailRow +='<td></td>';
                                         }
-                                      
-                              vendorDetailRow += '</tr>'; 
-
+                                vendorDetailRow += '</tr>';
+                
                               vendorDetailRow += '<tr>';
                    
                             vendorDetailRow += '<td><strong>Reason for not providing GST no.<strong></td>';
@@ -431,7 +421,8 @@
                                         else{
                                             vendorDetailRow +='<td></td>';
                                         }
-                         
+                                        vendorDetailRow += '<td></td>';
+                                    vendorDetailRow += '<td></td>';
                             vendorDetailRow += '</tr>'; 
 
                                

@@ -270,6 +270,7 @@ router.get('/fetchActivityCode', verify ,(request, response) => {
 
                   router.get('/fetchActivityCodeforCreateNew', verify ,(request, response) => {
 
+                    
                     console.log('hello i am inside Procurement Activity Code');
                   
                                         pool
@@ -1681,10 +1682,47 @@ pool
 })
   router.post('/saveVendor',(request,response)=>{
     let body = request.body;
+    let schema, result;
     console.log('body  : '+JSON.stringify(body));
     const{name,authority, cont,bankkDet,ifsc,pan,gst,add,accNo,state,url,other,district,reason}=request.body;
     console.log(name+authority+cont+bankkDet+ifsc+pan+gst+add+accNo+state+url+other+district+reason);
 
+    if(gst == null || gst == '' )
+    {
+         schema=joi.object({
+            state:joi.string().required().label('Please Choose State'),
+            district:joi.string().required().label('Please Choose District'),
+            name:joi.string().min(1).max(80).required().label('Please Fill Vendor Name'),
+            bankkDet:joi.string().min(1).max(255).required().label('Please Fill Bank Details'),
+            accNo:joi.string().required().label('Please Fill Bank Account Number'),
+            ifsc:joi.string().min(1).max(20).required().label('Please Fill Bank IFSC Code.'),
+            reason:joi.string().min(1).max(255).required().label('Please Fill Reason for not providing GST no.'),
+            
+              })
+        result = schema.validate({state:state,district:district,name:name,bankkDet:bankkDet,accNo:accNo,ifsc:ifsc,reason:reason});
+        
+    }
+
+     else
+     {
+
+         schema=joi.object({
+            state:joi.string().required().label('Please Choose State'),
+            district:joi.string().required().label('Please Choose District'),
+            name:joi.string().min(1).max(80).required().label('Please Fill Vendor Name'),
+            bankkDet:joi.string().min(1).max(255).required().label('Please Fill Bank Details'),
+            accNo:joi.string().required().label('Please Fill Bank Account Number'),
+            ifsc:joi.string().min(1).max(20).required().label('Please Fill Bank IFSC Code.'),
+              })
+         result = schema.validate({state:state,district:district,name:name,bankkDet:bankkDet,accNo:accNo,ifsc:ifsc});
+     }
+  
+    
+    if(result.error){
+        console.log('fd'+result.error);
+        response.send(result.error.details[0].context.label);    
+    }
+      else{
     
     let record = [];
     record.push(name);
@@ -1698,14 +1736,14 @@ pool
     record.push(accNo);
     record.push(state);
     record.push(district);
-    record.push(url);
-    record.push(other);
+   // record.push(url);
+   // record.push(other);
     record.push(reason);
 let recordlist=[];
 recordlist.push(record);
 console.log(recordlist);
 
-       let impaneledVendor = format('INSERT INTO salesforce.Impaneled_Vendor__c (Vendor_Name__c,Name_of_Signing_Authority__c,Contact_No__c,Bank_Details__c,Bank_IFSC_Code__c, PAN_No__c,GST_No__c,Address__c,Bank_Account_No__c,State__c,District__c, Quote_Public_URL__c,Others__c,Reason_for_not_providing_GST_no__c ) VALUES %L returning id',recordlist);
+       let impaneledVendor = format('INSERT INTO salesforce.Impaneled_Vendor__c (Vendor_Name__c,Name_of_Signing_Authority__c,Contact_No__c,Bank_Details__c,Bank_IFSC_Code__c, PAN_No__c,GST_No__c,Address__c,Bank_Account_No__c,State__c,District__c,Reason_for_not_providing_GST_no__c ) VALUES %L returning id',recordlist);
        console.log('impaneledVendor=>'+impaneledVendor);
     pool.query(impaneledVendor)
     .then((vendorQueryResult) => {
@@ -1716,7 +1754,7 @@ console.log(recordlist);
         console.log('error  : '+error.stack);
         response.send('Error Occurred !');
     })
-  
+}
 
     })
 router.get('/ItemDescriptionListView',verify,(request,response)=>{
