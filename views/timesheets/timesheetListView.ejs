@@ -13,8 +13,8 @@
     <div class="col-md-5">
         <a  href="/timesheets/timesheetListView" style="color: #555;"id="ref" ><i class="fa fa-refresh" style="font-size:34px; margin-left: 10px; margin-top: 30px;"></i> </a>
     </div>
-    <div class="col-md-3">
-    <input type="text" class="form-control" placeholder="Search" id="searchField" style="margin-top: 5px;">
+    <div class="col-md-4">
+    <input type="text" class="form-control" placeholder="Search by Timesheet" id="searchField" style="margin-top: 5px;">
     </div>
     <div class="col-md-2 text-right">
     <span class="pr-2">Rows Per Page:</span>
@@ -181,7 +181,7 @@
 
     
     $('#changeRows').on('change', function() {
-        table.updateRowsPerPage(parseInt($(this).val(), 15));
+        table.updateRowsPerPage(parseInt($(this).val()));
         })
 
         $('#refresh').click(function() {

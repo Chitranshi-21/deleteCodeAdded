@@ -1,7 +1,11 @@
 <% include ./partials/navbar %>
 <% include ./partials/footer %>
 <% include ./partials/messages %>
-<div class="container-fluid bg-gray" id="accordion-style-1" style="margin-left: 20px; margin-right: 20px;"></div>
+<div class="container-fluid bg-gray" id="accordion-style-1" style="align-items: center;">
+</br>
+
+<a class="btn btn-primary btn-md bg-gray" href="/procurement/getVendorListView" >Go To Impaneled Vendor List View </a>
+</br>
 <h3 style="text-align: center;">Create New : Impaneled Vendor </h3>
 <div class="">
   <div id="errorMessages"></div>
@@ -53,7 +57,7 @@
         <div class="row">
           <div class="col-md-6">
             <label for="accNo">Bank Account Number </label>
-            <input type="number"  class="form-control" id="accNo" placeholder="Plaese Fill 0 If no Account Number" value="0"  name="accNo" >
+            <input type="number"  class="form-control" id="accNo" name="accNo" >
           </div>
             <div class="col-md-6">
             <label for="bankkDet"> Bank Details(Name,Branch, etc)</label>
@@ -91,23 +95,26 @@
     </div>
   </div>
 
-  <button style="margin-left:810px ; border: 5px solid black; width:100px;height:50px;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
- <!--  <button  class="btn btn-primary" href="/procurement/getVendorsList">GOTO Impaneled Vendor List</button> -->
+  <button style="margin-left:610px ; border: 5px solid black; width:100px;height:50px;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
+ 
+  <!--  <button  class="btn btn-primary" href="/procurement/getVendorsList">GOTO Impaneled Vendor List</button> -->
  <!-- <button type="button" style="margin-left:20px ; border: 5px solid black; width:200px;height:90px;" class="btn btn-primary" id="listOfVendor" data-dismiss="modal">ImapneledVendorList</button></form> -->
-</div>
+</div></div>
 <script>
     let st =["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh",
     "Jharkhand", "Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha",
     "Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura", "Uttar Pradesh","Uttarakhand","West Bengal"];
     let dstrUP=["Noida","Ghaziabad","Kanpur Nagar","Kanpur Dehat","Unnao"];
     let dstrUK=["Almora","Bageshwar","Chamoli","Champawat","Dehradun","Haridwar","Nainital","Pauri Garhwal","Pithoragarh"];
-    var itemsCategory = [ "Stationery", "Printing", "Electrical", "Events", "MaterialsOnRent", "Miscellaneous"];
-    var Stationery = ["A4 Size Paper Rim", "Pen", "Pencil", "Sharpner", "Eraser", "Markers", "Files", "White", "Magnetic Board", "Other Items"];
-    var Printing = ["Books", "Brochures", "Leaflets", "Binding", "Posters", "Backdrop", "Standees", "Caps", "Certificates", "Other Items"];
-    var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater", "Fans", "Other Items"];
-    var Events = ["Suggested Hostels", "Other Items"];
-    var MaterialsOnRent = ["Projector", "AV Systems", "Hardware Peripherals", "Other Items"];
-    var Miscellaneous = ["Maintenance", "Any Other Expense"];
+    let dstrJK=["Ranchi"];
+    var itemsCategory = [ "Electrical", "Events", "IT", "Materials On Rent", "Miscellaneous","Printing","Stationery" ];
+    var Stationery = ["A4 Size Paper Rim","Books","Eraser","Files","Magnetic Board","Markers", "Others", "Pen", "Pencil","Sharpner","White", ];
+    var Printing = ["Binding","Brochures","Caps", "Certificates", "Leaflets","Others", "Posters", "Standees" ];
+    var Electrical = ["Battery", "Camera", "Extension Board", "Fan" , "Heater", "Inverter", "LCD Projector", "Lights", "Others", "Plasma", "Telephone", "UPS"  ];
+    var Events = ["Others", "Suggest Hotels"];
+    var IT = ["Cartridge","CPU", "Desktop","Desktop Mouse", "External Hard Disk", "Keyboard", "Laptop" ,"Laptop Charger", "Monitor", "Others", "Pen Drive", "Printer", "RAM", "Server", "Software","Tablet"];
+    var MaterialsOnRent = [ "AV Systems", "Backdrop", "Hardware Peripherals", "Others" , "Projector"];
+    var Miscellaneous = ["Any Other Expense", "Maintenance"];
     
     $(document).ready(function(){
 
@@ -136,9 +143,6 @@
          $('#district').attr("readonly",false);
        //  alert('You Choose=> '+state);
          $('#district')
-           .append($("<option></option>")
-           .attr("value","")
-           .text("select District"))
           for(let i=0; i <dstrUP.length; i++)
           {
            $('#district')
@@ -158,6 +162,19 @@
            .append($("<option></option>")
            .attr("value",dstrUK[i])
            .text(dstrUK[i]))
+          }
+        }
+        else if(state=='Jharkhand')
+        {
+     //    alert('You Choose=> '+state);
+         $('#district').attr("readonly",false);
+         $('#district').clearQueue();
+          for(let i=0; i <dstrJK.length; i++)
+          {
+           $('#district')
+           .append($("<option></option>")
+           .attr("value",dstrJK[i])
+           .text(dstrJK[i]))
           }
         }
         else{
@@ -208,7 +225,7 @@
       $('form#formdata').bind('submit', function () {
         $("#CreateVendor").attr("disabled", true);
         let data=$('form#formdata').serialize();
-        let objUser = response.objUser;
+        
      //   alert('Sumbit button clicked!' +data);
         $.ajax({
           type: 'post',
@@ -229,7 +246,7 @@
           $("#CreateVendor").attr("disabled", false);
           $('#errorMessages').append(errorHtml);
         
-         // window.location.href = ".routes/procurement/getvendorListView"+objUser;
+         
        }
        else
        {
@@ -240,7 +257,6 @@
           '</div>';
           $('#errorMessages').empty();
           $('#errorMessages').append(errorHtml);
-         
           $("#CreateVendor").attr("disabled", false);
        }
           },

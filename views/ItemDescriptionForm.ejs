@@ -2,32 +2,41 @@
 <% include ./partials/footer %>
 <% include ./partials/messages %>
 <p id="vendorID"><%= parentVendor %></p>
+<div class="container-fluid bg-gray" id="accordion-style-1" style="align-items: center;">
+
+</br>
+<a class="btn btn-primary btn-md bg-gray" href="/procurement/ItemDescriptionViewRel/<%=parentVendor %>" >Go To Impaneled Vendor </a>
+
+</br>
+<h3 style="text-align: center;">Create New : Item </h3></br>
 <div class="">
-    <div id="errorMessages"></div>
-<form  id="formdata" name="formdata" method="POST" >
+  <div id="errorMessages"></div>
+<form  id="formdata" name="formdata" method="POST" class="needs-validation" novalidate>
   
     <div class="form-group">
         <div class="row">
-            <div class="col-md-6">
-            <label for="name">Item ID </label>
-            <!--  <input type="text" class="form-control" id="name" value="" required="true"   name="name" >  -->
-            </div>
+          
           <div class="col-md-6">
             <label for="category">Item Category </label>
             <select name="category" id="category" class="form-control item_unit itemsCategory"><option value="">Select</option></select>
           </div>
+          <div class="col-md-6">
+            <label for="unit">Unit</label>
+             <input type="text" class="form-control" id="unit" value=""  required="true" name="unit" > 
+            </div>
         </div>
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-md-6">
-            <label for="unit">Unit</label>
-             <input type="text" class="form-control" id="unit" value=""  required="true" name="unit" > 
-            </div>
+          
             <div class="col-md-6">
               <label for="items">Item  </label>
               <select name="items" id="items" class="form-control item_unit itemsCategory"><option value="">Select</option></select>
             </div>
+            <div class="col-md-6">
+              <label for="cost">Per Unit Cost </label>
+               <input type="text" class="form-control" id="cost" value=""   name="cost" > 
+              </div>
         </div>
     </div>
 
@@ -35,10 +44,6 @@
 
     <div class="form-group">
         <div class="row">
-          <div class="col-md-6">
-            <label for="cost">Per Unit Cost </label>
-             <input type="text" class="form-control" id="cost" value=""   name="cost" > 
-            </div>
           <div class="col-md-6">
             <label for="other">  Others </label>
              <input type="other" class="form-control" id="other" value=""   name="other" > 
@@ -52,17 +57,19 @@
             </div>
         </div>
     </div>
-    <button style="text-align: center;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
+    <button style="margin-left:610px ; border: 5px solid black; width:100px;height:50px;" type="submit" class="btn btn-primary" id="CreateVendor" >Save</button>
+
 </form>
-</div>
+</div></div>
 <script>
-    var itemsCategory = [ "Stationery", "Printing", "Electrical", "Events", "MaterialsOnRent", "Miscellaneous"];
-    var Stationery = ["A4 Size Paper Rim", "Pen", "Pencil", "Sharpner", "Eraser", "Markers", "Files", "White", "Magnetic Board", "Other Items"];
-    var Printing = ["Books", "Brochures", "Leaflets", "Binding", "Posters", "Backdrop", "Standees", "Caps", "Certificates", "Other Items"];
-    var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater", "Fans","Plasma","Other Items"];
-    var Events = ["Suggested Hostels", "Other Items"];
-    var MaterialsOnRent = ["Projector", "AV Systems", "Hardware Peripherals", "Other Items"];
-    var Miscellaneous = ["Maintenance", "Any Other Expense"];
+    var itemsCategory = [ "Electrical", "Events", "IT", "Materials On Rent", "Miscellaneous","Printing","Stationery" ];
+    var Stationery = ["A4 Size Paper Rim","Books","Eraser","Files","Magnetic Board","Markers", "Others", "Pen", "Pencil","Sharpner","White", ];
+    var Printing = ["Binding","Brochures","Caps", "Certificates", "Leaflets","Others", "Posters", "Standees" ];
+    var Electrical = ["Battery", "Camera", "Extension Board", "Fan" , "Heater", "Inverter", "LCD Projector", "Lights", "Others", "Plasma", "Telephone", "UPS"  ];
+    var Events = ["Others", "Suggest Hotels"];
+    var IT = ["Cartridge","CPU", "Desktop","Desktop Mouse", "External Hard Disk", "Keyboard", "Laptop" ,"Laptop Charger", "Monitor", "Others", "Pen Drive", "Printer", "RAM", "Server", "Software","Tablet"];
+    var MaterialsOnRent = [ "AV Systems", "Backdrop", "Hardware Peripherals", "Others" , "Projector"];
+    var Miscellaneous = ["Any Other Expense", "Maintenance"];
     $(document).ready(function(){
         $('#vendorID').hide();
         let vendId = document.getElementById('vendorID').innerHTML;
@@ -107,7 +114,6 @@
              // alert(data);
              if(data== 'Succesfully Inserted'){
                 document.getElementById("formdata").reset();
-                $("#CreateVendor").attr("disabled", false);
                 let errorHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+ data+
               '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
               '<span aria-hidden="true">&times;</span>'+
@@ -126,7 +132,7 @@
               '</div>';
               $('#errorMessages').empty();
               $('#errorMessages').append(errorHtml); 
-              $("#submitButton").attr("disabled", false);
+              $("#CreateVendor").attr("disabled", false);
               }
               
           }

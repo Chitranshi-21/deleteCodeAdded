@@ -170,7 +170,6 @@
  <label for="planDate">Target Date of Receiving</label>
  <input type="date" class="form-control" id="planDate" value="" name="planDate" >
  </div>
-  
  <div class="col-md-6">
   <label for="act">Activity code</label>
   <select id="act" class="form-control act" name="act">
@@ -264,18 +263,18 @@
      <div class="col-md-6">
      <label for="quotations">if less than 3 quotations, specify Reason</label>
      <select id="quotations" class="custom-select custom-select-sm form-control" name="quotations" >
-         <option value="false">None</option>
-         <option value="true">Yes</option>
-         <option value="false">No</option>
+         <option value="None">None</option>
+         <option value="Yes">Yes</option>
+         <option value="Not Required">Not Required</option>
          </select> 
      </div>
      
      <div class="col-md-6">
      <label for="reason">reason for non-registered GST Vendor</label>
      <select id="reason" class="custom-select custom-select-sm form-control" name="reason" >
-         <option value="false">None</option>
-         <option value="true">Yes</option>
-         <option value="false">No</option>
+         <option value="None">None</option>
+         <option value="Yes">Yes</option>
+         <option value="Not Required">Not Required</option>
          </select> 
     </div>
      </div> 
@@ -287,9 +286,9 @@
      <label for="pricing">Pricing Terms/Cost comparison</label>
      <!-- <input type="checkbox"  id="pricing" value="" name="pricing" > -->
      <select id="pricing" class="custom-select custom-select-sm form-control" name="pricing" >
-         <option value="false">None</option>
-         <option value="true">Yes</option>
-         <option value="false">No</option>
+         <option value="None">None</option>
+         <option value="Yes">Yes</option>
+         <option value="Not Required">Not Required</option>
          </select> 
      </div>
      
@@ -753,7 +752,7 @@
         
         });
         $('#changeRows').on('change', function() {
-            table.updateRowsPerPage(parseInt($(this).val(), 15));
+            table.updateRowsPerPage(parseInt($(this).val()));
             })
     
            $('#refresh').click(function() {
@@ -952,30 +951,14 @@
       assetDetailsTableRows += '</tr>';
       assetDetailsTableRows += '<tr>';
       assetDetailsTableRows += '<td><strong>If < 3 quotations, specify Reason<strong></td>';
-        if(assetDetailsRecord.if_3_quotations_specify_reason__c==true){
-          assetDetailsTableRows += '<td>Yes</td>';
-        }
-        else {
-          assetDetailsTableRows += '<td>No</td>';
-        }
-      
+        assetDetailsTableRows += '<td>'+assetDetailsRecord.if_3_quotations_specify_reason__c+'</td>';     
       assetDetailsTableRows += '<td><strong>Reason for non-registered GST Vendor<strong></td>';
-        if(assetDetailsRecord.reason_for_non_registered_gst_vendor__c==true){
-          assetDetailsTableRows += '<td>Yes</td>';
-        }
-        else {
-          assetDetailsTableRows += '<td>No</td>';
-        }
+        assetDetailsTableRows += '<td>'+assetDetailsRecord.reason_for_non_registered_gst_vendor__c+'</td>';     
      // assetDetailsTableRows += '<td>'+assetDetailsRecord.reason_for_non_registered_gst_vendor__c+'</td>';
       assetDetailsTableRows += '</tr>'; 
       assetDetailsTableRows += '<tr>';
       assetDetailsTableRows += '<td><strong>Pricing Terms/Cost comparison<strong></td>';
-        if(assetDetailsRecord.pricing_terms_cost_comparison__c==true){
-          assetDetailsTableRows += '<td>Yes</td>';
-        }
-        else {
-          assetDetailsTableRows += '<td>No</td>';
-        }
+        assetDetailsTableRows += '<td>'+assetDetailsRecord.pricing_terms_cost_comparison__c+'</td>';      
     //  assetDetailsTableRows += '<td>'+assetDetailsRecord.pricing_terms_cost_comparison__c+'</td>';
       assetDetailsTableRows += '<td><strong>Delivery Place<strong></td>';
       assetDetailsTableRows += '<td>'+assetDetailsRecord.delivery_terms_delivery_place__c+'</td>';
@@ -1527,8 +1510,7 @@ function accountsApprovalFunctionality(){
  })
  });
  });
-      }      //c     //c
-
+      }     
          $('#createAssetRequisitionFormButton').click(function() {
         let projId = this.id;
       console.log('Before Show create Asset Requisition Form Button Modal ');
@@ -1536,44 +1518,56 @@ function accountsApprovalFunctionality(){
       console.log('After Show Edit Modal ');
       let lstActivityCodes = [];
 
-      $.ajax({
-  url: '/procurement/getProjectList',
-  type:'get',
-  dataType : 'json'
-  })
-  .done((response) => {
-  console.log('response '+JSON.stringify(response));
-  if(response.length > 0)
-  {
-  response.forEach((eachRpoject) => {
-  console.log('eachRpoject.name '+eachRpoject.name);
-  $('#project')
-  .append($("<option></option>")
-  .attr("value",eachRpoject.sfid)
-  .text(eachRpoject.name))
-  }); 
-  }
-  
-  })
-  .fail((jqXHR, status, err)=> {
-  console.log('jqXHR '+JSON.stringify(jqXHR));
-  console.log('error '+err);
-  })
+         $.ajax({
+        url: '/procurement/getProjectList',
+        type:'get',
+        dataType : 'json'
+        })
+        .done((response) => {
+        console.log('response '+JSON.stringify(response));
+        if(response.length > 0)
+        {
+        response.forEach((eachRpoject) => {
+        console.log('eachRpoject.name '+eachRpoject.name);
+        $('#project')
+        .append($("<option></option>")
+        .attr("value",eachRpoject.sfid)
+        .text(eachRpoject.name))
+        }); 
+        }
+        
+        })
+        .fail((jqXHR, status, err)=> {
+        console.log('jqXHR '+JSON.stringify(jqXHR));
+        console.log('error '+err);
+        })
 
+
+        $('#project').on('change', function() {
+          $('#act').empty();
+          $('#act')
+                .append($("<option></option>")
+                .attr("value",'')
+                .text('None'))
+                  proj=this.value;
+                      console.log('proj  : '+proj);
+                  
       $.ajax({
             url : '/procurement/fetchActivityCodeforCreateNew',
-            data : {
-              projId : projId
-            },
-            dataType : 'json',
-            type : 'get'
+            type:'get',
+                data : {
+                  proj : proj
+                },
+                dataType: 'json',
         })
         .done((response) => {
             console.log('response  '+JSON.stringify(response));
             if(response.length > 0)
                 {
+                  
                 response.forEach((eachActivity) => {
                 console.log('eachActivity.name '+eachActivity.name);
+              //  $('#act').empty();
                 $('#act')
                 .append($("<option></option>")
                 .attr("value",eachActivity.sfid)
@@ -1584,6 +1578,8 @@ function accountsApprovalFunctionality(){
         .fail((jqXHR,text,err) => {
             console.log('text  '+text + '  err '+err);
         })
+
+      });
 
       $('#createAssetRequisitionForm').modal('show');
       $('#assetRequisitionSubmitbutton').on('click',function(event){

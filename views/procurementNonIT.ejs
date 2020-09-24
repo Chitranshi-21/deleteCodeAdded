@@ -59,7 +59,7 @@
         <a class="btn btn-primary btn-md bg-gray" href="/procurement/assetRequisitionViewRel/<%= parentAssetId %>" >Go To AssetRequisition </a>
         <a class="btn btn-primary btn-md bg-gray" href="/procurement/getNonItProcurementListVIew/<%= parentAssetId %>" >Go To Procurement Non IT</a>
     </div>
-       <br />
+  </br>
        <div class="">
         <div id="errorMessages"></div>
        <form method="post" action="/insertprecash" id="formdata"  enctype="multipart/form-data">
@@ -113,13 +113,13 @@
        let dstrUK=["Almora","Bageshwar","Chamoli","Champawat","Dehradun","Haridwar","Nainital","Pauri Garhwal","Pithoragarh"];
        let dstrJH=["Ranchi"];
 
-        var itemsCategory = [ "Stationery", "Printing", "Electrical", "Events", "MaterialsOnRent", "Miscellaneous"];
-        var Stationery = ["None","A4 Size Paper Rim", "Pen", "Pencil", "Sharpner", "Eraser", "Markers", "Files", "White", "Magnetic Board", "Other Items"];
-        var Printing = ["Books", "Brochures", "Leaflets", "Binding", "Posters", "Backdrop", "Standees", "Caps", "Certificates", "Other Items"];
-        var Electrical = ["Lights", "UPS", "Inverter", "Battery", "Extension Board", "Heater","Plasma","Fans", "Other Items"];
-        var Events = ["Suggested Hostels", "Other Items"];
-        var MaterialsOnRent = ["Projector", "AV Systems", "Hardware Peripherals", "Other Items"];
-        var Miscellaneous = ["Maintenance", "Any Other Expense"];
+    var itemsCategory = [ "Electrical", "Events", "Materials On Rent", "Miscellaneous","Printing","Stationery" ];
+    var Stationery = ["A4 Size Paper Rim","Books","Eraser","Files","Magnetic Board","Markers", "Others", "Pen", "Pencil","Sharpner","White", ];
+    var Printing = ["Binding","Brochures","Caps", "Certificates", "Leaflets","Others", "Posters", "Standees" ];
+    var Electrical = ["Battery", "Camera", "Extension Board", "Fan" , "Heater", "Inverter", "LCD Projector", "Lights", "Others", "Plasma", "Telephone", "UPS"  ];
+    var Events = ["Others", "Suggest Hotels"];
+    var MaterialsOnRent = [ "AV Systems", "Backdrop", "Hardware Peripherals", "Others" , "Projector"];
+    var Miscellaneous = ["Any Other Expense", "Maintenance"];
         
         var subListValue="";
         var sts='';
